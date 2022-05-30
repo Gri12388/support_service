@@ -3,7 +3,7 @@ import './NotFound.scss';
 
 function NotFound() {
   return (
-    <p>There's nothing here!</p>
+    <p className='NotFound__txt'>There's nothing here!</p>
   );
 }
 

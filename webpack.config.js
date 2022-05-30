@@ -11,20 +11,20 @@ module.exports = {
     },
   },
   output: {
-    filename: ISDEV ? '[name]/[name].js' : '[name]/[name].[contenthash].js',
+    filename: ISDEV ? '[name].js' : '[name].[contenthash].js',
     path: path.resolve(__dirname, 'dist'),
     clean: true,
   },
   plugins: [
     new htmlWebpackPlugin({
       template: './src/index.ejs',
-      filename: 'index/index.html',
+      filename: 'index.html',
       chunks: ['index'],
       title: 'Home',
       root: 'root',
     }),
     new miniCssExtractPlugin({
-      filename: ISDEV ? '[name]/[name].css' : '[name].[contenthash].css',
+      filename: ISDEV ? '[name].css' : '[name].[contenthash].css',
     }),
   ],
   module: {

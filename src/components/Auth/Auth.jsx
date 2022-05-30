@@ -4,7 +4,7 @@ import './Auth.scss';
 function Auth() {
   return (
     <div>
-      Hello, world!
+      <p className='txt'>Hello, world!</p>
     </div>
   );
 }
