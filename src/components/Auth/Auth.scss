@@ -1,7 +1,56 @@
 @import url('../../assets/styles/normalize.scss');
 @import url('../../assets/styles/inter-400-font.scss');
+@import '../../assets/styles/_variables.scss';
 
-.txt {
-  font-family: 'Inter400', sans-serif;
-  color: red;
+.Auth__container {
+  width: 100%;
+  max-width: 1920px;
+  height: 969px;
+  margin: auto;
+}
+
+.Auth__main {
+  display: flex;
+  height: 90.5%;
+  background-color: $color3;
+}
+
+.Auth__img-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 50%;
+  background-color: $color2;
+}
+
+.Auth__poster {
+  width: 699px;
+  height: 678px;
+}
+
+.Auth__auth-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 50%;
+  height: 100%;
+  padding-top: 141px;
+}
+
+.Auth__main-logo {
+  width: 165px;
+  height: 161px;
+}
+
+.Auth__footer {
+  height: 9.5%;
+  background-color: $color1;
+}
+
+.Auth__footer-logo {
+  width: 59px;
+  height: 58px;
+  margin-left: 30px;
+  margin-top: 16px;
 }
