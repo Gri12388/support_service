@@ -21,6 +21,7 @@ module.exports = {
       filename: 'index.html',
       chunks: ['index'],
       title: 'Home',
+      favicon: './src/assets/images/logo.svg',
       root: 'root',
     }),
     new miniCssExtractPlugin({
