@@ -4,6 +4,7 @@ import './InputText.scss';
 
 function InputText({
   id,
+  type,
   label,
   placeholder,
   value,
@@ -16,7 +17,7 @@ function InputText({
       <label htmlFor={id} className='text1 InputText__label'>{label}</label>
       <div className='InputText__input_wrapper'>
         <input 
-          type='text'
+          type={type ? type : 'text' }
           id={id}
           name={id}
           className='InputText__input'

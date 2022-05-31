@@ -21,6 +21,7 @@ function Login() {
       <div className='Login__InputText1_wrapper'>
         <InputText
           id='InputText__email'
+          type='email'
           label='E-MAIL'
           placeholder='Type your e-mail'
           img={mail}
@@ -31,6 +32,7 @@ function Login() {
       <div className='Login__InputText2_wrapper'>
         <InputText
           id='InputText__password'
+          type='password'
           label='PASSWORD'
           placeholder='Type your password'
           img={lock}

@@ -55,3 +55,29 @@
   margin-left: 30px;
   margin-top: 16px;
 }
+
+@media (max-width: 949px) {
+  .Auth__container {
+    height: 100vh;
+    min-height: 620px;
+  }
+  
+  .Auth__img-section {
+    display: none;
+  }
+
+  .Auth__main-logo {
+    width: 96px;
+    height: 93px;
+  }
+
+  .Auth__auth-section {
+    width: 100%;
+    gap: 72px;
+    padding-top: 48px;
+  }
+
+  .Auth__footer-logo {
+    display: none;
+  }
+}

@@ -4,7 +4,6 @@
 .Login__form {
   width: 466px;
   height: 339px;
-
 }
 
 .Login__InputText1_wrapper {
@@ -42,3 +41,11 @@
 .Login__text-marked {
   color: v.$color6;
 }
+
+@media (max-width: 498px) {
+  .Login__form {
+    width: 100%;
+    padding: 0 16px;
+  }
+}
+
