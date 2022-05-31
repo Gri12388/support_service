@@ -1,0 +1,25 @@
+@use '../../assets/styles/variables.scss' as v;
+@use '../../assets/styles/mixins' as m;
+@import url('../../assets/styles/normalize.scss');
+
+.InputText__input_wrapper {
+  display: flex;
+  width: 100%;
+  height: 48px;
+  border-radius:  16px;
+  background-color: v.$color4;
+}
+
+.InputText__label {
+  display: inline-block;
+  margin-bottom: 8px;
+}
+
+.InputText__input {
+  width: 87%;
+  margin-left: 16px;
+  background-color: v.$color0;
+  &::placeholder {
+    @include m.text(v.$font1, 18px, 22px, v.$color7);
+  }
+}

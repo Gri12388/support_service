@@ -1,6 +1,5 @@
+@use '../../assets/styles/variables.scss' as v;
 @import url('../../assets/styles/normalize.scss');
-@import url('../../assets/styles/inter-400-font.scss');
-@import '../../assets/styles/_variables.scss';
 
 .Auth__container {
   width: 100%;
@@ -12,7 +11,7 @@
 .Auth__main {
   display: flex;
   height: 90.5%;
-  background-color: $color3;
+  background-color: v.$color3;
 }
 
 .Auth__img-section {
@@ -21,7 +20,8 @@
   align-items: center;
   height: 100%;
   width: 50%;
-  background-color: $color2;
+  overflow-x: hidden;
+  background-color: v.$color2;
 }
 
 .Auth__poster {
@@ -33,6 +33,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 96px;
   width: 50%;
   height: 100%;
   padding-top: 141px;
@@ -45,7 +46,7 @@
 
 .Auth__footer {
   height: 9.5%;
-  background-color: $color1;
+  background-color: v.$color1;
 }
 
 .Auth__footer-logo {

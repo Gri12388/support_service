@@ -1,0 +1,44 @@
+@use '../../assets/styles/variables.scss' as v;
+@import url('../../assets/styles/normalize.scss');
+
+.Login__form {
+  width: 466px;
+  height: 339px;
+
+}
+
+.Login__InputText1_wrapper {
+  margin-bottom: 28px;
+}
+
+.Login__InputText2_wrapper {
+  margin-bottom: 25px;
+}
+
+.Login__checkbox_wrapper {
+  display: flex;
+  align-items: center;
+  height: 20px;
+  margin-bottom: 35px;
+}
+
+.Login__checkbox {
+  width: 19px;
+  height: 20px;
+  margin-left: 11px;
+  margin-right: 10px;
+}
+
+.Login__button {
+  width: 100%;
+  height: 52px;
+  margin-bottom: 16px;
+}
+
+.Login__text {
+  text-align: center;
+}
+
+.Login__text-marked {
+  color: v.$color6;
+}

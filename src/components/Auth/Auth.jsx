@@ -1,8 +1,10 @@
 import React from 'react';
-import './Auth.scss';
+import Login from '../Login/Login.jsx';
 import mainLogo from '../../assets/images/logo.svg';
 import footerLogo from '../../assets/images/logo-invert.svg';
 import poster from '../../assets/images/poster.png';
+
+import './Auth.scss';
 
 function Auth() {
   return (
@@ -13,6 +15,7 @@ function Auth() {
         </section>
         <section className='Auth__auth-section'>
           <img src={mainLogo} alt="logotype" className='Auth__main-logo' />
+          <Login />
         </section>
       </main>
       <footer className='Auth__footer'>

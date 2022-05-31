@@ -1,0 +1,68 @@
+@use './variables.scss' as v;
+@use './mixins' as m;
+@import url('./fonts.scss');
+@import url('./normalize.scss');
+
+
+.text1 {
+  @include m.text(v.$font3, 12px, 15px, v.$color5, 2px);
+}
+
+.text2 {
+  @include m.text(v.$font1, 14px, 17px, v.$color7);
+}
+
+.text3 {
+  @include m.text(v.$font1, 18px, 22px, v.$color7);
+}
+
+%button {
+  width: 82px;
+  height: 48px;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: v.$transition;
+}
+
+.button1 {
+  @extend %button;
+  @include m.text(v.$font2, 18px, 36px, v.$color3);
+  background-color: v.$color8;
+  &:hover {
+    background-color: v.$color9;
+  };
+  &:active {
+    background-color: v.$color10;
+  }
+}
+
+.button2 {
+  @extend %button;
+  @include m.text(v.$font2, 18px, 36px, v.$color3);
+  background-color: v.$color2;
+  &:hover {
+    background-color: v.$color11;
+  };
+  &:active {
+    background-color: v.$color12;
+  }
+}
+
+.button3 {
+  @extend %button;
+  @include m.text(v.$font2, 18px, 36px, v.$color13);
+  background-color: v.$color0;
+  border: solid 1px v.$color5;
+  &:hover {
+    color: v.$color1;
+    border-color: v.$color1;
+  };
+  &:active {
+    color: v.$color12;
+    border-color: v.$color12;
+  }
+}
+
+.interactiv {
+  cursor: pointer;
+}
