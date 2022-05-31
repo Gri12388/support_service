@@ -12,6 +12,20 @@ function InputText({
   alt,
   callback
 }) {
+
+  let imageCode;
+  if (img) {
+    imageCode = (
+      <div className='InputText__image_wrapper'>
+        <img 
+          src={img} 
+          alt={alt??'image'}
+          className='InputText__image' 
+        />   
+      </div>
+    )  
+  }
+
   return (
     <>
       <label htmlFor={id} className='text1 InputText__label'>{label}</label>
@@ -24,14 +38,9 @@ function InputText({
           placeholder={placeholder??''}
           value={value}
           onChange={callback}
+          style={{width: img ? '87%' : '100%'}}
          />
-         <div className='InputText__image_wrapper'>
-          <img 
-            src={img} 
-            alt={alt??'image'}
-            className='InputText__image' 
-          />   
-         </div>
+         {imageCode}
       </div>
     </>
   );

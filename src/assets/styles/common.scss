@@ -39,7 +39,7 @@
 .button2 {
   @extend %button;
   @include m.text(v.$font2, 18px, 36px, v.$color3);
-  background-color: v.$color2;
+  background-color: v.$color1;
   &:hover {
     background-color: v.$color11;
   };
@@ -61,6 +61,12 @@
     color: v.$color12;
     border-color: v.$color12;
   }
+}
+
+.xbutton1 {
+  width: 100%;
+  height: 52px;
+  margin-bottom: 16px;
 }
 
 .interactiv {

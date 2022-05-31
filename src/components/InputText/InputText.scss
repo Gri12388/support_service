@@ -17,7 +17,6 @@
 
 .InputText__input {
   @include m.text(v.$font1, 18px, 22px, v.$color7);
-  width: 87%;
   margin-left: 16px;
   outline: none;
   background-color: v.$color0;

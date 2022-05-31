@@ -1,5 +1,5 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useState } from 'react';
+
 import InputText from '../InputText/InputText.jsx';
 
 import '../../assets/styles/common.scss';
@@ -9,7 +9,7 @@ import mail from '../../assets/images/mail.svg';
 import lock from '../../assets/images/lock.svg';
 
 
-function Login() {
+function Login({callback}) {
   const [email, setEmail] = useState('');
   let [password, setPassword] = useState();
 
@@ -20,7 +20,7 @@ function Login() {
     <form className='Login__form'>
       <div className='Login__InputText1_wrapper'>
         <InputText
-          id='InputText__email'
+          id='fromLogin__email'
           type='email'
           label='E-MAIL'
           placeholder='Type your e-mail'
@@ -31,7 +31,7 @@ function Login() {
       </div>
       <div className='Login__InputText2_wrapper'>
         <InputText
-          id='InputText__password'
+          id='fromLogin__password'
           type='password'
           label='PASSWORD'
           placeholder='Type your password'
@@ -46,10 +46,10 @@ function Login() {
       </div>
 
       
-      <button className='button2 Login__button'>Login</button>
+      <button className='button2 xbutton1'>Login</button>
       <p className='text2 Login__text'>
         Not a member?
-        <span className='text2 interactiv Login__text-marked'>
+        <span className='text2 interactiv Login__text-marked' onClick={callback}>
           &nbsp;Request registration
         </span>
       </p>

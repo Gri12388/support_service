@@ -1,0 +1,24 @@
+@use '../../assets/styles/variables.scss' as v;
+
+.Reg__modal {
+  position: relative;
+  width: 100%;
+  max-width: 498px;
+  height: fit-content;
+  margin: 0 20px;
+  padding: 16px;
+  border-radius: 16px;
+  background-color: v.$color3;
+}
+
+.Reg__section {
+  margin-bottom: 16px;
+}
+
+.Reg__button {
+  position: absolute;
+  top: -24px;
+  right: -24px;
+  width: 48px;
+  border-radius: 50%;
+}
