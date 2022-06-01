@@ -11,7 +11,7 @@ import './Auth.scss';
 
 function Auth() {
   const [isVisible, setIsVisible] = useState(false);
-  
+
   useEffect(() => {
     const body = document.getElementsByTagName('body');
     if (isVisible) {
@@ -21,6 +21,7 @@ function Auth() {
     else {
       body[0].style.overflow = 'unset';
       body[0].style.paddingRight = 'unset';
+      let temp = document.querySelectorAll('.Reg__section .InputText__input').forEach(item => item.value = '');
     }
   }, [isVisible]);
 

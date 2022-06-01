@@ -17,6 +17,9 @@
 
 .Reg__button {
   position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   top: -24px;
   right: -24px;
   width: 48px;

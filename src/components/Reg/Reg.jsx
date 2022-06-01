@@ -63,7 +63,7 @@ function Reg() {
         />
       </section>
       <button className='button2 xbutton1'>Register</button>
-      <button className='button2 Reg__button' id='Reg__button'>╳</button>
+      <div className='button2 Reg__button' id='Reg__button'>╳</div>
     </form>
   );
 }
