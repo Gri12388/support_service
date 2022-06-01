@@ -17,7 +17,7 @@
 }
 
 .text4 {
-  @include m.text(v.$font1, 14px, 32px, v.$color16);
+  @include m.text(v.$font2, 36px, 43.57px, v.$color16);
 }
 
 %button {

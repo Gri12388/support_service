@@ -1,0 +1,22 @@
+@import url('../../assets/styles/normalize.scss');
+
+.Claims__container {
+  height: fit-content;
+  max-height: 870px;
+  padding-top: 56px;
+  background-color: yellow;
+}
+
+.Claims__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 48px;
+  margin: 0 56px 48px 64px;
+  background-color: red;
+}
+
+.Claims__button {
+  width: 174px;
+  height: 48px;
+}

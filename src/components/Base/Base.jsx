@@ -1,4 +1,5 @@
 import React from 'react';
+import { Outlet } from "react-router-dom";
 
 import Search from '../Search/Search.jsx';
 
@@ -37,7 +38,9 @@ function Base() {
           <span className='Base__full-name'>Ivan Ivanov</span>
           <img src={baseQuit} alt="quit" className='Base__quit'/>
         </header>
-        <main></main>
+        <main>
+          <Outlet />
+        </main>
       </section>
     </div>
   );

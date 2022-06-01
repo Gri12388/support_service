@@ -13,6 +13,7 @@ module.exports = {
   output: {
     filename: ISDEV ? '[name].js' : '[name].[contenthash].js',
     path: path.resolve(__dirname, 'dist'),
+    publicPath: '/',
     clean: true,
   },
   plugins: [
