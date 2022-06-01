@@ -16,7 +16,7 @@ function InputText({
   let imageCode;
   if (img) {
     imageCode = (
-      <div className='InputText__image_wrapper'>
+      <div className='image_wrapper'>
         <img 
           src={img} 
           alt={alt??'image'}
@@ -29,12 +29,12 @@ function InputText({
   return (
     <>
       <label htmlFor={id} className='text1 InputText__label'>{label}</label>
-      <div className='InputText__input_wrapper'>
+      <div className='input_wrapper'>
         <input 
           type={type ? type : 'text' }
           id={id}
           name={id}
-          className='InputText__input'
+          className='input InputText__input'
           placeholder={placeholder??''}
           value={value}
           onChange={callback}

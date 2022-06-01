@@ -16,6 +16,10 @@
   @include m.text(v.$font1, 18px, 22px, v.$color7);
 }
 
+.text4 {
+  @include m.text(v.$font1, 14px, 32px, v.$color16);
+}
+
 %button {
   width: 82px;
   height: 48px;
@@ -72,9 +76,29 @@
 .container1 {
   width: 100%;
   max-width: 1920px;
-  //height: 969px;
-  height: 100vh;
+  height: 969px;
+  //height: 100vh;
   margin: 0 auto;
+}
+
+.input_wrapper {
+  display: flex;
+  width: 100%;
+  max-width: 585px;
+  height: 48px;
+  border-radius:  16px;
+  background-color: v.$color4;
+}
+
+.input {
+  margin-left: 16px;
+  outline: none;
+  background-color: v.$color0;
+}
+
+.image_wrapper {
+  display: flex;
+  align-items: center;
 }
 
 .interactiv {

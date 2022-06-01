@@ -2,15 +2,19 @@
 @use '../../assets/styles/mixins' as m;
 @import url('../../assets/styles/normalize.scss');
 
-.InputText__label {
-  display: inline-block;
-  margin-bottom: 8px;
+.Search__input_wrapper {
+  margin-right: 64px;
 }
 
-.InputText__input {
+.Search__input {
   @include m.text(v.$font1, 18px, 22px, v.$color7);
-  
+  width: 87%;
   &::placeholder {
-    @include m.text(v.$font1, 18px, 22px, v.$color7);
+    @include m.text(v.$font1, 18px, 22px, v.$color5);
   }
+}
+
+.Search__image {
+  width: 40px;
+  height: 40px;
 }

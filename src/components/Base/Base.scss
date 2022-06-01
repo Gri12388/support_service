@@ -1,4 +1,5 @@
 @use '../../assets/styles/variables.scss' as v;
+@use '../../assets/styles/mixins' as m;
 @import url('../../assets/styles/normalize.scss');
 
 .Base__container {
@@ -6,7 +7,63 @@
 }
 
 .Base__aside {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 96px;
   height: 100%;
-  background: linear-gradient(180deg, #D5EEE2 0%, #7DB59A 43.23%);;
+  padding-top: 32px;
+  background: linear-gradient(180deg, v.$color14 0%, v.$color1 43.23%);
+}
+
+.Base__logo {
+  width: 72.82px;
+  height: 71.08px;
+  margin-bottom: 47.92px;
+}
+
+.Base__pic {
+  width: 40px;
+  height: 40px;
+  margin-bottom: 24px;
+}
+
+.Base__section {
+  width: 100%;
+  height: 100%;
+  background-color: v.$color3;
+}
+
+.Base__header {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  width: 100%;
+  height: 96px;
+  border-bottom: solid 1px v.$color15;
+  background-color: v.$color3;
+}
+
+.Base__bell {
+  width: 40px;
+  height: 40px;
+  margin-right: 20px;
+}
+
+.Base__user {
+  width: 50px;
+  height: 50px;
+  margin-right: 20px;
+  border-radius: 50%;
+}
+
+.Base__full-name {
+  @include m.text(v.$font1, 14px, 32px, v.$color16);
+  margin-right: 23px;
+}
+
+.Base__quit {
+  width: 40px;
+  height: 40px;
+  margin-right: 24px;
 }
