@@ -20,6 +20,10 @@
   @include m.text(v.$font2, 36px, 43.57px, v.$color16);
 }
 
+.text5 {
+  @include m.text(v.$font1, 16px, 20px, v.$color7);
+}
+
 %button {
   width: 82px;
   height: 48px;
