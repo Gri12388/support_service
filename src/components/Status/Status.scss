@@ -1,0 +1,10 @@
+@import url('../../assets/styles/normalize.scss');
+
+.Status__badge {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 124px;
+  height: 32px;
+  border-radius: 16px;
+}

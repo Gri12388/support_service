@@ -6,22 +6,32 @@
 
 .text1 {
   @include m.text(v.$font3, 12px, 15px, v.$color5, 2px);
+  cursor: default;
 }
 
 .text2 {
   @include m.text(v.$font1, 14px, 17px, v.$color7);
+  cursor: default;
 }
 
 .text3 {
   @include m.text(v.$font1, 18px, 22px, v.$color7);
+  cursor: default;
 }
 
 .text4 {
   @include m.text(v.$font2, 36px, 43.57px, v.$color16);
+  cursor: default;
 }
 
 .text5 {
   @include m.text(v.$font1, 16px, 20px, v.$color7);
+  cursor: default;
+}
+
+.text6 {
+  @include m.text(v.$font3, 12px, 14.52px, v.$color3, 2.5px);
+  cursor: default;
 }
 
 %button {
