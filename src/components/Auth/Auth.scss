@@ -1,14 +1,6 @@
 @use '../../assets/styles/variables.scss' as v;
 @import url('../../assets/styles/normalize.scss');
 
-.Auth__container {
-
-  width: 100%;
-  max-width: 1920px;
-  height: 969px;
-  margin: auto;
-}
-
 .Auth__main {
   display: flex;
   height: 90.5%;
@@ -26,18 +18,20 @@
 }
 
 .Auth__poster {
-  width: 699px;
-  height: 678px;
+  // width: 699px;
+  // height: 678px;
+  width: 73%;
+  height: 77%;
 }
 
 .Auth__auth-section {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 96px;
+  gap: 13%;
   width: 50%;
   height: 100%;
-  padding-top: 141px;
+  padding-top: 7.3%;
 }
 
 .Auth__main-logo {
@@ -67,10 +61,13 @@
   top: 0;
   left: 0;
   visibility: visible;
+  opacity: 1;
   z-index: 1;
   background-color: rgba($color: v.$color5, $alpha: .7);
   &_hidden {
+    @extend .Auth__modal-area;
     visibility: hidden;
+    opacity: 0;
   }
 }
 

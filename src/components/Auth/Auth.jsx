@@ -30,7 +30,7 @@ function Auth() {
   };
 
   return (
-    <div className='Auth__container'>
+    <div className='container1'>
       <main className='Auth__main'>
         <section className='Auth__img-section'>
           <img src={poster} alt="poster" className='Auth__poster'/>
