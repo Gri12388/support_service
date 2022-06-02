@@ -4,6 +4,7 @@
 
 .Base__container {
   display: flex;
+  border: solid 1px v.$color16;
 }
 
 .Base__aside {

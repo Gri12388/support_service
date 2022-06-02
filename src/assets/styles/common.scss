@@ -34,6 +34,11 @@
   cursor: default;
 }
 
+.text7 {
+  @include m.text(v.$font4, 18px, 22px, v.$color7);
+  cursor: default;
+}
+
 %button {
   width: 82px;
   height: 48px;
@@ -113,6 +118,26 @@
 .image_wrapper {
   display: flex;
   align-items: center;
+}
+
+.column1 {
+  width: 27.43%;
+}
+
+.column2 {
+  width: 17.54%;
+}
+
+.column3 {
+  width: 16.37%;
+}
+
+.column4 {
+  width: 15.9%;
+}
+
+.column5 {
+  width: 20.17%;
 }
 
 .interactiv {

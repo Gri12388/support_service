@@ -1,10 +1,10 @@
+@use '../../assets/styles/variables.scss' as v;
 @import url('../../assets/styles/normalize.scss');
 
 .Claims__container {
   height: fit-content;
   max-height: 870px;
   padding-top: 56px;
-  background-color: yellow;
 }
 
 .Claims__header {
@@ -13,10 +13,28 @@
   align-items: center;
   height: 48px;
   margin: 0 56px 48px 64px;
-  background-color: red;
+
 }
 
 .Claims__button {
   width: 174px;
   height: 48px;
 }
+
+.Claims__table {
+  width: 100%;
+  max-width: 1710px;
+  height: 528px;
+  margin: 0 58px 56px 56px;
+  background-color: yellow;
+}
+
+.Claims__table-head {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  height: 57px;
+  border-bottom: solid 1px v.$color15;
+  background-color: v.$color17;
+}
+
