@@ -1,4 +1,5 @@
 import React from 'react';
+
 import '../../assets/styles/common.scss';
 import './InputText.scss';
 
@@ -14,6 +15,10 @@ function InputText({
 }) {
 
   let imageCode;
+  let labelCode;
+
+  if (label) labelCode = (<label htmlFor={id} className='text1 InputText__label'>{label}</label>);
+
   if (img) {
     imageCode = (
       <div className='image_wrapper'>
@@ -28,7 +33,7 @@ function InputText({
 
   return (
     <>
-      <label htmlFor={id} className='text1 InputText__label'>{label}</label>
+      {labelCode}
       <div className='input_wrapper'>
         <input 
           type={type ? type : 'text' }

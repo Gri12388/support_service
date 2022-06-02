@@ -1,5 +1,5 @@
 import React from 'react';
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 
 import Search from '../Search/Search.jsx';
 
@@ -18,6 +18,9 @@ import baseUser from '../../assets/images/user.png';
 import baseQuit from '../../assets/images/quit.svg';
 
 function Base() {
+  const location = useLocation();
+  const search = location.pathname === '/base/claims' ? <Search /> : null;
+
   return (
     <div className='container1 Base__container'>
       <aside className='Base__aside'>
@@ -32,7 +35,7 @@ function Base() {
       </aside>
       <section className='Base__section'>
         <header className='Base__header'>
-          <Search />
+          {search}
           <img src={baseBell} alt="bell" className='Base__bell'/>
           <img src={baseUser} alt="user" className='Base__user'/>
           <span className='Base__full-name'>Ivan Ivanov</span>

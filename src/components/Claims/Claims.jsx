@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import Status from '../Status/Status.jsx';
 
@@ -8,10 +9,15 @@ import './Claims.scss';
 function Claims() {
 
   return (
-    <div className='Claims__container'>
+    <div className='container2'>
       <header className='Claims__header'>
         <p className='text4'>Your claims</p>
-        <button className='button2 Claims__button'>🞣 Create claim</button>
+        <Link 
+          className='button2 Claims__button'
+          to='/base/new'
+        >
+          🞣 Create claim
+        </Link>
       </header>
       <section className='Claims__table'>
         <div className='Claims__table-head'>

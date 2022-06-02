@@ -10,7 +10,7 @@ import lock from '../../assets/images/lock.svg';
 
 
 function Login({callback}) {
-  const [email, setEmail] = useState('');
+  let [email, setEmail] = useState('');
   let [password, setPassword] = useState();
 
   const onEmailInput = e => setEmail(e.target.value);
