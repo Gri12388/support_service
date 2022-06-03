@@ -16,7 +16,9 @@ function Select({
   if (label) labelCode = (<label htmlFor={id} className='text1 InputText__label'>{label}</label>);
   
   options = array.map(item => (
-    <option key={item.id} value={item.value}>{item.content}</option>
+    <option key={item.id} value={item.value}>
+      {item.content}
+    </option>
   ));
 
   return (
@@ -26,11 +28,10 @@ function Select({
         <select 
           id={id}
           name={id}
-          className='input'
-          placeholder={placeholder??''}
+          className='input text3 Select__select'
           onChange={callback}
         >
-          <option value='' selected></option>
+          <option value='' className='Select__option'>{placeholder??''}</option>
           {options}
         </select>
       </div>
