@@ -45,9 +45,9 @@ function Auth() {
         <img src={footerLogo} alt="logotype" className='Auth__footer-logo' />
       </footer>
       <div 
-        className={isVisible ? 'Auth__modal-area' : 'Auth__modal-area_hidden'}
+        //className={isVisible ? 'Auth__modal-area' : 'Auth__modal-area_hidden'}
         id='Auth__modal-area' 
-        //className='Auth__modal-area' 
+        className='Auth__modal-area' 
         onClick={hideModal}
       >
         <Reg />

@@ -16,9 +16,19 @@ function Reg() {
   const onEmailInput = e => setEmail(e.target.value);
   const onPasswordInput = e => setPassword(e.target.value);
   const onPasswordCopyInput = e => setPasswordCopy(e.target.value);
+  const onSubmit = (e, el) => {
+    e.preventDefault();
+    // for (let i = 0; i < el.target.length - 1; i++) {
+    //   console.log(el.target[i].value);
+    // }
+
+    console.log(e);
+    console.log(el);
+    return false;
+  }
 
   return (
-    <form className='Reg__modal'>
+    <form className='Reg__modal' onSubmit={onSubmit}>
       <section className='Reg__section'>
         <InputText 
           id='fromReg__name'
@@ -62,7 +72,8 @@ function Reg() {
           callback={onPasswordCopyInput}
         />
       </section>
-      <button className='button2 xbutton1'>Register</button>
+      {/* <button className='button2 xbutton1'>Register</button> */}
+      <input type='submit' className='button2 xbutton1' value='Register' />
       <div className='button2 Reg__button' id='Reg__button'>╳</div>
     </form>
   );

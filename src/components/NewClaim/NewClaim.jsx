@@ -1,25 +1,13 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
 
 import InputText from '../InputText/InputText.jsx';
-import Select from '../Select/Select.jsx';
 import Sel from '../Sel/Sel.jsx';
-
-import { selectTypes } from '../../store/slices/typesSlice.js';
 
 import '../../assets/styles/common.scss';
 import './NewClaim.scss';
 
 function NewClaim() {
-  let types = useSelector(selectTypes);
-  let array = types.map(item => {
-    return {
-      id: item.id,
-      value: item.type,
-      content: item.type,
-    }
-  })
-
+  
   let [title, setTitle] = useState('');
   let [description, setDescription] = useState('');
   let [type, setType] = useState('');
@@ -43,7 +31,7 @@ function NewClaim() {
         <Sel 
           id='fromNewClaim__type'
           label='TYPE'
-          groupId={'1'}
+          groupId={'fromNewClaim__sel1'}
           callback={onTypeInput}
           placeholder='Select type'
         />
@@ -60,8 +48,6 @@ function NewClaim() {
         <button className='button3'>Cancel</button>
         <button className='button2'>Create</button>
       </section>
-      
-
     </form>
   ); 
 }

@@ -8,19 +8,21 @@ import './Sel.scss';
 
 import arrowDown from '../../assets/images/arrow-down.svg';
 
+
 function Sel({
   id,
   label,
+  value,
   groupId,
   callback,
   placeholder,
 }) {
   let types = useSelector(selectTypes);
 
-  let [isVisible, setIsVisible] = useState(true);
-  let [color, setColor] = useState('transparent');
-  let [content, setContent] = useState(placeholder ?? '');
-  let [display, setDisplay] = useState(false);
+  let [isVisible, setIsVisible] = useState(false);
+  let [color, setColor] = useState(value ? types[value].color : 'transparent');
+  let [content, setContent] = useState(value ? types[value].type : placeholder ?? `Select ${(label ?? 'item').toLowerCase()}`);
+  let [display, setDisplay] = useState(value ? true : false);
 
   const toggleVisibility = () => setIsVisible(!isVisible);
   const onButtonClick = (e) => {
@@ -38,7 +40,6 @@ function Sel({
   const onOutClick = (e) => {
     let temp = e.target.dataset.group;
     if (temp !== groupId) setIsVisible(false);
-    debugger
   }
 
   useEffect(() => document.addEventListener('click', onOutClick), []);
@@ -62,7 +63,7 @@ function Sel({
   return(
     <>
       {labelCode}
-      <div className='input_wrapper Sel__base' data-id='1' data-group={groupId}>
+      <div className='input_wrapper Sel__base' data-group={groupId}>
         <button className='Sel__select' onClick={onButtonClick} data-group={groupId}>
           <div className='Sel__mark-area' onClick={toggleVisibility} style={{display: display ? 'flex' : 'none'}} data-group={groupId}>
             <div className='Sel__mark' style={{backgroundColor: color}} data-group={groupId}></div>
