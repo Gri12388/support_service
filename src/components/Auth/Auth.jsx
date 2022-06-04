@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 import Login from '../Login/Login.jsx';
 import Reg from '../Reg/Reg.jsx';
@@ -10,20 +10,7 @@ import poster from '../../assets/images/poster.png';
 import './Auth.scss';
 
 function Auth() {
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    const body = document.getElementsByTagName('body');
-    if (isVisible) {
-      body[0].style.overflow = 'hidden';
-      body[0].style.paddingRight = '15px';
-    }
-    else {
-      body[0].style.overflow = 'unset';
-      body[0].style.paddingRight = 'unset';
-      let temp = document.querySelectorAll('.Reg__section .InputText__input').forEach(item => item.value = '');
-    }
-  }, [isVisible]);
+  const [isVisible, setIsVisible] = useState(true);
 
   const showModal = () => setIsVisible(true);
   const hideModal = (e) => {
@@ -44,16 +31,43 @@ function Auth() {
       <footer className='Auth__footer'>
         <img src={footerLogo} alt="logotype" className='Auth__footer-logo' />
       </footer>
-      <div 
-        //className={isVisible ? 'Auth__modal-area' : 'Auth__modal-area_hidden'}
-        id='Auth__modal-area' 
-        className='Auth__modal-area' 
-        onClick={hideModal}
-      >
-        <Reg />
-      </div>
+      {isVisible && (
+        <div 
+          className='Auth__modal-area'
+          id='Auth__modal-area' 
+          onClick={hideModal}
+        >
+          <Reg />
+        </div>
+      )}
     </div>
   );
 }
 
 export default Auth;
+
+//-----------------------------
+
+//  {/* <div 
+//         className={isVisible ? 'Auth__modal-area' : 'Auth__modal-area_hidden'}
+//         id='Auth__modal-area' 
+//         //className='Auth__modal-area' 
+//         onClick={hideModal}
+//       >
+//         <Reg />
+//       </div> */}
+
+//-----------------------------
+
+// useEffect(() => {
+  //   const body = document.getElementsByTagName('body');
+  //   if (isVisible) {
+  //     body[0].style.overflow = 'hidden';
+  //     body[0].style.paddingRight = '15px';
+  //   }
+  //   else {
+  //     body[0].style.overflow = 'unset';
+  //     body[0].style.paddingRight = 'unset';
+  //     let temp = document.querySelectorAll('.Reg__section .InputText__input').forEach(item => item.value = '');
+  //   }
+  // }, [isVisible]);

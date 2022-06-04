@@ -7,6 +7,14 @@
   margin-bottom: 8px;
 }
 
+.InputText__input_wrapper {
+  margin-bottom: 0px;
+}
+
+.InputText__error {
+  border: solid 1px v.$color18;
+}
+
 .InputText__input {
   @include m.text(v.$font1, 18px, 22px, v.$color7);
   

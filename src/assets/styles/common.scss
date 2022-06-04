@@ -39,6 +39,11 @@
   cursor: default;
 }
 
+.text8 {
+  @include m.text(v.$font1, 18px, 32px, v.$color18);
+  cursor: default;
+}
+
 %button {
   width: 82px;
   height: 48px;

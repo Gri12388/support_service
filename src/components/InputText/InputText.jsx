@@ -5,10 +5,16 @@ import './InputText.scss';
 
 function InputText({ id, alt, img, type, label, value, state, callbacks, placeholder }) {
   
+  const onKeyDown = e => {
+    if (e.code === 'Enter') {
+      e.preventDefault();
+    }
+  }
+
   return (
     <>
       { label && <label htmlFor={id} className='text1 InputText__label'>{label}</label> }
-      <div className='input_wrapper'>
+      <div className={ state && state.touched && !state.status ? 'input_wrapper InputText__input_wrapper InputText__error' : 'input_wrapper InputText__input_wrapper'}>
         <input 
           type={ type ? type : 'text' }
           id={id}
@@ -18,6 +24,7 @@ function InputText({ id, alt, img, type, label, value, state, callbacks, placeho
           value={value}
           onChange={callbacks && callbacks.onChange}
           onBlur={callbacks && callbacks.onBlur}
+          onKeyDown={onKeyDown}
           style={{width: img ? '87%' : '100%'}}
         />
         {img && (
@@ -30,7 +37,7 @@ function InputText({ id, alt, img, type, label, value, state, callbacks, placeho
           </div>
         )}
       </div>
-      <p>{state && state.touched && !state.status && state.error}</p>
+      <p className='text8'>{state && state.touched && !state.status && state.error}</p>
     </>
   );
 }
