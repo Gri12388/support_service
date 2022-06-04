@@ -4,6 +4,8 @@ import InputText from '../InputText/InputText.jsx';
 
 import './Reg.scss';
 
+import loadingImage from '../../assets/images/loading.svg';
+
 const rules = {
   nameLengthMin: 1,
   nameLengthMax: 20,
@@ -38,7 +40,11 @@ const errors = {
   }
 }
 
-function Reg() {
+function Reg({toggleBlockModal}) {
+
+  const [form, setForm] = useState({isVisible: true});
+  const [loading, setLoading] = useState({isVisible: false});
+  const [message, setMessage] = useState({isVisible: false, content: ''});
 
   const [name, setName] = useState({content: '', status: false, touched: false, error: errors.nameErrors.noName});
   const [surname, setSurname] = useState({content: '', status: false, touched: false, error: errors.surnameErrors.noSurname});
@@ -61,12 +67,44 @@ function Reg() {
   const onPasswordCopyInput = e => setPasswordCopy(state=>({...state, content: e.target.value}));
   const onSubmit = (e) => {
     e.preventDefault();
-    let isValid = states.every(item => item.state.status);
-    if (!isValid) states.forEach(item => {
-      if (!item.state.status) item.setState(state=>({...state, touched: true}));
-    })
-    //debugger
+    // let isValid = states.every(item => item.state.status);
+    // if (!isValid) {
+    //   states.forEach(item => {
+    //     if (!item.state.status) item.setState(state=>({...state, touched: true}));
+    //   });
+    //   return;
+    // }
+    // let post = {
+    //   fullName: name.content + ' ' + surname.content,
+    //   email: email.content,
+    //   password: password.content
+    // }
+    // sendRequest(JSON.stringify(post));
+    
+    testAsync();
+    setForm(state=>({...state, isVisible: false}));
+    setLoading(state=>({...state, isVisible: true}));
+    toggleBlockModal();
+
     //console.log(password);
+  }
+
+  // async function sendRequest(json) {
+  //   let promise = await fetch('http://localhost:3001/auth/registration', {
+  //     method: 'POST',
+  //     headers: {'Content-Type': 'application/json;charset=utf-8'}, 
+  //     body: json,
+  //   });
+  //   console.log(promise);
+  //   debugger
+  // }
+
+  async function testAsync() {
+    let promise = await (() => new Promise(resolve => setTimeout(()=>resolve('Done'), 5000)))();
+    console.log (promise);
+    setLoading(state=>({...state, isVisible: false}));
+    setMessage(state=>({...state, isVisible: true, content: promise}));
+    toggleBlockModal();
   }
 
   const onBlur = (setter, checker) => {
@@ -108,60 +146,76 @@ function Reg() {
   }
 
   return (
-    <form className='Reg__modal' onSubmit={onSubmit}>
-      <section className='Reg__section'>
-        <InputText 
-          id='fromReg__name'
-          label='NAME'
-          placeholder='Type your name'
-          //callbacks={{onChange: onNameInput, onBlur: onBlurName}}
-          callbacks={{onChange: onNameInput, onBlur: onBlur.bind(null, setName, checkName)}}
-          state={name}
-        />
-      </section>
-      <section className='Reg__section'>
-        <InputText 
-          id='fromReg__surname'
-          label='SURNAME'
-          placeholder='Type your surname'
-          callbacks={{onChange: onSurnameInput, onBlur: onBlur.bind(null, setSurname, checkSurname)}}
-          state={surname}
-        />
-      </section>
-      <section className='Reg__section'>
-        <InputText 
-          type='email'
-          id='fromReg__email'
-          label='E-MAIL'
-          placeholder='Type your e-mail'
-          callbacks={{onChange: onEmailInput, onBlur: onBlur.bind(null, setEmail, checkEmail)}}
-          state={email}
-        />
-      </section>
-      <section className='Reg__section'>
-        <InputText 
-          type='password'
-          id='fromReg__password'
-          label='PASSWORD'
-          placeholder='Type your password'
-          callbacks={{onChange: onPasswordInput, onBlur: onBlur.bind(null, setPassword, checkPassword)}}
-          state={password}
-        />
-      </section>
-      <section className='Reg__section'>
-        <InputText 
-          type='password'
-          id='fromReg__password-copy'
-          label='PASSWORD AGAIN'
-          placeholder='Type your password again'
-          callbacks={{onChange: onPasswordCopyInput, onBlur: onBlur.bind(null, setPasswordCopy, checkPasswordCopy)}}
-          state={passwordCopy}
-        />
-      </section>
-      {/* <button className='button2 xbutton1'>Register</button> */}
-      <input type='submit' className='button2 xbutton1' value='Register' />
-      <div className='button2 Reg__button' id='Reg__button'>╳</div>
-    </form>
+    <div className='container3'>
+      {form.isVisible && (
+        <form className='Reg__modal' onSubmit={onSubmit}>
+          <section className='Reg__section'>
+          <InputText 
+            id='fromReg__name'
+            label='NAME'
+            placeholder='Type your name'
+            //callbacks={{onChange: onNameInput, onBlur: onBlurName}}
+            callbacks={{onChange: onNameInput, onBlur: onBlur.bind(null, setName, checkName)}}
+            state={name}
+          />
+          </section>
+          <section className='Reg__section'>
+          <InputText 
+            id='fromReg__surname'
+            label='SURNAME'
+            placeholder='Type your surname'
+            callbacks={{onChange: onSurnameInput, onBlur: onBlur.bind(null, setSurname, checkSurname)}}
+            state={surname}
+          />
+          </section>
+          <section className='Reg__section'>
+          <InputText 
+            type='email'
+            id='fromReg__email'
+            label='E-MAIL'
+            placeholder='Type your e-mail'
+            callbacks={{onChange: onEmailInput, onBlur: onBlur.bind(null, setEmail, checkEmail)}}
+            state={email}
+          />
+          </section>
+          <section className='Reg__section'>
+          <InputText 
+            type='password'
+            id='fromReg__password'
+            label='PASSWORD'
+            placeholder='Type your password'
+            callbacks={{onChange: onPasswordInput, onBlur: onBlur.bind(null, setPassword, checkPassword)}}
+            state={password}
+          />
+          </section>
+          <section className='Reg__section'>
+          <InputText 
+            type='password'
+            id='fromReg__password-copy'
+            label='PASSWORD AGAIN'
+            placeholder='Type your password again'
+            callbacks={{onChange: onPasswordCopyInput, onBlur: onBlur.bind(null, setPasswordCopy, checkPasswordCopy)}}
+            state={passwordCopy}
+          />
+          </section>
+          <input type='submit' className='button2 xbutton1' value='Register' />
+          <div className='button2 Reg__button' id='Reg__button'>╳</div>
+        </form>
+      )}
+      {loading.isVisible && (
+        <div className='Reg__modal1'>
+          <img src={loadingImage} alt="loading" className='loading' />
+          <p className='text4'>Loading...</p>
+        </div>  
+      )}
+      {message.isVisible && (
+        <div className='Reg__modal'>
+          <p className='text3'>{message.content}</p>
+          <div className='button2 Reg__button' id='Reg__button'>╳</div>
+        </div>
+      )}
+      
+    </div>
   );
 }
 
@@ -183,5 +237,9 @@ export default Reg;
 //   setEmail(state=>({...state, touched: true}));
 //   checkEmail();
 // }
+
+//--------------------------------
+
+{/* <button className='button2 xbutton1'>Register</button> */}
 
 //--------------------------------

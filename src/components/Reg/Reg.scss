@@ -1,14 +1,26 @@
 @use '../../assets/styles/variables.scss' as v;
 
-.Reg__modal {
-  position: relative;
+%modal {
   width: 100%;
-  max-width: 498px;
   height: fit-content;
   margin: 0 20px;
   padding: 16px;
   border-radius: 16px;
   background-color: v.$color3;
+}
+
+.Reg__modal {
+  @extend %modal;
+  position: relative;
+}
+
+.Reg__modal1 {
+  @extend %modal;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
 }
 
 .Reg__section {

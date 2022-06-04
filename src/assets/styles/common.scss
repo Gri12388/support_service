@@ -2,6 +2,8 @@
 @use './mixins' as m;
 @import url('./fonts.scss');
 @import url('./normalize.scss');
+@import url('./animation.scss');
+
 
 
 .text1 {
@@ -111,6 +113,12 @@
   padding-top: 56px;
 }
 
+.container3 {
+  width: 100%;
+  max-width: 498px;
+  height: fit-content;
+}
+
 .input_wrapper {
   display: flex;
   width: 100%;
@@ -149,6 +157,16 @@
 
 .column5 {
   width: 20.17%;
+}
+
+.loading {
+  width: 100px;
+  height: 100px;
+  animation-name: loading-animation;
+  animation-duration: 1s;
+  animation-timing-function: linear;
+  animation-direction: normal;
+  animation-iteration-count: infinite;
 }
 
 .interactiv {

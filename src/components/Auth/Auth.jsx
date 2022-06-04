@@ -10,11 +10,14 @@ import poster from '../../assets/images/poster.png';
 import './Auth.scss';
 
 function Auth() {
+  let isModalBlocked = false;
+  const setIsModalBlocked = () => isModalBlocked = !isModalBlocked;
+
   const [isVisible, setIsVisible] = useState(true);
 
   const showModal = () => setIsVisible(true);
   const hideModal = (e) => {
-    if (e.target.id === 'Auth__modal-area' || e.target.id === 'Reg__button') setIsVisible(false);
+    if (!isModalBlocked && (e.target.id === 'Auth__modal-area' || e.target.id === 'Reg__button')) setIsVisible(false);
   };
 
   return (
@@ -37,7 +40,7 @@ function Auth() {
           id='Auth__modal-area' 
           onClick={hideModal}
         >
-          <Reg />
+          <Reg toggleBlockModal={setIsModalBlocked}/>
         </div>
       )}
     </div>
