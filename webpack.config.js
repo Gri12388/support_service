@@ -21,6 +21,7 @@ module.exports = {
       template: './src/index.ejs',
       filename: 'index.html',
       chunks: ['index'],
+      publicPath: '/',
       title: 'Home',
       favicon: './src/assets/images/logo.svg',
       root: 'root',
