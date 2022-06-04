@@ -40,11 +40,19 @@ const errors = {
 
 function Reg() {
 
-  const [name, setName] = useState({content: '', status: false, touched: false, error: ''});
-  const [surname, setSurname] = useState({content: '', status: false, touched: false, error: ''});
-  const [email, setEmail] = useState({content: '', status: false, touched: false, error: ''});
-  const [password, setPassword] = useState({content: '', status: false, touched: false, error: ''});
-  const [passwordCopy, setPasswordCopy] = useState({content: '', status: false, touched: false, error: ''});
+  const [name, setName] = useState({content: '', status: false, touched: false, error: errors.nameErrors.noName});
+  const [surname, setSurname] = useState({content: '', status: false, touched: false, error: errors.surnameErrors.noSurname});
+  const [email, setEmail] = useState({content: '', status: false, touched: false, error: errors.emailErrors.noEmail});
+  const [password, setPassword] = useState({content: '', status: false, touched: false, error: errors.passwordErrors.noPassword});
+  const [passwordCopy, setPasswordCopy] = useState({content: '', status: false, touched: false, error: errors.passwordErrors.noPassword});
+
+  const states = [
+    {state: name, setState: setName},
+    {state: surname, setState: setSurname},
+    {state: email, setState: setEmail},
+    {state: password, setState: setPassword},
+    {state: passwordCopy, setState: setPasswordCopy},
+  ];
 
   const onNameInput = e => setName(state=>({...state, content: e.target.value}));
   const onSurnameInput = e => setSurname(state=>({...state, content: e.target.value}));
@@ -53,10 +61,12 @@ function Reg() {
   const onPasswordCopyInput = e => setPasswordCopy(state=>({...state, content: e.target.value}));
   const onSubmit = (e) => {
     e.preventDefault();
-    // for (let i = 0; i < el.target.length - 1; i++) {
-    //   console.log(el.target[i].value);
-    // }
-    console.log(password);
+    let isValid = states.every(item => item.state.status);
+    if (!isValid) states.forEach(item => {
+      if (!item.state.status) item.setState(state=>({...state, touched: true}));
+    })
+    //debugger
+    //console.log(password);
   }
 
   const onBlur = (setter, checker) => {
