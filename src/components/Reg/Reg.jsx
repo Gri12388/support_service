@@ -44,7 +44,7 @@ function Reg({toggleBlockModal}) {
 
   const [form, setForm] = useState({isVisible: true});
   const [loading, setLoading] = useState({isVisible: false});
-  const [message, setMessage] = useState({isVisible: false, content: ''});
+  const [message, setMessage] = useState({isVisible: false, content: '', isRegistered: false});
 
   const [name, setName] = useState({content: '', status: false, touched: false, error: errors.nameErrors.noName});
   const [surname, setSurname] = useState({content: '', status: false, touched: false, error: errors.surnameErrors.noSurname});
@@ -60,51 +60,83 @@ function Reg({toggleBlockModal}) {
     {state: passwordCopy, setState: setPasswordCopy},
   ];
 
+  const onTryAgainButton = () => {
+    setMessage(state=>({...state, isVisible: false, content: '', isRegistered: false}));
+    setForm(state=>({...state, isVisible: true}));
+    setName({status: false, touched: false, error: errors.nameErrors.noName});
+    setSurname({status: false, touched: false, error: errors.surnameErrors.noSurname});
+    setEmail({status: false, touched: false, error: errors.emailErrors.noEmail});
+    setPassword({status: false, touched: false, error: errors.passwordErrors.noPassword});
+    setPasswordCopy({status: false, touched: false, error: errors.passwordErrors.noPassword});
+  }
   const onNameInput = e => setName(state=>({...state, content: e.target.value}));
   const onSurnameInput = e => setSurname(state=>({...state, content: e.target.value}));
   const onEmailInput = e => setEmail(state=>({...state, content: e.target.value}));
   const onPasswordInput = e => setPassword(state=>({...state, content: e.target.value}));
   const onPasswordCopyInput = e => setPasswordCopy(state=>({...state, content: e.target.value}));
-  const onSubmit = (e) => {
+  
+  const onSubmit = e => {
     e.preventDefault();
-    // let isValid = states.every(item => item.state.status);
-    // if (!isValid) {
-    //   states.forEach(item => {
-    //     if (!item.state.status) item.setState(state=>({...state, touched: true}));
-    //   });
-    //   return;
-    // }
-    // let post = {
-    //   fullName: name.content + ' ' + surname.content,
-    //   email: email.content,
-    //   password: password.content
-    // }
-    // sendRequest(JSON.stringify(post));
+
+    let isValid = states.every(item => item.state.status);
+    if (!isValid) {
+      states.forEach(item => {
+        if (!item.state.status) item.setState(state=>({...state, touched: true}));
+      });
+      return;
+    }
+
+    let post = {
+      fullName: name.content + ' ' + surname.content,
+      email: email.content,
+      password: password.content
+    }
     
-    testAsync();
+    sendRequest(JSON.stringify(post));
     setForm(state=>({...state, isVisible: false}));
     setLoading(state=>({...state, isVisible: true}));
     toggleBlockModal();
+    
 
-    //console.log(password);
+    //---------------------------------------------------
+    // testAsync();
+    // setForm(state=>({...state, isVisible: false}));
+    // setLoading(state=>({...state, isVisible: true}));
+    // toggleBlockModal();
+    //---------------------------------------------------
+
   }
 
-  // async function sendRequest(json) {
-  //   let promise = await fetch('http://localhost:3001/auth/registration', {
-  //     method: 'POST',
-  //     headers: {'Content-Type': 'application/json;charset=utf-8'}, 
-  //     body: json,
-  //   });
-  //   console.log(promise);
-  //   debugger
-  // }
+  async function sendRequest(body) {
+    let promise = await fetch('http://localhost:3001/auth/registration', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json;charset=utf-8'}, 
+      body: body,
+    });
+    
+    setLoading(state=>({...state, isVisible: false}));
+    toggleBlockModal();
+    //console.log (promise);
+
+    switch (promise.status) {
+      case 200: setMessage(state=>({...state, isVisible: true, content: 'You are registered successfully', isRegistered: true}));
+                break;
+      case 409: setMessage(state=>({...state, isVisible: true, content: 'User with the same credentials is already registered', isRegistered: false}));
+                break;
+      default:  setMessage(state=>({...state, isVisible: true, content: 'You are not registered', isRegistered: false}));
+    }
+  }
 
   async function testAsync() {
-    let promise = await (() => new Promise(resolve => setTimeout(()=>resolve('Done'), 5000)))();
-    console.log (promise);
+    let promise = await (() => new Promise(resolve => setTimeout(()=>resolve({}), 5000)))();
+    promise.status = 201;
+
     setLoading(state=>({...state, isVisible: false}));
-    setMessage(state=>({...state, isVisible: true, content: promise}));
     toggleBlockModal();
+    console.log (promise);
+
+    if (promise.status === 200) setMessage(state=>({...state, isVisible: true, content: 'You are registered successfully', isRegistered: true})); 
+    else setMessage(state=>({...state, isVisible: true, content: 'You are  not registered', isRegistered: false}));
   }
 
   const onBlur = (setter, checker) => {
@@ -205,12 +237,15 @@ function Reg({toggleBlockModal}) {
       {loading.isVisible && (
         <div className='Reg__modal1'>
           <img src={loadingImage} alt="loading" className='loading' />
-          <p className='text4'>Loading...</p>
+          <p className='text3'>Loading...</p>
         </div>  
       )}
       {message.isVisible && (
-        <div className='Reg__modal'>
+        <div className='Reg__modal2'>
           <p className='text3'>{message.content}</p>
+          {!message.isRegistered && (
+            <button className='button4' onClick={onTryAgainButton}>Try again?</button>
+          )}
           <div className='button2 Reg__button' id='Reg__button'>╳</div>
         </div>
       )}

@@ -23,6 +23,11 @@
   gap: 16px;
 }
 
+.Reg__modal2 {
+  @extend .Reg__modal1;
+  position: relative;
+}
+
 .Reg__section {
   height: 103px;
   margin-bottom: 0px;
