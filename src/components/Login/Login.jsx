@@ -9,7 +9,7 @@ import mail from '../../assets/images/mail.svg';
 import lock from '../../assets/images/lock.svg';
 
 
-function Login({callback}) {
+function Login() {
   let [email, setEmail] = useState('');
   let [password, setPassword] = useState();
 
@@ -47,12 +47,6 @@ function Login({callback}) {
 
       
       <button className='button2 xbutton1'>Login</button>
-      <p className='text2 Login__text'>
-        Not a member?
-        <span className='text2 interactiv Login__text-marked' onClick={callback}>
-          &nbsp;Request registration
-        </span>
-      </p>
     </form>
   );
 }

@@ -13,7 +13,7 @@ function Auth() {
   let isModalBlocked = false;
   const setIsModalBlocked = () => isModalBlocked = !isModalBlocked;
 
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(false);
 
   const showModal = () => setIsVisible(true);
   const hideModal = (e) => {
@@ -28,7 +28,13 @@ function Auth() {
         </section>
         <section className='Auth__auth-section'>
           <img src={mainLogo} alt="logotype" className='Auth__main-logo' />
-          <Login callback={showModal}/>
+          <Login />
+          <p className='text2 Auth__text'>
+            Not a member?
+            <span className='text2 interactiv Auth__text-marked' onClick={showModal}>
+              &nbsp;Request registration
+            </span>
+          </p>
         </section>
       </main>
       <footer className='Auth__footer'>

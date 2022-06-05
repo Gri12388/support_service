@@ -3,7 +3,7 @@
 
 .Login__form {
   width: 466px;
-  height: 339px;
+  height: fit-content;
 }
 
 .Login__InputText1_wrapper {
@@ -26,14 +26,6 @@
   height: 20px;
   margin-left: 11px;
   margin-right: 10px;
-}
-
-.Login__text {
-  text-align: center;
-}
-
-.Login__text-marked {
-  color: v.$color6;
 }
 
 @media (max-width: 498px) {
