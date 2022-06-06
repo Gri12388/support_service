@@ -7,7 +7,7 @@ import '../../assets/styles/common.scss';
 import './Claims.scss';
 
 function Claims() {
-
+  
   return (
     <div className='container2'>
       <header className='Claims__header'>

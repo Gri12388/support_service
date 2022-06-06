@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
+  token: '',
   totalItems: 0,
   values: {},
 }
@@ -10,12 +11,12 @@ const claimsSlice = createSlice({
   initialState,
   reducers: {
     upload: (state, action) => {
-      debugger
+      if (action.payload.token) state.token = action.payload.token;
       state.totalItems = action.payload.totalItems;
       action.payload.claims.forEach((item, index) => {
         state.values[index] = item;
       });
-    }
+    },
   },
 });
 

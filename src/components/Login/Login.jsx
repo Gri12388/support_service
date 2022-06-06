@@ -1,9 +1,10 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from "react-router-dom";
 
 import InputText from '../InputText/InputText.jsx';
 import { rules, errors, messages } from '../../data/data.js';
-import { upload, selectClaims, selectTotalClaimsNumber } from '../../store/slices/claimsSlaice.js';
+import { upload } from '../../store/slices/claimsSlaice.js';
 
 import '../../assets/styles/common.scss';
 import './Login.scss';
@@ -14,9 +15,9 @@ import lock from '../../assets/images/lock.svg';
 
 function Login({ setLoading, email, setEmail, password, setPassword }) {
   
+  const navigate = useNavigate();
+
   const dispatch = useDispatch();
-  const claims = useSelector(selectClaims);
-  const totalClaimsNumber = useSelector(selectTotalClaimsNumber);
 
   const states = [
     {state: email, setState: setEmail},
@@ -93,25 +94,22 @@ function Login({ setLoading, email, setEmail, password, setPassword }) {
     }
 
     let result = await promiseClaims.json();
-    debugger
+    result.token = data.token;
+
     dispatch(upload(result));
     setLoading({isLoading: false, isBlocked: false, message: ''});
-
-    // setLoading(state=>({...state, isVisible: false}));
-    // toggleBlockModal();
-
-    // switch (promise.status) {
-    //   case 200: setMessage(state=>({...state, isVisible: true, content: 'You are registered successfully', isRegistered: true}));
-    //             break;
-    //   case 409: setMessage(state=>({...state, isVisible: true, content: 'User with the same credentials is already registered', isRegistered: false}));
-    //             break;
-    //   default:  setMessage(state=>({...state, isVisible: true, content: 'You are not registered', isRegistered: false}));
-    // }
+    navigate('/base/claims');
   }
 
   const onBlur = (setter, checker) => {
     setter(state=>({...state, touched: true}));
     checker();
+  }
+
+  const onKeyDown = e => {
+    if (e.code === 'Enter' || e.key === 'Enter') {
+      e.preventDefault();
+    }
   }
 
   const checkEmail = () => {
@@ -128,7 +126,7 @@ function Login({ setLoading, email, setEmail, password, setPassword }) {
   }
 
   return (
-    <form className='Login__form' onSubmit={onSubmit}>
+    <form className='Login__form' onSubmit={onSubmit} onKeyDown={onKeyDown}>
       <div className='Login__InputText1_wrapper'>
         <InputText
           id='fromLogin__email'
@@ -156,12 +154,12 @@ function Login({ setLoading, email, setEmail, password, setPassword }) {
         />
       </div>
       <div className='Login__checkbox_wrapper'>
-        <input type='checkbox' id='Login__checkbox' name='Login__checkbox' className='Login__checkbox' onClick={() => {claims; debugger}} />
+        <input type='checkbox' id='Login__checkbox' name='Login__checkbox' className='Login__checkbox' />
         <label htmlFor='' className='text2'>Keep me logged in</label>
       </div>
 
       
-      {/* <button className='button2 xbutton1'>Login</button> */}
+     
       <input type='submit' className='button2 xbutton1' value='Login' />
     </form>
   );
@@ -173,5 +171,9 @@ export default Login;
 
   // let [email, setEmail] = useState('');
   // let [password, setPassword] = useState();
+
+//---------------------------
+
+//  {/* <button className='button2 xbutton1'>Login</button> */}
 
 //---------------------------

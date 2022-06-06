@@ -6,7 +6,7 @@ import './InputText.scss';
 function InputText({ id, alt, img, type, label, value, state, callbacks, placeholder }) {
   
   const onKeyDown = e => {
-    if (e.code === 'Enter') {
+    if (e.code === 'Enter' || e.key === 'Enter') {
       e.preventDefault();
     }
   }
