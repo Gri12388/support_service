@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 
 import Login from '../Login/Login.jsx';
 import Reg from '../Reg/Reg.jsx';
+import { errors } from '../../data/data.js';
 
 import mainLogo from '../../assets/images/logo.svg';
 import footerLogo from '../../assets/images/logo-invert.svg';
@@ -12,6 +13,9 @@ import '../../assets/styles/common.scss';
 import './Auth.scss';
 
 function Auth() {
+  const [email, setEmail] = useState({content: '', status: false, touched: false, error: errors.emailErrors.noEmail});
+  const [password, setPassword] = useState({content: '', status: false, touched: false, error: errors.passwordErrors.noPassword});
+
   let isModalBlocked = false;
   const setIsModalBlocked = () => isModalBlocked = !isModalBlocked;
 
@@ -20,8 +24,11 @@ function Auth() {
 
   // const showLoading = () => setLoading(state=>({...state, isLoading: true, isBlocked: true}));
   const hideLoading = e => {
-    if (!loading.isBlocked && (e.target.id === 'Auth__modal-area1' || e.target.id === 'Auth__close-button')) setLoading({isLoading: false, isBlocked: false, message: ''});
-    debugger
+    if (!loading.isBlocked && (e.target.id === 'Auth__modal-area1' || e.target.id === 'Auth__close-button')) {
+      setLoading({isLoading: false, isBlocked: false, message: ''});
+      setEmail({content: '', status: false, touched: false, error: errors.emailErrors.noEmail});
+      setPassword({content: '', status: false, touched: false, error: errors.passwordErrors.noPassword});
+    }
   } 
   const showModal = () => setIsVisible(true);
   const hideModal = (e) => {
@@ -36,7 +43,7 @@ function Auth() {
         </section>
         <section className='Auth__auth-section'>
           <img src={mainLogo} alt="logotype" className='Auth__main-logo' />
-          <Login loading={loading} setLoading={setLoading} />
+          <Login setLoading={setLoading} email={email} setEmail={setEmail} password={password} setPassword={setPassword}/>
           <p className='text2 Auth__text'>
             Not a member?
             <span className='text2 interactiv Auth__text-marked' onClick={showModal}>

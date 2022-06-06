@@ -35,5 +35,7 @@ export const errors = {
 export const messages = {
   regGood: 'You are registered successfully',
   regBad: 'You are not registered',
+  noAuth: 'You are not authenticated',
   alreadyRegistered: 'User with the same credentials is already registered',
+  default: 'Something went wrong'
 }

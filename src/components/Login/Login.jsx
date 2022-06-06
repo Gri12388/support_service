@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import InputText from '../InputText/InputText.jsx';
-import { rules, errors } from '../../data/data.js';
+import { rules, errors, messages } from '../../data/data.js';
 
 import '../../assets/styles/common.scss';
 import './Login.scss';
@@ -10,9 +10,8 @@ import mail from '../../assets/images/mail.svg';
 import lock from '../../assets/images/lock.svg';
 
 
-function Login({ loading, setLoading }) {
-  const [email, setEmail] = useState({content: '', status: false, touched: false, error: errors.emailErrors.noEmail});
-  const [password, setPassword] = useState({content: '', status: false, touched: false, error: errors.passwordErrors.noPassword});
+function Login({ setLoading, email, setEmail, password, setPassword }) {
+  
   const states = [
     {state: email, setState: setEmail},
     {state: password, setState: setPassword},
@@ -55,20 +54,42 @@ function Login({ loading, setLoading }) {
 
   }
 
+
+
+
   async function sendRequest(body) {
     let promise = await fetch('http://localhost:3001/auth/login', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'}, 
       body: body,
     });
+
+    switch(promise.status) {
+      case 200: break;
+      case 401: setLoading(state=>({...state, isBlocked: false, message: messages.noAuth}));
+                return;
+      default:  setLoading(state=>({...state, isBlocked: false, message: messages.default}));
+                return;
+    }
     
-    if (promise.status === 200) {
-      let data = await promise.json();
-      console.log (data);
+    let data = await promise.json();
+    let promiseClaims = await fetch('http://localhost:3001/claim?offset=0&limit=10', {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${data.token}`
+      },
+    });
+
+    switch(promiseClaims.status) {
+      case 200: break;
+      default:  setLoading(state=>({...state, isBlocked: false, message: messages.default}));
+                return;
     }
 
-    
+    let result = await promiseClaims.json();
     debugger
+    setLoading({isLoading: false, isBlocked: false, message: ''});
+
     // setLoading(state=>({...state, isVisible: false}));
     // toggleBlockModal();
 
@@ -107,6 +128,7 @@ function Login({ loading, setLoading }) {
           type='email'
           label='E-MAIL'
           placeholder='Type your e-mail'
+          value={email.content}
           img={mail}
           alt='mail'
           callbacks={{onChange: onEmailInput, onBlur: onBlur.bind(null, setEmail, checkEmail)}}
@@ -119,6 +141,7 @@ function Login({ loading, setLoading }) {
           type='password'
           label='PASSWORD'
           placeholder='Type your password'
+          value={password.content}
           img={lock}
           alt='lock'
           callbacks={{onChange: onPasswordInput, onBlur: onBlur.bind(null, setPassword, checkPassword)}}
