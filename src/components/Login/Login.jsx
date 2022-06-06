@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
 import InputText from '../InputText/InputText.jsx';
 import { rules, errors, messages } from '../../data/data.js';
+import { upload, selectClaims, selectTotalClaimsNumber } from '../../store/slices/claimsSlaice.js';
 
 import '../../assets/styles/common.scss';
 import './Login.scss';
@@ -12,6 +14,10 @@ import lock from '../../assets/images/lock.svg';
 
 function Login({ setLoading, email, setEmail, password, setPassword }) {
   
+  const dispatch = useDispatch();
+  const claims = useSelector(selectClaims);
+  const totalClaimsNumber = useSelector(selectTotalClaimsNumber);
+
   const states = [
     {state: email, setState: setEmail},
     {state: password, setState: setPassword},
@@ -88,6 +94,7 @@ function Login({ setLoading, email, setEmail, password, setPassword }) {
 
     let result = await promiseClaims.json();
     debugger
+    dispatch(upload(result));
     setLoading({isLoading: false, isBlocked: false, message: ''});
 
     // setLoading(state=>({...state, isVisible: false}));
@@ -149,7 +156,7 @@ function Login({ setLoading, email, setEmail, password, setPassword }) {
         />
       </div>
       <div className='Login__checkbox_wrapper'>
-        <input type='checkbox' id='Login__checkbox' name='Login__checkbox' className='Login__checkbox' />
+        <input type='checkbox' id='Login__checkbox' name='Login__checkbox' className='Login__checkbox' onClick={() => {claims; debugger}} />
         <label htmlFor='' className='text2'>Keep me logged in</label>
       </div>
 

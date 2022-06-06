@@ -7,7 +7,7 @@ const initialState = {
   3: {id: 3, type: 'Troubleshooting', color: '#6C5CE7'},
 };
 
-const postsSlice = createSlice({
+const typesSlice = createSlice({
   name: 'types',
   initialState,
   reducers: {},
@@ -15,4 +15,4 @@ const postsSlice = createSlice({
 
 export const selectTypes = state => Object.values(state.types);
 
-export default postsSlice.reducer;
+export default typesSlice.reducer;

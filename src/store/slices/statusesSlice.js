@@ -7,7 +7,7 @@ const initialState = {
   3: {id: 3, status: 'DECLINED', color: '#E84393'},
 };
 
-const postsSlice = createSlice({
+const statusesSlice = createSlice({
   name: 'statuses',
   initialState,
   reducers: {},
@@ -15,4 +15,4 @@ const postsSlice = createSlice({
 
 export const selectStatuses = state => Object.values(state.statuses);
 
-export default postsSlice.reducer;
+export default statusesSlice.reducer;
