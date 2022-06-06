@@ -79,6 +79,17 @@
   }
 }
 
+.Auth__message {
+  position: relative;
+  width: fit-content;
+  max-width: 498px;
+  height: fit-content;
+  margin: 0 20px;
+  padding: 16px;
+  border-radius: 16px;
+  background-color: v.$color3;
+}
+
 @media (max-width: 949px) {
   .Auth__container {
     height: 100vh;

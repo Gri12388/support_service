@@ -1,44 +1,12 @@
 import React, { useState } from 'react';
 
 import InputText from '../InputText/InputText.jsx';
+import { rules, errors, messages } from '../../data/data.js'
 
+import '../../assets/styles/common.scss';
 import './Reg.scss';
 
-import loadingImage from '../../assets/images/loading.svg';
-
-const rules = {
-  nameLengthMin: 1,
-  nameLengthMax: 20,
-  surnameLengthMin: 1,
-  surnameLengthMax: 20,
-  emailRegExp: /^\w[-._\w]*\w@\w[-._\w]*\w\.\w{2,3}$/,
-  passwordLengthMin: 6,
-  passwordLengthMax: 20,
-}
-
-const errors = {
-  nameErrors: {
-    noName: 'Type name',
-    shortName: 'Name is short',
-    longName: 'Name is long',
-  },
-  surnameErrors: {
-    noSurname: 'Type surname',
-    shortSurname: 'Surname is short',
-    longSurname: 'Surname is long',
-  },
-  emailErrors: {
-    noEmail: 'Type email',
-    wrongEmail: 'Wrong email',
-  },
-  passwordErrors: {
-    noPassword: 'Type password',
-    noPasswordCopy: 'Repeat password',
-    shortPassword: 'Password is short',
-    longPassword: 'Password is long',
-    noMatch: 'Passwords don\'t match', 
-  }
-}
+import loadingImage from '../../assets/images/loading.png';
 
 function Reg({toggleBlockModal}) {
 
@@ -119,25 +87,27 @@ function Reg({toggleBlockModal}) {
     //console.log (promise);
 
     switch (promise.status) {
-      case 200: setMessage(state=>({...state, isVisible: true, content: 'You are registered successfully', isRegistered: true}));
+      case 200: setMessage(state=>({...state, isVisible: true, content: messages.regGood, isRegistered: true}));
                 break;
-      case 409: setMessage(state=>({...state, isVisible: true, content: 'User with the same credentials is already registered', isRegistered: false}));
+      case 409: setMessage(state=>({...state, isVisible: true, content: messages.alreadyRegistered, isRegistered: false}));
                 break;
-      default:  setMessage(state=>({...state, isVisible: true, content: 'You are not registered', isRegistered: false}));
+      default:  setMessage(state=>({...state, isVisible: true, content: messages.regBad, isRegistered: false}));
     }
   }
 
-  async function testAsync() {
-    let promise = await (() => new Promise(resolve => setTimeout(()=>resolve({}), 5000)))();
-    promise.status = 201;
+  //------------------------------------------
+  // async function testAsync() {
+  //   let promise = await (() => new Promise(resolve => setTimeout(()=>resolve({}), 5000)))();
+  //   promise.status = 201;
 
-    setLoading(state=>({...state, isVisible: false}));
-    toggleBlockModal();
-    console.log (promise);
+  //   setLoading(state=>({...state, isVisible: false}));
+  //   toggleBlockModal();
+  //   console.log (promise);
 
-    if (promise.status === 200) setMessage(state=>({...state, isVisible: true, content: 'You are registered successfully', isRegistered: true})); 
-    else setMessage(state=>({...state, isVisible: true, content: 'You are  not registered', isRegistered: false}));
-  }
+  //   if (promise.status === 200) setMessage(state=>({...state, isVisible: true, content: 'You are registered successfully', isRegistered: true})); 
+  //   else setMessage(state=>({...state, isVisible: true, content: 'You are  not registered', isRegistered: false}));
+  // }
+  //------------------------------------------
 
   const onBlur = (setter, checker) => {
     setter(state=>({...state, touched: true}));
@@ -186,7 +156,6 @@ function Reg({toggleBlockModal}) {
             id='fromReg__name'
             label='NAME'
             placeholder='Type your name'
-            //callbacks={{onChange: onNameInput, onBlur: onBlurName}}
             callbacks={{onChange: onNameInput, onBlur: onBlur.bind(null, setName, checkName)}}
             state={name}
           />
@@ -231,7 +200,7 @@ function Reg({toggleBlockModal}) {
           />
           </section>
           <input type='submit' className='button2 xbutton1' value='Register' />
-          <div className='button2 Reg__button' id='Reg__button'>╳</div>
+          <div className='button2 close-button' id='Reg__button'>╳</div>
         </form>
       )}
       {loading.isVisible && (
@@ -246,7 +215,7 @@ function Reg({toggleBlockModal}) {
           {!message.isRegistered && (
             <button className='button4' onClick={onTryAgainButton}>Try again?</button>
           )}
-          <div className='button2 Reg__button' id='Reg__button'>╳</div>
+          <div className='button2 close-button' id='Reg__button'>╳</div>
         </div>
       )}
       
@@ -276,5 +245,41 @@ export default Reg;
 //--------------------------------
 
 {/* <button className='button2 xbutton1'>Register</button> */}
+
+//--------------------------------
+
+// const rules = {
+//   nameLengthMin: 1,
+//   nameLengthMax: 20,
+//   surnameLengthMin: 1,
+//   surnameLengthMax: 20,
+//   emailRegExp: /^\w[-._\w]*\w@\w[-._\w]*\w\.\w{2,3}$/,
+//   passwordLengthMin: 6,
+//   passwordLengthMax: 20,
+// }
+
+// const errors = {
+//   nameErrors: {
+//     noName: 'Type name',
+//     shortName: 'Name is short',
+//     longName: 'Name is long',
+//   },
+//   surnameErrors: {
+//     noSurname: 'Type surname',
+//     shortSurname: 'Surname is short',
+//     longSurname: 'Surname is long',
+//   },
+//   emailErrors: {
+//     noEmail: 'Type email',
+//     wrongEmail: 'Wrong email',
+//   },
+//   passwordErrors: {
+//     noPassword: 'Type password',
+//     noPasswordCopy: 'Repeat password',
+//     shortPassword: 'Password is short',
+//     longPassword: 'Password is long',
+//     noMatch: 'Passwords don\'t match', 
+//   }
+// }
 
 //--------------------------------

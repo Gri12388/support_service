@@ -6,7 +6,9 @@ import Reg from '../Reg/Reg.jsx';
 import mainLogo from '../../assets/images/logo.svg';
 import footerLogo from '../../assets/images/logo-invert.svg';
 import poster from '../../assets/images/poster.png';
+import loadingImage from '../../assets/images/loading.png';
 
+import '../../assets/styles/common.scss';
 import './Auth.scss';
 
 function Auth() {
@@ -14,7 +16,13 @@ function Auth() {
   const setIsModalBlocked = () => isModalBlocked = !isModalBlocked;
 
   const [isVisible, setIsVisible] = useState(false);
+  const [loading, setLoading] = useState({isLoading: false, isBlocked: false, message: ''});
 
+  // const showLoading = () => setLoading(state=>({...state, isLoading: true, isBlocked: true}));
+  const hideLoading = e => {
+    if (!loading.isBlocked && (e.target.id === 'Auth__modal-area1' || e.target.id === 'Auth__close-button')) setLoading({isLoading: false, isBlocked: false, message: ''});
+    debugger
+  } 
   const showModal = () => setIsVisible(true);
   const hideModal = (e) => {
     if (!isModalBlocked && (e.target.id === 'Auth__modal-area' || e.target.id === 'Reg__button')) setIsVisible(false);
@@ -28,7 +36,7 @@ function Auth() {
         </section>
         <section className='Auth__auth-section'>
           <img src={mainLogo} alt="logotype" className='Auth__main-logo' />
-          <Login />
+          <Login loading={loading} setLoading={setLoading} />
           <p className='text2 Auth__text'>
             Not a member?
             <span className='text2 interactiv Auth__text-marked' onClick={showModal}>
@@ -47,6 +55,22 @@ function Auth() {
           onClick={hideModal}
         >
           <Reg toggleBlockModal={setIsModalBlocked}/>
+        </div>
+      )}
+      {loading.isLoading && (
+        <div className='Auth__modal-area' id='Auth__modal-area1' onClick={hideLoading}>
+          <section className='Auth__message'>
+            {!loading.message && (
+              <img src={loadingImage} alt='loading' className='loading' />
+            )}
+            {loading.message && (
+              <>
+                <p className='text3'>{loading.message}</p> 
+                <div className='button2 close-button' id='Auth__close-button'>╳</div>
+              </>
+            )}
+
+          </section>
         </div>
       )}
     </div>
