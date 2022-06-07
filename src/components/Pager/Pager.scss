@@ -1,0 +1,15 @@
+@import url('../../assets/styles/normalize.scss');
+
+.Pager__bar_wrapper {
+  display: flex;
+  justify-content: end;
+  width: 100%;
+  height: 32px;
+}
+
+.Pager__bar {
+  //width: fit-content;
+  width: 32px;
+  height: 100%;
+  background-color: yellowgreen;
+}

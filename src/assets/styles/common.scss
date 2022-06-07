@@ -134,7 +134,8 @@
 .container2 {
   height: fit-content;
   max-height: 870px;
-  padding-top: 56px;
+  padding: 56px 56px 0 56px;
+  background-color: red;
 }
 
 .container3 {
@@ -180,7 +181,8 @@
 }
 
 .column5 {
-  width: 20.17%;
+  //width: 20.17%;
+  width: 16.9%;
 }
 
 .loading {

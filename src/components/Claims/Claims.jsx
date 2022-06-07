@@ -1,8 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import Status from '../Status/Status.jsx';
+//import Status from '../Status/Status.jsx';
 import ClaimRow from '../ClaimRow/ClaimRow.jsx';
+import Pager from '../Pager/Pager.jsx';
 
 import '../../assets/styles/common.scss';
 import './Claims.scss';
@@ -30,6 +31,7 @@ function Claims() {
         </section>
         <ClaimRow />
       </main>
+      <Pager />
     </div>
   );
 }
