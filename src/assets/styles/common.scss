@@ -21,6 +21,13 @@
   cursor: default;
 }
 
+.text3-link {
+  @extend .text3;
+  width: fit-content;
+  border-bottom: solid 1px v.$color20;
+  color: v.$color20;
+}
+
 .text4 {
   @include m.text(v.$font2, 36px, 43.57px, v.$color16);
   cursor: default;

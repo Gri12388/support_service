@@ -2,12 +2,13 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import Status from '../Status/Status.jsx';
+import ClaimRow from '../ClaimRow/ClaimRow.jsx';
 
 import '../../assets/styles/common.scss';
 import './Claims.scss';
 
 function Claims() {
-  
+
   return (
     <div className='container2'>
       <header className='Claims__header'>
@@ -19,15 +20,16 @@ function Claims() {
           🞣 Create claim
         </Link>
       </header>
-      <section className='Claims__table'>
-        <div className='Claims__table-head'>
+      <main className='Claims__table'>
+        <section className='Claims__table-head'>
           <p className='text7 column1'>Title</p>
           <p className='text7 column2'>Created</p>
           <p className='text7 column3'>Type</p>
           <p className='text7 column4'>Status</p>
           <p className='text7 column5'>Actions</p>
-        </div>
-      </section>
+        </section>
+        <ClaimRow />
+      </main>
     </div>
   );
 }

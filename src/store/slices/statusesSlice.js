@@ -5,6 +5,7 @@ const initialState = {
   1: {id: 1, status: 'DONE', color: '#00B894'},
   2: {id: 2, status: 'IN PROGRESS', color: '#FDCB6E'},
   3: {id: 3, status: 'DECLINED', color: '#E84393'},
+  4: {id: 4, status: 'UNDEFINED', color: '#ADADAD'},
 };
 
 const statusesSlice = createSlice({

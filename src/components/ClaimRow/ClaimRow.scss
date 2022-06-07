@@ -1,0 +1,16 @@
+@use '../../assets/styles/variables.scss' as v;
+@import url('../../assets/styles/normalize.scss');
+
+.CR__row {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  width: 100%;
+  height: fit-content;
+  min-height: 57px;
+  border-bottom: solid 1px v.$color15;
+  background-color: v.$color3;
+  &:hover {
+    background-color: v.$color19;
+  }
+}

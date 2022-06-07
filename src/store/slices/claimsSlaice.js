@@ -26,4 +26,6 @@ export const selectClaims = state => Object.values(state.claims.values);
 
 export const selectTotalClaimsNumber = state => state.claims.totalItems;
 
+export const selectToken = state => state.claims.token;
+
 export default claimsSlice.reducer;
