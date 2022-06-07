@@ -1,3 +1,4 @@
+@use '../../assets/styles/variables.scss' as v;
 @import url('../../assets/styles/normalize.scss');
 
 .Pager__bar_wrapper {
@@ -8,8 +9,37 @@
 }
 
 .Pager__bar {
+  display: flex;
+  gap: 8px;
   //width: fit-content;
-  width: 32px;
+  width: fit-content;
   height: 100%;
-  background-color: yellowgreen;
+}
+
+.Pager__item1 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 32px;
+  height: 32px;
+}
+
+.Pager__item {
+  @extend .Pager__item1;
+  border: solid 1px v.$color21;
+  cursor: pointer;
+  transition: v.$transition;
+  &:hover {
+    background-color: v.$color21;
+  }
+}
+
+.Pager__pointer {
+  border-color: v.$color1;
+  color: v.$color1;
+  transition: v.$transition;
+  &:hover {
+    color: v.$color3;
+    background-color: v.$color1;
+  }
 }

@@ -39,3 +39,8 @@ export const messages = {
   alreadyRegistered: 'User with the same credentials is already registered',
   default: 'Something went wrong'
 }
+
+export const pager = {
+  base: 10,
+  stop: 6
+}
