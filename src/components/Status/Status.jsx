@@ -11,7 +11,7 @@ function Status({ statusId }) {
 
   return (
     <div className='Status__badge' style={{backgroundColor: statuses[statusId].color}}>
-      <p className='text6'>{statuses[statusId].status}</p>
+      <p className='Status__text'>{statuses[statusId].status}</p>
     </div>
   );
 }

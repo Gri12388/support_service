@@ -1,3 +1,5 @@
+@use '../../assets/styles/variables.scss' as v;
+@use '../../assets/styles/mixins' as m;
 @import url('../../assets/styles/normalize.scss');
 
 .Status__badge {
@@ -7,4 +9,20 @@
   width: 124px;
   height: 32px;
   border-radius: 16px;
+}
+
+.Status__text {
+  @include m.text(v.$font3, 12px, 14.52px, v.$color3, 2.5px);
+  cursor: default;
+}
+
+@media (max-width: 799px) {
+  .Status__badge {
+    width: 93px;
+    height: 24px;
+  }
+
+  .Status__text {
+    @include m.text(v.$font3, 8px, 9px, v.$color3, 2.5px);
+  }
 }

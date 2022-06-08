@@ -58,6 +58,16 @@
   cursor: default;
 }
 
+.text10 {
+  @include m.text(v.$font2, 16px, 20px, v.$color3, 0.25px);
+  cursor: default;
+}
+
+.text11 {
+  @include m.text(v.$font2, 16px, 20px, v.$color16, 0.25px);
+  cursor: default;
+}
+
 %button {
   width: 82px;
   height: 48px;
@@ -245,6 +255,11 @@
 }
 
 @media (max-width: 799px) {
+  .container1 {
+    min-height: 100vh;
+    height: fit-content;
+  }
+
   .container2 {
     max-height: none;
     padding: 24px 16px 0 16px;

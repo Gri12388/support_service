@@ -23,7 +23,6 @@
   max-width: 1710px;
   height: 536px;
   margin-bottom: 56px;
-  background-color: yellow;
 }
 
 .Claims__table-head {
@@ -49,9 +48,23 @@
   }
 }
 
+.Claims__tiles {
+  display: none;
+  justify-content: center;
+  align-content: space-between;
+  flex-wrap: wrap;
+  gap: 24px;
+  height: fit-content;
+  margin-bottom: 28px;
+}
+
 @media (max-width: 799px) {
   .Claims__table {
     display: none;
+  }
+
+  .Claims__tiles {
+    display: flex;
   }
 
   .Claims__header {

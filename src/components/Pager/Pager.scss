@@ -43,3 +43,10 @@
     background-color: v.$color1;
   }
 }
+
+@media (max-width: 799px) {
+  .Pager__bar_wrapper {
+    justify-content: center;
+    margin-bottom: 28px;
+  }
+}

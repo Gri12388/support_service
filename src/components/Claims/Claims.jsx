@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 import ClaimRow from '../ClaimRow/ClaimRow.jsx';
+import ClaimTile from '../ClaimTile/ClaimTile.jsx';
 import Pager from '../Pager/Pager.jsx';
 
 import { selectClaims } from '../../store/slices/claimsSlaice.js';
@@ -55,9 +56,39 @@ function Claims() {
     }
 
     return (
-      <section className='Claims__row'>
+      <section key={item._id} className='Claims__row'>
         <ClaimRow item={item} type={type} status={status}/>  
       </section>
+    );
+  });
+
+  const tiles = claims.map((item) => {
+    let type, status;
+
+    if (!item.type || !item.type.name) type = types[4];
+    else {
+      type = types.find(elem => {
+        let el = elem.type.toLowerCase();
+        let it = item.type.name.toLowerCase();
+        let res = el.localeCompare(it);
+        if (res === 0) return true;
+        else return false;
+      });
+    }
+
+    if (!item.status || !item.status.name) status = statuses[4];
+    else {
+      status = statuses.find(elem => {
+        let el = elem.status.toLowerCase();
+        let it = item.status.name.toLowerCase();
+        let res = el.localeCompare(it);
+        if (res === 0) return true;
+        else return false;
+      })
+    }
+
+    return (
+      <ClaimTile key={item._id} item={item} type={type} status={status}/>  
     );
   });
 
@@ -81,6 +112,9 @@ function Claims() {
           <p className='text7 column5'>Actions</p>
         </section>
         {rows}
+      </main>
+      <main className='Claims__tiles'>
+        {tiles}
       </main>
 
       <Pager />
