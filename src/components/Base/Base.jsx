@@ -1,5 +1,8 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { Outlet, useLocation } from "react-router-dom";
+
+import { selectStatus } from '../../store/slices/claimsSlaice.js';
 
 import Search from '../Search/Search.jsx';
 
@@ -16,8 +19,12 @@ import basePieChart from '../../assets/images/pie-chart.svg';
 import baseBell from '../../assets/images/bell.svg';
 import baseUser from '../../assets/images/user.png';
 import baseQuit from '../../assets/images/quit.svg';
+import loadingImage from '../../assets/images/loading.png';
 
 function Base() {
+
+  let status = useSelector(selectStatus);
+
   const location = useLocation();
   const search = location.pathname === '/base/claims' ? <Search /> : null;
 
@@ -45,6 +52,13 @@ function Base() {
           <Outlet />
         </main>
       </section>
+      {status === 'loading' && (
+        <div className='modal-area'>
+          <div className='modal-message'>
+            <img src={loadingImage} alt='loading' className='loading' />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

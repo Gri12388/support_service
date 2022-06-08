@@ -70,8 +70,6 @@ function ClaimRow() {
 
     console.log(items);
 
-
-
   return (
     <>
       {items}

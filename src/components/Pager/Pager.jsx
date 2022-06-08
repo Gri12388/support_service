@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { pager } from '../../data/data.js';
-import { selectTotalClaimsNumber } from '../../store/slices/claimsSlaice.js';
+import { selectTotalClaimsNumber, fetchClaims, selectToken } from '../../store/slices/claimsSlaice.js';
 
 import './Pager.scss';
 
 function Pager() {
 
-  
+  let token = useSelector(selectToken);
+  const dispatch = useDispatch();
 
   const totalClaimsNumber = useSelector(selectTotalClaimsNumber);
-  let [pageNumber, setPageNumber] = useState(10);
+  let [pageNumber, setPageNumber] = useState(Math.ceil(totalClaimsNumber / pager.base));
   // totalClaimsNumber / pager.base
 
   
@@ -68,6 +69,7 @@ function Pager() {
     if (temp.pointer < temp.last) temp.pointer++;
     controlRight(temp);
     setPageBar(temp);
+    dispatch(fetchClaims({token: token, offset: (temp.pointer - 1) * pager.base, limit: pager.base}));
   }
 
   const decrementPointer = () => {
@@ -75,6 +77,7 @@ function Pager() {
     if (temp.pointer > 1) temp.pointer--;
     controlLeft(temp);
     setPageBar(temp);
+    dispatch(fetchClaims({token: token, offset: (temp.pointer - 1) * pager.base, limit: pager.base}));
   }
 
   const choosePage = e => {
@@ -83,9 +86,27 @@ function Pager() {
     controlLeft(temp);
     controlRight(temp);
     setPageBar(temp);
+    dispatch(fetchClaims({token: token, offset: (temp.pointer - 1) * pager.base, limit: pager.base}));
   } 
 
-  const choosePageLight = e => setPageBar(state=>({...state, pointer: +e.target.id}));
+  const chooseExtremePage = e => {
+    let temp = {...pageBar};
+    temp.pointer = +e.target.id;
+    if (temp.pointer === temp.last) {
+      temp.stop = temp.last - 1;
+      temp.start = temp.last - 5;
+      temp.displayRight = false;
+      temp.displayLeft = true;
+    }
+    if (temp.pointer === 1) {
+      temp.stop = 6;
+      temp.start = 2;
+      temp.displayRight = true;
+      temp.displayLeft = false;
+    }
+    setPageBar(temp);
+    dispatch(fetchClaims({token: token, offset: (temp.pointer - 1) * pager.base, limit: pager.base}));
+  }
   
 
   const pages = [];
@@ -98,19 +119,25 @@ function Pager() {
   return (
     <section className='Pager__bar_wrapper'>
       <div className='Pager__bar'>
-        <div className='Pager__item' onClick={decrementPointer}>&lt;</div>
+        <div  className='Pager__item' 
+              onClick={decrementPointer}
+              style={{visibility: pageBar.pointer !== 1 ? 'visible' : 'hidden'}}
+        >&lt;</div>
         <div  id={1} 
               className={pageBar.pointer === 1 ? 'Pager__item Pager__pointer' : 'Pager__item'} 
-              onClick={choosePageLight}
+              onClick={chooseExtremePage}
         >{1}</div>
         {pageBar.displayLeft && <div className='Pager__item1'>...</div>}
         {pages}
         {pageBar.displayRight && <div className='Pager__item1'>...</div>}
         <div  id={pageNumber} 
               className={pageBar.pointer === pageNumber ? 'Pager__item Pager__pointer' : 'Pager__item'} 
-              onClick={choosePageLight}
+              onClick={chooseExtremePage}
         >{pageNumber}</div>
-        <div className='Pager__item' onClick={incrementPointer}>&gt;</div>
+        <div  className='Pager__item' 
+              onClick={incrementPointer}
+              style={{visibility: pageBar.pointer !== pageBar.last ? 'visible' : 'hidden'}}
+        >&gt;</div>
       </div>
     </section>
   );
