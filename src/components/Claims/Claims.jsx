@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
-//import Status from '../Status/Status.jsx';
 import ClaimRow from '../ClaimRow/ClaimRow.jsx';
 import Pager from '../Pager/Pager.jsx';
+
+import { selectClaims } from '../../store/slices/claimsSlaice.js';
+import { selectTypes } from '../../store/slices/typesSlice.js';
+import { selectStatuses } from '../../store/slices/statusesSlice.js';
 
 import '../../assets/styles/common.scss';
 import './Claims.scss';
@@ -20,6 +24,42 @@ function Claims() {
       window.removeEventListener('resize', onClaimsWindowWidthResize);
     }
   }, []);
+
+  const claims = useSelector(selectClaims);
+  const types = useSelector(selectTypes);
+  const statuses = useSelector(selectStatuses);
+
+  const rows = claims.map((item) => {
+    let type, status;
+
+    if (!item.type || !item.type.name) type = types[4];
+    else {
+      type = types.find(elem => {
+        let el = elem.type.toLowerCase();
+        let it = item.type.name.toLowerCase();
+        let res = el.localeCompare(it);
+        if (res === 0) return true;
+        else return false;
+      });
+    }
+
+    if (!item.status || !item.status.name) status = statuses[4];
+    else {
+      status = statuses.find(elem => {
+        let el = elem.status.toLowerCase();
+        let it = item.status.name.toLowerCase();
+        let res = el.localeCompare(it);
+        if (res === 0) return true;
+        else return false;
+      })
+    }
+
+    return (
+      <section className='Claims__row'>
+        <ClaimRow item={item} type={type} status={status}/>  
+      </section>
+    );
+  });
 
   return (
     <div className='container2'>
@@ -40,9 +80,9 @@ function Claims() {
           <p className='text7 column4'>Status</p>
           <p className='text7 column5'>Actions</p>
         </section>
-        <ClaimRow />
+        {rows}
       </main>
-      
+
       <Pager />
     </div>
   );

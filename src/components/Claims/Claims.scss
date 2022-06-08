@@ -35,6 +35,20 @@
   background-color: v.$color17;
 }
 
+.Claims__row {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  width: 100%;
+  height: 48px;
+  overflow: hidden;
+  border-bottom: solid 1px v.$color15;
+  background-color: v.$color3;
+  &:hover {
+    background-color: v.$color19;
+  }
+}
+
 @media (max-width: 799px) {
   .Claims__table {
     display: none;
