@@ -53,6 +53,11 @@
   cursor: default;
 }
 
+.text9 {
+  @include m.text(v.$font2, 24px, 29.05px, v.$color16);
+  cursor: default;
+}
+
 %button {
   width: 82px;
   height: 48px;
@@ -237,4 +242,11 @@
 
 .interactiv {
   cursor: pointer;
+}
+
+@media (max-width: 799px) {
+  .container2 {
+    max-height: none;
+    padding: 24px 16px 0 16px;
+  }
 }

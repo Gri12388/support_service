@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 //import Status from '../Status/Status.jsx';
@@ -10,15 +10,26 @@ import './Claims.scss';
 
 function Claims() {
 
+  let [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  const onClaimsWindowWidthResize = () => setWindowWidth(window.innerWidth);
+
+  useEffect(()=> {
+    window.addEventListener('resize', onClaimsWindowWidthResize);
+    return () => {
+      window.removeEventListener('resize', onClaimsWindowWidthResize);
+    }
+  }, []);
+
   return (
     <div className='container2'>
       <header className='Claims__header'>
-        <p className='text4'>Your claims</p>
+        <p className={windowWidth > 799 ? 'text4' : 'text9'}>Your claims</p>
         <Link 
           className='button2 Claims__button'
           to='/base/new'
         >
-          🞣 Create claim
+          {windowWidth > 799 ? '🞣 Create claim' : '🞣'}
         </Link>
       </header>
       <main className='Claims__table'>

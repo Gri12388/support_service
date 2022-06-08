@@ -49,7 +49,17 @@
   width: 24px;
   height: 24px;
   margin-left: 16px;
-  background-color: red;
+}
+
+.Base__burger {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.Base__burger_line {
+  height: 2px;
+  background-color: v.$color3;
 }
 
 .Base__header {
@@ -88,10 +98,6 @@
 @media (max-width: 799px) {
   .Base__aside, .Base__full-name, .Base__quit {
     display: none;
-  }
-
-  .Base__burger {
-    display: flex;
   }
 
   .Base__header_wrapper {

@@ -54,7 +54,11 @@ function Base() {
       </aside>
       <section className='Base__section'>
         <div className='Base__header_wrapper'>
-          <div className='Base__burger'></div>
+          <div className='Base__burger'>
+            <div className='Base__burger_line' />
+            <div className='Base__burger_line' />
+            <div className='Base__burger_line' />
+          </div>
           <header className='Base__header'>
             {search}
             <img src={windowWidth > 799 ? baseBell : baseBell1} alt="bell" className='Base__bell'/>
