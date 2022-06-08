@@ -163,25 +163,40 @@
   align-items: center;
 }
 
+%column {
+  padding-right: 16px;
+}
+
 .column1 {
+  @extend %column;
   width: 27.43%;
+  min-width: 105px;
+  height: fit-content;
+  max-height: 48px;
+  overflow: hidden;
 }
 
 .column2 {
+  @extend %column;
   width: 17.54%;
+  min-width: 105px;
 }
 
 .column3 {
-  width: 16.37%;
+  @extend %column;
+  width: 17.54%;
+  min-width: 175px;
 }
 
 .column4 {
-  width: 15.9%;
+  @extend %column;
+  width: 15.91%;
+  min-width: 140px;
 }
 
 .column5 {
-  //width: 20.17%;
-  width: 16.9%;
+  @extend %column;
+  width: 20.18%;
 }
 
 .modal-area {

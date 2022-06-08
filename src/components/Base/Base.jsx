@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Outlet, useLocation } from "react-router-dom";
 
@@ -17,6 +17,7 @@ import baseLogo from '../../assets/images/logo-invert.svg';
 import baseNavigation from '../../assets/images/navigation.svg';
 import basePieChart from '../../assets/images/pie-chart.svg';
 import baseBell from '../../assets/images/bell.svg';
+import baseBell1 from '../../assets/images/bell1.svg';
 import baseUser from '../../assets/images/user.png';
 import baseQuit from '../../assets/images/quit.svg';
 import loadingImage from '../../assets/images/loading.png';
@@ -24,6 +25,17 @@ import loadingImage from '../../assets/images/loading.png';
 function Base() {
 
   let status = useSelector(selectStatus);
+
+  let [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  const onBaseWindowWidthResize = () => setWindowWidth(window.innerWidth);
+
+  useEffect(()=> {
+    window.addEventListener('resize', onBaseWindowWidthResize);
+    return () => {
+      window.removeEventListener('resize', onBaseWindowWidthResize);
+    }
+  }, []);
 
   const location = useLocation();
   const search = location.pathname === '/base/claims' ? <Search /> : null;
@@ -41,13 +53,16 @@ function Base() {
         <img src={baseNavigation} alt="globe" className='interactiv Base__pic' />
       </aside>
       <section className='Base__section'>
-        <header className='Base__header'>
-          {search}
-          <img src={baseBell} alt="bell" className='Base__bell'/>
-          <img src={baseUser} alt="user" className='Base__user'/>
-          <span className='Base__full-name'>Ivan Ivanov</span>
-          <img src={baseQuit} alt="quit" className='Base__quit'/>
-        </header>
+        <div className='Base__header_wrapper'>
+          <div className='Base__burger'></div>
+          <header className='Base__header'>
+            {search}
+            <img src={windowWidth > 799 ? baseBell : baseBell1} alt="bell" className='Base__bell'/>
+            <img src={baseUser} alt="user" className='Base__user'/>
+            <span className='Base__full-name'>Ivan Ivanov</span>
+            <img src={baseQuit} alt="quit" className='Base__quit'/>
+          </header>
+        </div>
         <main>
           <Outlet />
         </main>

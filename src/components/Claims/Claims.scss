@@ -35,3 +35,8 @@
   background-color: v.$color17;
 }
 
+@media (max-width: 799px) {
+  .Claims__table {
+    display: none;
+  }
+}

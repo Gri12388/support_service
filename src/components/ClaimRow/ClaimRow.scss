@@ -6,8 +6,8 @@
   justify-content: end;
   align-items: center;
   width: 100%;
-  height: fit-content;
-  min-height: 48px;
+  height: 48px;
+  overflow: hidden;
   border-bottom: solid 1px v.$color15;
   background-color: v.$color3;
   &:hover {
