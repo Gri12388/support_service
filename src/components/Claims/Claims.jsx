@@ -42,6 +42,7 @@ function Claims() {
         </section>
         <ClaimRow />
       </main>
+      
       <Pager />
     </div>
   );

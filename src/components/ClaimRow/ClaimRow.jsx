@@ -14,13 +14,9 @@ import './ClaimRow.scss';
 
 function ClaimRow() {
 
-  console.log (Date('2021-11-11T09:14:33.869Z').toLocaleString('en-US'));
-
   const claims = useSelector(selectClaims);
   const types = useSelector(selectTypes);
   const statuses = useSelector(selectStatuses);
-  
-  console.log (claims);
   
   const items = claims.map((item) => {
     let type, status;
@@ -67,8 +63,6 @@ function ClaimRow() {
       </div>
     </section>
   )});
-
-    console.log(items);
 
   return (
     <>
