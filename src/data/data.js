@@ -42,5 +42,7 @@ export const messages = {
 
 export const pager = {
   base: 10,
-  stop: 6
+  edge: 500,
+  stopMin: 4,
+  stopMax: 6
 }
