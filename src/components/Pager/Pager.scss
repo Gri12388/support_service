@@ -50,3 +50,14 @@
     margin-bottom: 28px;
   }
 }
+
+@media (max-width: 399px) {
+  .Pager__bar {
+    gap: 4px;
+  }
+  
+  .Pager__item1 {
+    width: 25px;
+    height: 25px;
+  }
+}
