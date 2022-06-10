@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import ClaimRow from '../ClaimRow/ClaimRow.jsx';
 import ClaimTile from '../ClaimTile/ClaimTile.jsx';
@@ -10,12 +10,18 @@ import { selectClaims } from '../../store/slices/claimsSlaice.js';
 import { selectTypes } from '../../store/slices/typesSlice.js';
 import { selectStatuses } from '../../store/slices/statusesSlice.js';
 
+import { fetchClaims } from '../../store/slices/claimsSlaice.js';
+
 import '../../assets/styles/common.scss';
 import './Claims.scss';
 
 function Claims() {
 
   let [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  const token = localStorage.getItem('token');
+
+  const dispatch = useDispatch();
 
   const onClaimsWindowWidthResize = () => setWindowWidth(window.innerWidth);
 
@@ -26,10 +32,15 @@ function Claims() {
     }
   }, []);
 
+  useEffect(()=>{
+    dispatch(fetchClaims({token: token, offset: 1, limit: 10}));
+  }, [])
+
   const claims = useSelector(selectClaims);
   const types = useSelector(selectTypes);
   const statuses = useSelector(selectStatuses);
 
+  //debugger
   const rows = claims.map((item) => {
     let type, status;
 

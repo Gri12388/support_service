@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from "react-router-dom";
 
 import InputText from '../InputText/InputText.jsx';
+
 import { rules, errors, messages } from '../../data/data.js';
 import { upload } from '../../store/slices/claimsSlaice.js';
 
@@ -80,23 +81,30 @@ function Login({ setLoading, email, setEmail, password, setPassword }) {
     }
     
     let data = await promise.json();
-    let promiseClaims = await fetch('http://localhost:3001/claim?offset=0&limit=10', {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${data.token}`
-      },
-    });
 
-    switch(promiseClaims.status) {
-      case 200: break;
-      default:  setLoading(state=>({...state, isBlocked: false, message: messages.default}));
-                return;
-    }
+//-------------------------------------------------------------------
 
-    let result = await promiseClaims.json();
-    result.token = data.token;
+    // let promiseClaims = await fetch('http://localhost:3001/claim?offset=0&limit=10', {
+    //   method: 'GET',
+    //   headers: {
+    //     Authorization: `Bearer ${data.token}`
+    //   },
+    // });
 
-    dispatch(upload(result));
+    // switch(promiseClaims.status) {
+    //   case 200: break;
+    //   default:  setLoading(state=>({...state, isBlocked: false, message: messages.default}));
+    //             return;
+    // }
+
+    // let result = await promiseClaims.json();
+    // result.token = data.token;
+
+    // dispatch(upload(result));
+
+//-------------------------------------------------------------------
+
+    localStorage.setItem('token', data.token);
     setLoading({isLoading: false, isBlocked: false, message: ''});
     navigate('/base/claims');
   }

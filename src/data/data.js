@@ -1,3 +1,5 @@
+import { selectToken } from "../store/slices/claimsSlaice"
+
 export const rules = {
   nameLengthMin: 1,
   nameLengthMax: 20,
@@ -46,3 +48,5 @@ export const pager = {
   stopMin: 4,
   stopMax: 6
 }
+
+export let token;
