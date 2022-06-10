@@ -6,20 +6,22 @@ import ClaimRow from '../ClaimRow/ClaimRow.jsx';
 import ClaimTile from '../ClaimTile/ClaimTile.jsx';
 import Pager from '../Pager/Pager.jsx';
 
-import { selectClaims } from '../../store/slices/claimsSlaice.js';
+import { selectClaims } from '../../store/slices/claimsSlice.js';
 import { selectTypes } from '../../store/slices/typesSlice.js';
 import { selectStatuses } from '../../store/slices/statusesSlice.js';
-
-import { fetchClaims } from '../../store/slices/claimsSlaice.js';
+import { fetchClaims } from '../../store/slices/claimsSlice.js';
 
 import '../../assets/styles/common.scss';
 import './Claims.scss';
+
 
 function Claims() {
 
   let [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
-  const token = localStorage.getItem('token');
+  let token = localStorage.getItem('token');
+
+  let offset = +localStorage.getItem('offset');
 
   const dispatch = useDispatch();
 
@@ -32,15 +34,16 @@ function Claims() {
     }
   }, []);
 
+
+  
   useEffect(()=>{
-    dispatch(fetchClaims({token: token, offset: 1, limit: 10}));
+    dispatch(fetchClaims({token: token, offset: offset, limit: 10}));
   }, [])
 
   const claims = useSelector(selectClaims);
   const types = useSelector(selectTypes);
   const statuses = useSelector(selectStatuses);
 
-  //debugger
   const rows = claims.map((item) => {
     let type, status;
 

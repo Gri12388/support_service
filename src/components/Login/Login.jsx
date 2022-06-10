@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import InputText from '../InputText/InputText.jsx';
 
 import { rules, errors, messages } from '../../data/data.js';
-import { upload } from '../../store/slices/claimsSlaice.js';
+import { upload } from '../../store/slices/claimsSlice.js';
 
 import '../../assets/styles/common.scss';
 import './Login.scss';
@@ -46,19 +46,6 @@ function Login({ setLoading, email, setEmail, password, setPassword }) {
     
     sendRequest(JSON.stringify(post));
     setLoading(state=>({...state, isLoading: true, isBlocked: true}));
-
-
-    // setForm(state=>({...state, isVisible: false}));
-    // setLoading(state=>({...state, isVisible: true}));
-    // toggleBlockModal();
-    
-
-    //---------------------------------------------------
-    // testAsync();
-    // setForm(state=>({...state, isVisible: false}));
-    // setLoading(state=>({...state, isVisible: true}));
-    // toggleBlockModal();
-    //---------------------------------------------------
 
   }
 
@@ -104,7 +91,10 @@ function Login({ setLoading, email, setEmail, password, setPassword }) {
 
 //-------------------------------------------------------------------
 
+    
+    
     localStorage.setItem('token', data.token);
+    localStorage.setItem('offset', 0);
     setLoading({isLoading: false, isBlocked: false, message: ''});
     navigate('/base/claims');
   }

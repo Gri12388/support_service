@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Outlet, useLocation } from "react-router-dom";
 
-import { selectStatus } from '../../store/slices/claimsSlaice.js';
+import { selectStatus } from '../../store/slices/claimsSlice.js';
 
 import Search from '../Search/Search.jsx';
+import Claims from '../Claims/Claims.jsx';
+
 
 import './Base.scss';
 
@@ -68,7 +70,8 @@ function Base() {
           </header>
         </div>
         <main>
-          <Outlet />
+          <Claims />
+          {/* <Outlet /> */}
         </main>
       </section>
       {status === 'loading' && (

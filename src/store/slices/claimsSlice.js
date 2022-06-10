@@ -1,5 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
+import { pager } from '../../data/data.js';
+
 const initialState = {
   token: '',
   totalItems: 0,
@@ -8,17 +10,22 @@ const initialState = {
 }
 
 export const fetchClaims = createAsyncThunk('claims/fetchClaims', async ({token, offset, limit}) => {
-  const promise = await fetch (`http://localhost:3001/claim?offset=${offset}&limit=${limit}`, {
-    method: 'GET',
+  while(true) {
+    const promise = await fetch (`http://localhost:3001/claim?offset=${offset}&limit=${limit}`, {
+      method: 'GET',
       headers: {
-        Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${token}`
       },
-  });
-
-  if (promise.status !== 200) return;
-  let result = await promise.json();
-  return result;
-
+    });
+    if (promise.status !== 200) return;
+    let result = await promise.json();
+    let maxOffset = Math.floor(result.totalItems / pager.base);
+    if (offset <= maxOffset) {
+      localStorage.setItem('offset', offset);
+      return result;
+    }
+    offset = maxOffset;  
+  }
 })
 
 const claimsSlice = createSlice({
@@ -46,6 +53,7 @@ const claimsSlice = createSlice({
         });
         state.values = temp;
         state.status = 'ok';
+      
       })
   }, 
 });
