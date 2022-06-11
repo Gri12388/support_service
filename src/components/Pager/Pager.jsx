@@ -146,6 +146,7 @@ function Pager() {
     controlRight(temp);
     dispatchPagerState(setPagerState(temp));
     dispatch(fetchClaims({token: token, offset: (temp.pointer - 1) * pager.base, limit: pager.base}));
+
   } 
 
   const chooseExtremePage = e => {

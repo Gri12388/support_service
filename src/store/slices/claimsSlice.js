@@ -19,9 +19,10 @@ export const fetchClaims = createAsyncThunk('claims/fetchClaims', async ({token,
     });
     if (promise.status !== 200) return;
     let result = await promise.json();
-    let maxOffset = Math.floor(result.totalItems / pager.base);
+    let maxOffset = (Math.floor(result.totalItems / pager.base) * pager.base);
     if (offset <= maxOffset) {
       localStorage.setItem('offset', offset);
+      debugger
       return result;
     }
     offset = maxOffset;  

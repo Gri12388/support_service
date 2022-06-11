@@ -40,6 +40,7 @@ function Claims() {
     dispatch(fetchClaims({token: token, offset: offset, limit: 10}));
   }, [])
 
+
   const claims = useSelector(selectClaims);
   const types = useSelector(selectTypes);
   const statuses = useSelector(selectStatuses);

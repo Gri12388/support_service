@@ -70,8 +70,8 @@ function Base() {
           </header>
         </div>
         <main>
-          <Claims />
-          {/* <Outlet /> */}
+          {/* <Claims /> */}
+          <Outlet />
         </main>
       </section>
       {status === 'loading' && (
