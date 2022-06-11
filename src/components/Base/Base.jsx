@@ -10,7 +10,7 @@ import Slider from '../Slider/Slider.jsx';
 import '../../assets/styles/common.scss';
 import './Base.scss';
 
-import baseArchive from '../../assets/images/globe.svg';
+import baseArchive from '../../assets/images/archive.svg';
 import baseDatabase from '../../assets/images/database.svg';
 import baseDollar from '../../assets/images/dollar.svg';
 import baseGlobe from '../../assets/images/globe.svg';

@@ -6,8 +6,9 @@
   top: 0;
   width: 256px;
   height: 100%;
+  padding-top: 16px + 64px;
   transition: v.$transition;
-  background-color: yellow;
+  background-color: v.$color1;
 }
 
 .Slider__slider {
@@ -18,5 +19,26 @@
   &_off {
     @extend %slider;
     left: -100%;
+  }
+}
+
+.Slider__item {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 24px;
+  height: 40px;
+  padding-left: 16px;
+}
+
+.Slider__image {
+  width: 40px;
+  height: 40px;
+}
+
+.Slider__text {
+  transition: v.$transition;
+  &:hover {
+    color: v.$color8;
   }
 }
