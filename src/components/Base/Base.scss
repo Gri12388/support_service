@@ -1,5 +1,7 @@
+@use 'sass:math' as math;
 @use '../../assets/styles/variables.scss' as v;
 @use '../../assets/styles/mixins' as m;
+
 @import url('../../assets/styles/normalize.scss');
 
 .Base__container {
@@ -46,20 +48,6 @@
 
 .Base__burger {
   display: none;
-  width: 24px;
-  height: 24px;
-  margin-left: 16px;
-}
-
-.Base__burger {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.Base__burger_line {
-  height: 2px;
-  background-color: v.$color3;
 }
 
 .Base__header {
@@ -95,14 +83,77 @@
   margin-right: 24px;
 }
 
+
+
+
+
 @media (max-width: 799px) {
   .Base__aside, .Base__full-name, .Base__quit {
     display: none;
   }
 
   .Base__header_wrapper {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 2;
+    width: 100%;
     height: 64px;
     background-color: v.$color1;
+  }
+
+  .Base__burger {
+    position: relative;
+    display: block;
+    width: 24px;
+    height: 24px;
+    margin-left: 16px;
+  }
+
+  %burger-line {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: v.$color3;
+    transition: v.$transition;
+    &_cross {
+      width: math.hypot(100, 100) * 1%;
+      transform-origin: left top;
+    }
+  }
+  
+  .Base__burger-line1 {
+    @extend %burger-line;
+    top: 0;
+    &_cross {
+      @extend .Base__burger-line1;
+      @extend %burger-line_cross;
+      transform: rotate(45deg);
+    }
+  }
+  
+  .Base__burger-line2 {
+    @extend %burger-line;
+    top: 50%;
+    transform: translateY(-50%);
+    &_cross {
+      display: none;
+    }
+  }
+  
+  .Base__burger-line3 {
+    @extend %burger-line;
+    bottom: 0;
+    &_cross {
+      @extend .Base__burger-line3;
+      @extend %burger-line_cross;
+      transform: rotate(-45deg);
+    }
+  }
+
+  .Base__main {
+    padding-top: 64px;
   }
 
   .Base__user {

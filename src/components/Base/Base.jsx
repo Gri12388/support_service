@@ -5,9 +5,9 @@ import { Outlet, useLocation } from "react-router-dom";
 import { selectStatus } from '../../store/slices/claimsSlice.js';
 
 import Search from '../Search/Search.jsx';
-import Claims from '../Claims/Claims.jsx';
+import Slider from '../Slider/Slider.jsx';
 
-
+import '../../assets/styles/common.scss';
 import './Base.scss';
 
 import baseArchive from '../../assets/images/globe.svg';
@@ -30,6 +30,8 @@ function Base() {
 
   let [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
+  let [sliderConfig, setSliderConfig] = useState({isVisible: false});
+
   const onBaseWindowWidthResize = () => setWindowWidth(window.innerWidth);
 
   useEffect(()=> {
@@ -38,6 +40,13 @@ function Base() {
       window.removeEventListener('resize', onBaseWindowWidthResize);
     }
   }, []);
+
+  const showSlider = () => setSliderConfig(state=>({...state, isVisible: true}));
+  const hideSlider = () => setSliderConfig(state=>({...state, isVisible: false}));
+  const burgerHandler = () => {
+    if (sliderConfig.isVisible) hideSlider();
+    else showSlider();
+  }
 
   const location = useLocation();
   const search = location.pathname === '/base/claims' ? <Search /> : null;
@@ -56,10 +65,10 @@ function Base() {
       </aside>
       <section className='Base__section'>
         <div className='Base__header_wrapper'>
-          <div className='Base__burger'>
-            <div className='Base__burger_line' />
-            <div className='Base__burger_line' />
-            <div className='Base__burger_line' />
+          <div className='Base__burger' onClick={burgerHandler}>
+            <div className={sliderConfig.isVisible ? 'Base__burger-line1_cross' : 'Base__burger-line1'} />
+            <div className={sliderConfig.isVisible ? 'Base__burger-line2_cross' : 'Base__burger-line2'} />
+            <div className={sliderConfig.isVisible ? 'Base__burger-line3_cross' : 'Base__burger-line3'} />
           </div>
           <header className='Base__header'>
             {search}
@@ -69,8 +78,7 @@ function Base() {
             <img src={baseQuit} alt="quit" className='Base__quit'/>
           </header>
         </div>
-        <main>
-          {/* <Claims /> */}
+        <main className='Base__main'>
           <Outlet />
         </main>
       </section>
@@ -81,6 +89,9 @@ function Base() {
           </div>
         </div>
       )}
+      <Slider sliderConfig={sliderConfig} 
+              functions={{setSliderConfig: setSliderConfig}}
+      />
     </div>
   );
 }

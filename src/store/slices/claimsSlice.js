@@ -22,7 +22,6 @@ export const fetchClaims = createAsyncThunk('claims/fetchClaims', async ({token,
     let maxOffset = (Math.floor(result.totalItems / pager.base) * pager.base);
     if (offset <= maxOffset) {
       localStorage.setItem('offset', offset);
-      debugger
       return result;
     }
     offset = maxOffset;  

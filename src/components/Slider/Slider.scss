@@ -1,0 +1,22 @@
+@use '../../assets/styles/variables.scss' as v;
+@import url('../../assets/styles/normalize.scss');
+
+%slider {
+  position: absolute;
+  top: 0;
+  width: 256px;
+  height: 100%;
+  transition: v.$transition;
+  background-color: yellow;
+}
+
+.Slider__slider {
+  &_on {
+    @extend %slider;
+    left: 0;
+  };
+  &_off {
+    @extend %slider;
+    left: -100%;
+  }
+}
