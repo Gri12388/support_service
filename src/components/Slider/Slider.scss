@@ -29,6 +29,12 @@
   gap: 24px;
   height: 40px;
   padding-left: 16px;
+  &:hover .Slider__svg {
+    stroke: v.$color8;
+  };
+  &:hover .Slider__text {
+    color: v.$color8;
+  }
 }
 
 .Slider__image {
@@ -38,7 +44,12 @@
 
 .Slider__text {
   transition: v.$transition;
-  &:hover {
-    color: v.$color8;
-  }
+}
+
+.Slider__svg {
+  width: 40px;
+  height: 40px;
+  stroke: v.$color3;
+  fill: v.$color0;
+  transition: v.$transition;
 }

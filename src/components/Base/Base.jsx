@@ -65,7 +65,7 @@ function Base() {
       </aside>
       <section className='Base__section'>
         <div className='Base__header_wrapper'>
-          <div className='Base__burger' onClick={burgerHandler}>
+          <div className='Base__burger interactiv' onClick={burgerHandler}>
             <div className={sliderConfig.isVisible ? 'Base__burger-line1_cross' : 'Base__burger-line1'} />
             <div className={sliderConfig.isVisible ? 'Base__burger-line2_cross' : 'Base__burger-line2'} />
             <div className={sliderConfig.isVisible ? 'Base__burger-line3_cross' : 'Base__burger-line3'} />

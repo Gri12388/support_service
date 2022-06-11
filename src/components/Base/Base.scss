@@ -109,6 +109,11 @@
     width: 24px;
     height: 24px;
     margin-left: 16px;
+    &:hover {
+      %burger-line {
+        background-color: v.$color8;
+      }
+    }
   }
 
   %burger-line {
