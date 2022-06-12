@@ -10,19 +10,12 @@ import Slider from '../Slider/Slider.jsx';
 import '../../assets/styles/common.scss';
 import './Base.scss';
 
-import baseArchive from '../../assets/images/archive.svg';
-import baseDatabase from '../../assets/images/database.svg';
-import baseDollar from '../../assets/images/dollar.svg';
-import baseGlobe from '../../assets/images/globe.svg';
-import baseHome from '../../assets/images/home.svg';
-import baseLogo from '../../assets/images/logo-invert.svg';
-import baseNavigation from '../../assets/images/navigation.svg';
-import basePieChart from '../../assets/images/pie-chart.svg';
-import baseBell from '../../assets/images/bell.svg';
-import baseBell1 from '../../assets/images/bell1.svg';
+
 import baseUser from '../../assets/images/user.png';
-import baseQuit from '../../assets/images/quit.svg';
 import loadingImage from '../../assets/images/loading.png';
+
+import baseLogo from '../../assets/images/logo-invert.svg';
+import baseSprite from '../../assets/images/sprite.svg';
 
 function Base() {
 
@@ -49,19 +42,28 @@ function Base() {
   }
 
   const location = useLocation();
-  const search = location.pathname === '/base/claims' ? <Search /> : null;
+
+  const baseIconsData = [
+    {id: 0, name: 'home'},
+    {id: 1, name: 'globe'},
+    {id: 2, name: 'archive'},
+    {id: 3, name: 'piechart'},
+    {id: 4, name: 'dollar'},
+    {id: 5, name: 'database'},
+    {id: 6, name: 'location'},
+  ];
+
+  const baseIcons = baseIconsData.map(item => (
+    <svg class="Base__aside_svg" key={item.id}>
+      <use href={baseSprite + `#${item.name}`}></use>
+    </svg>
+  ));
 
   return (
     <div className='container1 Base__container'>
       <aside className='Base__aside'>
         <img src={baseLogo} alt="logotype" className='Base__logo' />
-        <img src={baseHome} alt="home" className='interactiv Base__pic' />
-        <img src={baseGlobe} alt="globe" className='interactiv Base__pic' />
-        <img src={baseArchive} alt="globe" className='interactiv Base__pic' />
-        <img src={basePieChart} alt="globe" className='interactiv Base__pic' />
-        <img src={baseDollar} alt="globe" className='interactiv Base__pic' />
-        <img src={baseDatabase} alt="globe" className='interactiv Base__pic' />
-        <img src={baseNavigation} alt="globe" className='interactiv Base__pic' />
+        {baseIcons}
       </aside>
       <section className='Base__section'>
         <div className='Base__header_wrapper'>
@@ -71,11 +73,15 @@ function Base() {
             <div className={sliderConfig.isVisible ? 'Base__burger-line3_cross' : 'Base__burger-line3'} />
           </div>
           <header className='Base__header'>
-            {search}
-            <img src={windowWidth > 799 ? baseBell : baseBell1} alt="bell" className='Base__bell'/>
+            {location.pathname === '/base/claims' ? <Search /> : null}
+            <svg class="Base__bell-off_svg">
+              <use href={baseSprite + `#bellOff`}></use>
+            </svg>
             <img src={baseUser} alt="user" className='Base__user'/>
             <span className='Base__full-name'>Ivan Ivanov</span>
-            <img src={baseQuit} alt="quit" className='Base__quit'/>
+            <svg class="Base__quit_svg">
+              <use href={baseSprite + `#quit`}></use>
+            </svg>
           </header>
         </div>
         <main className='Base__main'>
@@ -97,3 +103,17 @@ function Base() {
 }
 
 export default Base;
+
+//---------------
+
+// {/* <img src={baseHome} alt="home" className='interactiv Base__pic' />
+//         <img src={baseGlobe} alt="globe" className='interactiv Base__pic' />
+//         <img src={baseArchive} alt="globe" className='interactiv Base__pic' />
+//         <img src={basePieChart} alt="globe" className='interactiv Base__pic' />
+//         <img src={baseDollar} alt="globe" className='interactiv Base__pic' />
+//         <img src={baseDatabase} alt="globe" className='interactiv Base__pic' />
+//         <img src={baseNavigation} alt="globe" className='interactiv Base__pic' /> */}
+
+//-----------------------------
+
+// {/* <img src={windowWidth > 799 ? baseBell : baseBell1} alt="bell" className='Base__bell'/> */}

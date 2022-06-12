@@ -3,7 +3,7 @@ import React from 'react';
 import '../../assets/styles/common.scss';
 import './Search.scss';
 
-import searchImg from '../../assets/images/loupe.svg';
+import searchSprite from '../../assets/images/sprite.svg';
 
 function Search() {
   return (
@@ -14,11 +14,9 @@ function Search() {
         placeholder='Search'
       />
       <div className='image_wrapper'>
-        <img 
-          src={searchImg} 
-          alt='loupe'
-          className='Search__image' 
-        />   
+        <svg class="Search__loupe_svg">
+          <use href={searchSprite + `#loupe`}></use>
+        </svg>
       </div>
     </div>
     

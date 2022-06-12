@@ -4,6 +4,17 @@
 
 @import url('../../assets/styles/normalize.scss');
 
+%svg {
+  width: 40px;
+  height: 40px;
+  fill: v.$color0;
+  transition: v.$transition;
+}
+
+%svg_hover {
+  stroke: v.$color8;
+}
+
 .Base__container {
   display: flex;
   border: solid 1px v.$color16;
@@ -23,12 +34,6 @@
   width: 72.82px;
   height: 71.08px;
   margin-bottom: 47.92px;
-}
-
-.Base__pic {
-  width: 40px;
-  height: 40px;
-  margin-bottom: 24px;
 }
 
 .Base__section {
@@ -59,10 +64,21 @@
   background-color: v.$color0;
 }
 
-.Base__bell {
-  width: 40px;
-  height: 40px;
+.Base__aside_svg {
+  @extend %svg;
   margin-right: 20px;
+  margin-bottom: 24px;
+  cursor: pointer;
+  stroke: v.$color3;
+  &:hover {
+    @extend %svg_hover;
+  }
+}
+
+.Base__bell-off_svg {
+  @extend %svg;
+  margin-right: 20px;
+  stroke: v.$color16;
 }
 
 .Base__user {
@@ -77,13 +93,15 @@
   margin-right: 23px;
 }
 
-.Base__quit {
-  width: 40px;
-  height: 40px;
+.Base__quit_svg {
+  @extend %svg;
   margin-right: 24px;
+  cursor: pointer;
+  stroke: v.$color16;
+  &:hover {
+    @extend %svg_hover;
+  }
 }
-
-
 
 
 
@@ -168,7 +186,8 @@
     margin-right: 6px;
   }
 
-  .Base__bell {
+  .Base__bell-off_svg {
     margin-right: 24px;
+    stroke: v.$color3;
   }
 }

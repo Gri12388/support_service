@@ -2,7 +2,19 @@
 @use '../../assets/styles/mixins' as m;
 @import url('../../assets/styles/normalize.scss');
 
+%svg {
+  width: 40px;
+  height: 40px;
+  fill: v.$color0;
+  transition: v.$transition;
+}
+
+%svg_hover {
+  stroke: v.$color8;
+}
+
 .Search__input_wrapper {
+  width: 32.07%;
   margin-right: 64px;
   margin-left: 16px;
 }
@@ -15,10 +27,16 @@
   }
 }
 
-.Search__image {
-  width: 40px;
-  height: 40px;
+.Search__loupe_svg {
+  @extend %svg;
+  cursor: pointer;
+  stroke: v.$color16;
+  &:hover {
+    @extend %svg_hover;
+  }
 }
+
+
 
 @media (max-width: 799px) {
   .Search__input_wrapper {
