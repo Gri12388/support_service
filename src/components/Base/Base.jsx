@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 import { selectStatus } from '../../store/slices/claimsSlice.js';
 
@@ -42,6 +42,12 @@ function Base() {
   }
 
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const quitSession = () => {
+    sessionStorage.clear();
+    navigate('/', {replace: true});
+  }
 
   const baseIconsData = [
     {id: 0, name: 'home'},
@@ -62,7 +68,7 @@ function Base() {
   return (
     <div className='container1 Base__container'>
       <aside className='Base__aside'>
-        <img src={baseLogo} alt="logotype" className='Base__logo' />
+        <img src={baseLogo} alt='logotype' className='Base__logo' />
         {baseIcons}
       </aside>
       <section className='Base__section'>
@@ -77,9 +83,9 @@ function Base() {
             <svg className='Base__bell-off_svg'>
               <use href={baseSprite + `#bellOff`}></use>
             </svg>
-            <img src={baseUser} alt="user" className='Base__user'/>
+            <img src={baseUser} alt='user' className='Base__user'/>
             <span className='Base__full-name'>{sessionStorage.getItem('fullName')}</span>
-            <svg className="Base__quit_svg">
+            <svg className='Base__quit_svg' onClick={quitSession}>
               <use href={baseSprite + `#quit`}></use>
             </svg>
           </header>
@@ -106,14 +112,14 @@ export default Base;
 
 //---------------
 
-// {/* <img src={baseHome} alt="home" className='interactiv Base__pic' />
-//         <img src={baseGlobe} alt="globe" className='interactiv Base__pic' />
-//         <img src={baseArchive} alt="globe" className='interactiv Base__pic' />
-//         <img src={basePieChart} alt="globe" className='interactiv Base__pic' />
-//         <img src={baseDollar} alt="globe" className='interactiv Base__pic' />
-//         <img src={baseDatabase} alt="globe" className='interactiv Base__pic' />
-//         <img src={baseNavigation} alt="globe" className='interactiv Base__pic' /> */}
+// {/* <img src={baseHome} alt='home' className='interactiv Base__pic' />
+//         <img src={baseGlobe} alt='globe' className='interactiv Base__pic' />
+//         <img src={baseArchive} alt='globe' className='interactiv Base__pic' />
+//         <img src={basePieChart} alt='globe' className='interactiv Base__pic' />
+//         <img src={baseDollar} alt='globe' className='interactiv Base__pic' />
+//         <img src={baseDatabase} alt='globe' className='interactiv Base__pic' />
+//         <img src={baseNavigation} alt='globe' className='interactiv Base__pic' /> */}
 
 //-----------------------------
 
-// {/* <img src={windowWidth > 799 ? baseBell : baseBell1} alt="bell" className='Base__bell'/> */}
+// {/* <img src={windowWidth > 799 ? baseBell : baseBell1} alt='bell' className='Base__bell'/> */}
