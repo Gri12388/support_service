@@ -6,7 +6,9 @@ const initialState = {
   token: '',
   totalItems: 0,
   values: {},
-  status: 'ok'
+  status: 'ok',
+  error: false,
+  errorMessage: ''
 }
 
 export const fetchClaims = createAsyncThunk('claims/fetchClaims', async ({token, offset, limit}) => {
@@ -17,11 +19,11 @@ export const fetchClaims = createAsyncThunk('claims/fetchClaims', async ({token,
       Authorization: `Bearer ${token}`
       },
     });
-    if (promise.status !== 200) return;
+    if (promise.status !== 200) throw Error(promise.status);
     let result = await promise.json();
     let maxOffset = (Math.floor(result.totalItems / pager.base) * pager.base);
     if (offset <= maxOffset) {
-      localStorage.setItem('offset', offset);
+      sessionStorage.setItem('offset', offset);
       return result;
     }
     offset = maxOffset;  
@@ -53,7 +55,12 @@ const claimsSlice = createSlice({
         });
         state.values = temp;
         state.status = 'ok';
-      
+      })
+      .addCase(fetchClaims.rejected, (state, action) => {
+        state.status = 'ok';
+        state.error = true;
+        state.errorMessage = action.error.message ? action.error.message : 'Something wrong';
+        console.log (action);
       })
   }, 
 });

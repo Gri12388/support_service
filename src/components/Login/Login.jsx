@@ -93,9 +93,11 @@ function Login({ setLoading, email, setEmail, password, setPassword }) {
 
     
     console.log (data);
-    localStorage.setItem('fullName', data.fullName);
-    localStorage.setItem('token', data.token);
-    localStorage.setItem('offset', 0);
+
+    sessionStorage.setItem('fullName', data.fullName);
+    sessionStorage.setItem('token', data.token);
+    sessionStorage.setItem('offset', 0);
+    
     setLoading({isLoading: false, isBlocked: false, message: ''});
     navigate('/base/claims');
   }

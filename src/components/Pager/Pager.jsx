@@ -10,7 +10,7 @@ import './Pager.scss';
 function Pager() {
 
   let pagerState = useSelector(selectPagerState);
-  let token = localStorage.getItem('token');
+  let token = sessionStorage.getItem('token');
   
   let dispatchPagerState = useDispatch();
   let dispatch = useDispatch();

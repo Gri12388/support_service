@@ -19,9 +19,9 @@ function Claims() {
 
   let [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
-  let token = localStorage.getItem('token');
+  let token = sessionStorage.getItem('token');
 
-  let offset = +localStorage.getItem('offset');
+  let offset = +sessionStorage.getItem('offset');
 
   const dispatch = useDispatch();
 

@@ -78,7 +78,7 @@ function Base() {
               <use href={baseSprite + `#bellOff`}></use>
             </svg>
             <img src={baseUser} alt="user" className='Base__user'/>
-            <span className='Base__full-name'>{localStorage.getItem('fullName')}</span>
+            <span className='Base__full-name'>{sessionStorage.getItem('fullName')}</span>
             <svg className="Base__quit_svg">
               <use href={baseSprite + `#quit`}></use>
             </svg>
