@@ -4,7 +4,8 @@ import { useNavigate } from "react-router-dom";
 
 import InputText from '../InputText/InputText.jsx';
 
-import { rules, errors, messages } from '../../data/data.js';
+import { rules, errors, messages, typeColors } from '../../data/data.js';
+import { uploadTypes } from '../../store/slices/typesSlice.js';
 import { upload } from '../../store/slices/claimsSlice.js';
 
 import '../../assets/styles/common.scss';
@@ -95,9 +96,51 @@ function Login({ setLoading, email, setEmail, password, setPassword }) {
     console.log (data);
 
     sessionStorage.setItem('fullName', data.fullName);
+    sessionStorage.setItem('role', data.role.name);
     sessionStorage.setItem('token', data.token);
     sessionStorage.setItem('offset', 0);
-    
+
+    //--- Загружаем типы ---//
+
+    let promiseTypes = await fetch('http://localhost:3001/types', {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${data.token}`
+      },
+    });
+
+    switch(promiseTypes.status) {
+      case 200: break;
+      default:  setLoading(state=>({...state, isBlocked: false, message: messages.default}));
+                return;
+    }
+
+    let types = await promiseTypes.json();
+
+    if (!Array.isArray(types)) {
+      setLoading(state=>({...state, isBlocked: false, message: messages.default}));
+      return;
+    }
+
+    let typesArray = types.map((item, index) => ({
+      id: index,
+      type: item.name,
+      slug: item.slug,
+      color: typeColors[index % typeColors.length] 
+    }));
+
+    typesArray.push({id: typeColors.length, type: 'Other', color: '#ADADAD'});
+
+    let typesObject = {};
+
+    typesArray.forEach(item => typesObject[item.id] = item);
+
+    dispatch(uploadTypes(typesObject));
+
+    // typesObject;
+
+    // debugger
+
     setLoading({isLoading: false, isBlocked: false, message: ''});
     navigate('/base/claims');
   }

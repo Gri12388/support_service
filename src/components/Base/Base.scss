@@ -93,6 +93,11 @@
   margin-right: 23px;
 }
 
+.Base__full-name_unauthenticated {
+  @extend .Base__full-name;
+  color: v.$color8;
+}
+
 .Base__quit_svg {
   @extend %svg;
   margin-right: 24px;

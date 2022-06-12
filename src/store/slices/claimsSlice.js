@@ -3,7 +3,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { pager } from '../../data/data.js';
 
 const initialState = {
-  token: '',
+  //token: '',
   totalItems: 0,
   values: {},
   status: 'ok',
@@ -19,6 +19,7 @@ export const fetchClaims = createAsyncThunk('claims/fetchClaims', async ({token,
       Authorization: `Bearer ${token}`
       },
     });
+    //debugger
     if (promise.status !== 200) throw Error(promise.status);
     let result = await promise.json();
     let maxOffset = (Math.floor(result.totalItems / pager.base) * pager.base);
@@ -60,7 +61,10 @@ const claimsSlice = createSlice({
         state.status = 'ok';
         state.error = true;
         state.errorMessage = action.error.message ? action.error.message : 'Something wrong';
+        state.totalItems = 0;
+        state.values = {};
         console.log (action);
+        //debugger
       })
   }, 
 });

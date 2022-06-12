@@ -84,7 +84,9 @@ function Base() {
               <use href={baseSprite + `#bellOff`}></use>
             </svg>
             <img src={baseUser} alt='user' className='Base__user'/>
-            <span className='Base__full-name'>{sessionStorage.getItem('fullName')}</span>
+            <span className={sessionStorage.key(0) ? 'Base__full-name' : 'Base__full-name_unauthenticated'} >
+              {sessionStorage.key(0) ? sessionStorage.getItem('fullName') : 'Not authenticated'}
+            </span>
             <svg className='Base__quit_svg' onClick={quitSession}>
               <use href={baseSprite + `#quit`}></use>
             </svg>

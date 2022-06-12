@@ -46,3 +46,10 @@ export const pager = {
   offsetMin: 4,
   offsetMax: 6
 }
+
+export const typeColors = [
+  '#7DB59A',
+  '#FF7675',
+  '#FDCB6E',
+  '#6C5CE7'
+]

@@ -20,7 +20,7 @@ function Claims() {
   let [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   let token = sessionStorage.getItem('token');
-
+  //debugger
   let offset = +sessionStorage.getItem('offset');
 
   const dispatch = useDispatch();
@@ -44,7 +44,7 @@ function Claims() {
   const claims = useSelector(selectClaims);
   const types = useSelector(selectTypes);
   const statuses = useSelector(selectStatuses);
-
+  
   const rows = claims.map((item) => {
     let type, status;
 

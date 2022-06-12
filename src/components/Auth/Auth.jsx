@@ -35,6 +35,8 @@ function Auth() {
     if (!isModalBlocked && (e.target.id === 'Auth__modal-area' || e.target.id === 'Reg__button')) setIsVisible(false);
   };
 
+  if (sessionStorage.key(0)) sessionStorage.clear();
+
   return (
     <div className='container1'>
       <main className='Auth__main'>
