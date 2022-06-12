@@ -54,7 +54,7 @@ function Base() {
   ];
 
   const baseIcons = baseIconsData.map(item => (
-    <svg class="Base__aside_svg" key={item.id}>
+    <svg className='Base__aside_svg' key={item.id}>
       <use href={baseSprite + `#${item.name}`}></use>
     </svg>
   ));
@@ -74,12 +74,12 @@ function Base() {
           </div>
           <header className='Base__header'>
             {location.pathname === '/base/claims' ? <Search /> : null}
-            <svg class="Base__bell-off_svg">
+            <svg className='Base__bell-off_svg'>
               <use href={baseSprite + `#bellOff`}></use>
             </svg>
             <img src={baseUser} alt="user" className='Base__user'/>
-            <span className='Base__full-name'>Ivan Ivanov</span>
-            <svg class="Base__quit_svg">
+            <span className='Base__full-name'>{localStorage.getItem('fullName')}</span>
+            <svg className="Base__quit_svg">
               <use href={baseSprite + `#quit`}></use>
             </svg>
           </header>

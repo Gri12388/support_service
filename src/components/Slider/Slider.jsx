@@ -27,7 +27,7 @@ function Slider({sliderConfig, functions}) {
 
   const sliderItems = sliderItemsData.map(item => (
     <div className='Slider__item' key={item.id}>
-      <svg class="Slider__svg">
+      <svg className="Slider__svg">
         <use href={sliderSprite + `#${item.name}`}></use>
       </svg>
       <p className='text10 interactiv Slider__text'>{item.content}</p>

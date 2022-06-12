@@ -14,7 +14,7 @@ function Search() {
         placeholder='Search'
       />
       <div className='image_wrapper'>
-        <svg class="Search__loupe_svg">
+        <svg className="Search__loupe_svg">
           <use href={searchSprite + `#loupe`}></use>
         </svg>
       </div>

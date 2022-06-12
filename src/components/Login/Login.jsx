@@ -92,7 +92,8 @@ function Login({ setLoading, email, setEmail, password, setPassword }) {
 //-------------------------------------------------------------------
 
     
-    
+    console.log (data);
+    localStorage.setItem('fullName', data.fullName);
     localStorage.setItem('token', data.token);
     localStorage.setItem('offset', 0);
     setLoading({isLoading: false, isBlocked: false, message: ''});
