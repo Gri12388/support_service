@@ -11,6 +11,8 @@ function Pager() {
 
   let pagerState = useSelector(selectPagerState);
   let token = sessionStorage.getItem('token');
+
+  //debugger
   
   let dispatchPagerState = useDispatch();
   let dispatch = useDispatch();
@@ -37,10 +39,19 @@ function Pager() {
     temp.last = pageNumber;
     temp.offset = windowWidth < 500 ? pager.offsetMin : pager.offsetMax;
     
-    if (!pagerState.pointer) temp.pointer = +localStorage.getItem('offset') + 1;
-    else if (pagerState.pointer > temp.last) temp.pointer = temp.last;
-    else temp.pointer = pagerState.pointer;
-        
+    if (!pagerState.pointer) {
+      temp.pointer = (+sessionStorage.getItem('offset')) / pager.base + 1;
+      //debugger
+    }
+    else if (pagerState.pointer > temp.last) {
+      temp.pointer = temp.last;
+      //debugger
+    }
+    else {
+      temp.pointer = pagerState.pointer;
+      //debugger
+    }
+    //debugger
     if (temp.last > 1 && temp.last <= temp.offset + 3) {
       temp.start = 2;
       temp.stop = temp.last - 1;
@@ -65,16 +76,17 @@ function Pager() {
       else {
         temp.start = temp.pointer - temp.offset + 1 > 1 ? temp.pointer - temp.offset + 1 : 2;
         temp.stop = temp.start + temp.offset;
+        if (temp.stop + 1 !== temp.last) {
+          temp.displayRight = true;
+          //temp.stop--;
+          temp.start++;
+        }
+        else temp.displayRight = false;
         if (temp.start - 1 !== 1) {
           temp.displayLeft = true;
           temp.start++;
         }
         else temp.displayLeft = false;
-        if (temp.stop + 1 !== temp.last) {
-          temp.displayRight = true;
-          temp.stop--;
-        }
-        else temp.displayRight = false;
       }
     }
     dispatchPagerState(setPagerState(temp));
