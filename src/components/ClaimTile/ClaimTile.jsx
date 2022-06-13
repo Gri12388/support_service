@@ -6,6 +6,7 @@ import Status from '../Status/Status.jsx';
 import './ClaimTile.scss';
 
 function ClaimTile({item, type, status}) {
+  if (type.id === null || type.id === undefined || status.id === null || status.id === undefined) return;
   return (
     <section className='CT__container'>
       <header className='CT__header'>

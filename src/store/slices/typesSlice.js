@@ -1,16 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const initialState = {};
+let temp;
+
+const initialState = (temp = sessionStorage.getItem('types')) ? JSON.parse(temp) : {};
 
 const typesSlice = createSlice({
   name: 'types',
   initialState,
-  reducers: {
-    uploadTypes: (state, action) => state = action.payload
-  },
+  reducers: {},
 });
-
-export const { uploadTypes } = typesSlice.actions;
 
 export const selectTypes = state => Object.values(state.types);
 

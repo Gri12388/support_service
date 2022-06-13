@@ -1,12 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const initialState = {
-  0: {id: 0, status: 'NEW', color: '#6C5CE7'},
-  1: {id: 1, status: 'DONE', color: '#00B894'},
-  2: {id: 2, status: 'IN PROGRESS', color: '#FDCB6E'},
-  3: {id: 3, status: 'DECLINED', color: '#E84393'},
-  4: {id: 4, status: 'UNDEFINED', color: '#ADADAD'},
-};
+let temp;
+
+const initialState = (temp = sessionStorage.getItem('statuses')) ? JSON.parse(temp) : {};
 
 const statusesSlice = createSlice({
   name: 'statuses',
@@ -17,3 +13,13 @@ const statusesSlice = createSlice({
 export const selectStatuses = state => Object.values(state.statuses);
 
 export default statusesSlice.reducer;
+
+//---------------------------
+
+// {
+//   0: {id: 0, status: 'NEW', color: '#6C5CE7'},
+//   1: {id: 1, status: 'DONE', color: '#00B894'},
+//   2: {id: 2, status: 'IN PROGRESS', color: '#FDCB6E'},
+//   3: {id: 3, status: 'DECLINED', color: '#E84393'},
+//   4: {id: 4, status: 'UNDEFINED', color: '#ADADAD'},
+// };

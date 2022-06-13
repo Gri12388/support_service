@@ -53,3 +53,10 @@ export const typeColors = [
   '#FDCB6E',
   '#6C5CE7'
 ]
+
+export const statusColors = [
+  '#E84393',
+  '#6C5CE7',
+  '#00B894',
+  '#FDCB6E'
+]

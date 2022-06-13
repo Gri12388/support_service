@@ -4,9 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 import InputText from '../InputText/InputText.jsx';
 
-import { rules, errors, messages, typeColors } from '../../data/data.js';
-import { uploadTypes } from '../../store/slices/typesSlice.js';
-import { upload } from '../../store/slices/claimsSlice.js';
+import { rules, errors, messages, typeColors, statusColors } from '../../data/data.js';
 
 import '../../assets/styles/common.scss';
 import './Login.scss';
@@ -70,31 +68,6 @@ function Login({ setLoading, email, setEmail, password, setPassword }) {
     
     let data = await promise.json();
 
-//-------------------------------------------------------------------
-
-    // let promiseClaims = await fetch('http://localhost:3001/claim?offset=0&limit=10', {
-    //   method: 'GET',
-    //   headers: {
-    //     Authorization: `Bearer ${data.token}`
-    //   },
-    // });
-
-    // switch(promiseClaims.status) {
-    //   case 200: break;
-    //   default:  setLoading(state=>({...state, isBlocked: false, message: messages.default}));
-    //             return;
-    // }
-
-    // let result = await promiseClaims.json();
-    // result.token = data.token;
-
-    // dispatch(upload(result));
-
-//-------------------------------------------------------------------
-
-    
-    console.log (data);
-
     sessionStorage.setItem('fullName', data.fullName);
     sessionStorage.setItem('role', data.role.name);
     sessionStorage.setItem('token', data.token);
@@ -135,11 +108,46 @@ function Login({ setLoading, email, setEmail, password, setPassword }) {
 
     typesArray.forEach(item => typesObject[item.id] = item);
 
-    dispatch(uploadTypes(typesObject));
+    sessionStorage.setItem('types', JSON.stringify(typesObject));
 
-    // typesObject;
+    //--- Загружаем статусы ---//
 
-    // debugger
+    let promiseStatuses = await fetch('http://localhost:3001/status', {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${data.token}`
+      },
+    });
+
+    switch(promiseStatuses.status) {
+      case 200: break;
+      default:  setLoading(state=>({...state, isBlocked: false, message: messages.default}));
+                return;
+    }
+
+    let statuses = await promiseStatuses.json();
+
+    if (!Array.isArray(statuses)) {
+      setLoading(state=>({...state, isBlocked: false, message: messages.default}));
+      return;
+    }
+
+    let statusesArray = statuses.map((item, index) => ({
+      id: index,
+      status: (item.name).toUpperCase(),
+      slug: item.slug,
+      color: statusColors[index % statusColors.length] 
+    }));
+
+    statusesArray.push({id: statusColors.length, status: 'UNDEFINED', color: '#ADADAD'});
+
+    let statusesObject = {};
+
+    statusesArray.forEach(item => statusesObject[item.id] = item);
+
+    sessionStorage.setItem('statuses', JSON.stringify(statusesObject));
+
+    //--- Выходим из загрузки и переходим на целевую страницу ---//
 
     setLoading({isLoading: false, isBlocked: false, message: ''});
     navigate('/base/claims');
