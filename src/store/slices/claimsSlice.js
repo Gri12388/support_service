@@ -11,23 +11,25 @@ const initialState = {
 }
 
 export const fetchClaims = createAsyncThunk('claims/fetchClaims', async ({token, offset, limit}) => {
-  while(true) {
-    const promise = await fetch (`http://localhost:3001/claim?offset=${offset}&limit=${limit}`, {
+  let promise = await fetch ('http://localhost:3001/claim?offset=0&limit=1', {
       method: 'GET',
       headers: {
       Authorization: `Bearer ${token}`
       },
     });
-    //debugger
-    if (promise.status !== 200) throw Error(promise.status);
-    let result = await promise.json();
-    let maxOffset = (Math.floor(result.totalItems / pager.base) * pager.base);
-    if (offset <= maxOffset) {
-      sessionStorage.setItem('offset', offset);
-      return result;
-    }
-    offset = maxOffset;  
-  }
+  if (promise.status !== 200) throw Error(promise.status);
+  let result = await promise.json();
+  if (result.totalItems === 0) return result;
+  let maxOffset = (Math.floor(result.totalItems / pager.base) * pager.base);
+  if (isNaN(offset) || offset > maxOffset) offset = maxOffset;
+  promise = await fetch (`http://localhost:3001/claim?offset=${offset}&limit=${limit}`, {
+    method: 'GET',
+    headers: {
+    Authorization: `Bearer ${token}`
+    },
+  });
+  if (promise.status !== 200) throw Error(promise.status);
+  return await promise.json();
 });
 
 const claimsSlice = createSlice({
@@ -60,9 +62,11 @@ const claimsSlice = createSlice({
       .addCase(fetchClaims.fulfilled, (state, action) => {
         state.totalItems = action.payload.totalItems;
         let temp = {};
-        action.payload.claims.forEach((item, index) => {
-          temp[index] = item;
-        });
+        if (action.payload.claims && Array.isArray(action.payload.claims)) {
+          action.payload.claims.forEach((item, index) => {
+            temp[index] = item;
+          });
+        }
         state.values = temp;
         state.status = 'ok';
       })

@@ -10,14 +10,16 @@ import arrowDown from '../../assets/images/arrow-down.svg';
 
 
 function Sel({id, label, value, groupId, state, callbacks, placeholder}) {
+
+  if (value === '') debugger;
   
-  let types = useSelector(selectTypes).filter(item => item.slug);
+  let types = Object.values(JSON.parse(sessionStorage.getItem('types'))).filter(item => item.slug);
 
   let [isVisible, setIsVisible] = useState(false);
   let [color, setColor] = useState(value ? types[value].color : 'transparent');
   let [content, setContent] = useState(value ? types[value].type : placeholder ?? `Select ${(label ?? 'item').toLowerCase()}`);
   let [display, setDisplay] = useState(value ? true : false);
-
+  //debugger
   const toggleVisibility = () => setIsVisible(!isVisible);
   const onButtonClick = e => {
     e.preventDefault();
@@ -30,7 +32,6 @@ function Sel({id, label, value, groupId, state, callbacks, placeholder}) {
     setDisplay(true);
     toggleVisibility();
     callbacks.onChange(types[temp].id.toString());
-    //callback({target: {value: types[temp].type}});
   }
   const onOutClick = e => {
     let temp = e.target.dataset.group;

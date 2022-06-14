@@ -30,6 +30,12 @@ function NewClaim() {
   const onDescriptionInput = e => setDescription(state=>({...state, content: e.target.value}));
   const onTypeInput = id => setType(state=>({...state, content: id, touched: true, status: true }));
 
+  const setStatesDefault = () => {
+    setTitle({content: '', status: false, touched: false, error: errors.titleErrors.noTitle});
+    setDescription({content: '', status: false, touched: false, error: errors.descriptionError.noDescription});
+    setType({content: '', status: false, touched: false, error: errors.typeError.noType});
+  }
+
   const onSubmit = e => {
     e.preventDefault();
 
@@ -51,18 +57,17 @@ function NewClaim() {
 
 
     dispatch(configSettings({status: 'loading'}));
-    try {
-      sendRequest(token, postBodyJSON);
-    }
-    catch (err) {
+    sendRequest(token, postBodyJSON).catch(err => {
+      setStatesDefault();
       dispatch(configSettings({status: 'ok', error: true, errorMessage: err.message}));
       console.log(err);
-      debugger
-    }
+
+    })
   }
 
   async function sendRequest(token, body) {
-    let promise = await fetch('http://localhost:3001/claim', {
+
+    let promise = await fetch('http://localhost:3001/claimss', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -70,9 +75,10 @@ function NewClaim() {
       },
       body: body,
     });
-    debugger
+    
     switch (promise.status) {
       case 200: dispatch(configSettings({status: 'ok'}));
+                sessionStorage.setItem('offset', 'last');
                 navigate('/base/claims');
                 break;
       default:  throw Error(messages.default);
@@ -108,6 +114,7 @@ function NewClaim() {
           id='fromNewClaim__title'
           label='TITLE'
           placeholder='Type claim title'
+          value={title.content}
           callbacks={{onChange: onTitleInput, onBlur: onBlur.bind(null, setTitle, checkTitle)}}
           state={title}
         />
@@ -117,9 +124,10 @@ function NewClaim() {
           id='fromNewClaim__type'
           label='TYPE'
           groupId={'fromNewClaim__sel1'}
+          placeholder='Select type'
+          value={type.content}
           callbacks={{onChange: onTypeInput, onBlur: onBlur.bind(null, setType, checkType)}}
           state={type}
-          placeholder='Select type'
         />
       </section>
       <section className='NewClaim__input'>
@@ -127,6 +135,7 @@ function NewClaim() {
           id='fromNewClaim__description'
           label='DESCRIPTION'
           placeholder='Type claim description'
+          value={description.content}
           callbacks={{onChange: onDescriptionInput, onBlur: onBlur.bind(null, setDescription, checkDescription)}}
           state={description}
         />

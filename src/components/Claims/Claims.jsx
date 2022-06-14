@@ -20,9 +20,9 @@ function Claims() {
   let [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   let token = sessionStorage.getItem('token');
-  //debugger
+  
   let offset = +sessionStorage.getItem('offset');
-
+  
   const dispatch = useDispatch();
 
   const onClaimsWindowWidthResize = () => setWindowWidth(window.innerWidth);
