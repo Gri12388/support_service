@@ -10,8 +10,6 @@ import arrowDown from '../../assets/images/arrow-down.svg';
 
 
 function Sel({id, label, value, groupId, state, callbacks, placeholder}) {
-
-  if (value === '') debugger;
   
   let types = Object.values(JSON.parse(sessionStorage.getItem('types'))).filter(item => item.slug);
 
@@ -74,15 +72,15 @@ function Sel({id, label, value, groupId, state, callbacks, placeholder}) {
         >
           <div  className='Sel__mark-area' 
                 onClick={toggleVisibility} 
-                style={{display: display ? 'flex' : 'none'}} 
+                style={{display: value ? 'flex' : 'none'}} 
                 data-group={groupId}
           >
             <div  className='Sel__mark' 
-                  style={{backgroundColor: color}} 
+                  style={{backgroundColor: value ? color : 'transparent'}} 
                   data-group={groupId}
             ></div>
           </div>
-          <p className='text3' data-group={groupId}>{content}</p>
+          <p className='text3' data-group={groupId}>{value ? content : placeholder ?? `Select ${(label ?? 'item').toLowerCase()}`}</p>
         </button>
         <div  className='Sel__side-area' 
               onClick={toggleVisibility} 
