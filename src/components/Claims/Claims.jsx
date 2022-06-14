@@ -42,9 +42,11 @@ function Claims() {
 
 
   const claims = useSelector(selectClaims);
-  const types = useSelector(selectTypes);
-  const statuses = useSelector(selectStatuses);
-  
+
+  const types = Object.values(JSON.parse(sessionStorage.getItem('types')));
+  const statuses =  Object.values(JSON.parse(sessionStorage.getItem('statuses')));
+
+
   const rows = claims.map((item) => {
     let type, status;
 
