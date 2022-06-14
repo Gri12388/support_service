@@ -29,7 +29,7 @@ export const fetchClaims = createAsyncThunk('claims/fetchClaims', async ({token,
     }
     offset = maxOffset;  
   }
-})
+});
 
 const claimsSlice = createSlice({
   name: 'claims',
@@ -42,6 +42,13 @@ const claimsSlice = createSlice({
         state.values[index] = item;
       });
     }, 
+    configSettings: (state, action) => {
+      state.status = action.payload.status;
+      if (action.payload.error !== null || action.payload.error !== undefined) {
+        state.error = action.payload.error;
+        state.errorMessage = action.payload.errorMessage;
+      }
+    }
   },
   extraReducers: builder => {
     builder
@@ -69,7 +76,7 @@ const claimsSlice = createSlice({
   }, 
 });
 
-export const { upload } = claimsSlice.actions;
+export const { upload, configSettings } = claimsSlice.actions;
 
 export const selectClaims = state => Object.values(state.claims.values);
 
@@ -81,3 +88,29 @@ export const selectStatus = state => state.claims.status;
 
 export default claimsSlice.reducer;
 
+//----------------------------
+
+// export const postNewClaim = createAsyncThunk('claims/postNewClaim', async ({token, body}) => {
+//   const promise = await fetch (`http://localhost:3001/claim`, {
+//     method: 'POST',
+//     headers: {
+//       Authorization: `Bearer ${token}`
+//     },
+//     body: body
+//   });
+//   if (promise.status !== 200) throw Error(promise.status);
+//   else return;
+// })
+
+// .addCase(postNewClaim.pending, state => {
+//   state.status = 'loading';
+// })
+// .addCase(postNewClaim.fulfilled, state => {
+//   state.status = 'ok';
+// })
+// .addCase(postNewClaim.rejected, state => {
+//   state.status = 'ok';
+//   state.error = true;
+//   state.errorMessage = action.error.message ? action.error.message : 'Something wrong';
+//   console.log (action);
+// })

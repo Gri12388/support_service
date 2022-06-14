@@ -7,7 +7,7 @@ import '../../assets/styles/common.scss';
 import './ClaimRow.scss';
 
 function ClaimRow({item, type, status}) {
-  if (type.id === null || type.id === undefined || status.id === null || status.id === undefined) return;
+  if (type === null || type === undefined || status === null || status === undefined || type.id === null || type.id === undefined || status.id === null || status.id === undefined) return;
   return (
     <>
       <div className='column1'>

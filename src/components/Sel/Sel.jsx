@@ -9,15 +9,9 @@ import './Sel.scss';
 import arrowDown from '../../assets/images/arrow-down.svg';
 
 
-function Sel({
-  id,
-  label,
-  value,
-  groupId,
-  callback,
-  placeholder,
-}) {
-  let types = useSelector(selectTypes);
+function Sel({id, label, value, groupId, state, callbacks, placeholder}) {
+  
+  let types = useSelector(selectTypes).filter(item => item.slug);
 
   let [isVisible, setIsVisible] = useState(false);
   let [color, setColor] = useState(value ? types[value].color : 'transparent');
@@ -25,27 +19,33 @@ function Sel({
   let [display, setDisplay] = useState(value ? true : false);
 
   const toggleVisibility = () => setIsVisible(!isVisible);
-  const onButtonClick = (e) => {
+  const onButtonClick = e => {
     e.preventDefault();
     toggleVisibility();
   }
-  const chooseItem = (e) => {
+  const chooseItem = e => {
     let temp = +e.currentTarget.dataset.id;
     setColor(types[temp].color);
     setContent(types[temp].type);
     setDisplay(true);
     toggleVisibility();
-    callback({target: {value: types[temp].type}});
+    callbacks.onChange(types[temp].id.toString());
+    //callback({target: {value: types[temp].type}});
   }
-  const onOutClick = (e) => {
+  const onOutClick = e => {
     let temp = e.target.dataset.group;
     if (temp !== groupId) setIsVisible(false);
   }
+  const onKeyDown = e => {
+    if (e.code === 'Enter' || e.key === 'Enter') {
+      e.preventDefault();
+    }
+  }
 
-  useEffect(() => document.addEventListener('click', onOutClick), []);
-
-  let labelCode;
-  if (label) labelCode = (<label htmlFor={id} className='text1 InputText__label'>{label}</label>);
+  useEffect(() => {
+    document.addEventListener('click', onOutClick);
+    return () => document.removeEventListener('click', onOutClick);
+  }, []);
 
   const options = types.map(item => {
     return (
@@ -59,24 +59,44 @@ function Sel({
       </div>
     );
   })
-
+  //console.log (state)
   return(
     <>
-      {labelCode}
-      <div className='input_wrapper Sel__base' data-group={groupId}>
-        <button className='Sel__select' onClick={onButtonClick} data-group={groupId}>
-          <div className='Sel__mark-area' onClick={toggleVisibility} style={{display: display ? 'flex' : 'none'}} data-group={groupId}>
-            <div className='Sel__mark' style={{backgroundColor: color}} data-group={groupId}></div>
+      {label && <label htmlFor={id} className='text1 InputText__label'>{label}</label>}
+      <div  className={ state && state.touched && !state.status ? 'input_wrapper Sel__base Sel__input_wrapper Sel__error' : 'input_wrapper Sel__base Sel__input_wrapper'} 
+            data-group={groupId}
+      >
+        <button className='Sel__select' 
+                onClick={onButtonClick} 
+                onBlur={callbacks.onBlur}
+                data-group={groupId}
+        >
+          <div  className='Sel__mark-area' 
+                onClick={toggleVisibility} 
+                style={{display: display ? 'flex' : 'none'}} 
+                data-group={groupId}
+          >
+            <div  className='Sel__mark' 
+                  style={{backgroundColor: color}} 
+                  data-group={groupId}
+            ></div>
           </div>
           <p className='text3' data-group={groupId}>{content}</p>
         </button>
-        <div className='Sel__side-area' onClick={toggleVisibility} data-group={groupId}>
+        <div  className='Sel__side-area' 
+              onClick={toggleVisibility} 
+              data-group={groupId}
+        >
           <img src={arrowDown} alt='arrow-down' data-group={groupId} />
         </div>
-        <div className='Sel__drop' style={{display: isVisible ? 'block' : 'none'}} data-group={groupId}>
+        <div  className='Sel__drop' 
+              style={{display: isVisible ? 'block' : 'none'}} 
+              data-group={groupId}
+        >
           {options}
         </div>
       </div>
+      <p className='text8'>{state && state.touched && !state.status && state.error}</p>
     </>
   );
 }

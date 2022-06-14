@@ -6,6 +6,7 @@ export const rules = {
   emailRegExp: /^\w[-._\w]*\w@\w[-._\w]*\w\.\w{2,3}$/,
   passwordLengthMin: 6,
   passwordLengthMax: 20,
+  titleLengthMax: 30,
 }
 
 export const errors = {
@@ -29,6 +30,16 @@ export const errors = {
     shortPassword: 'Password is short',
     longPassword: 'Password is long',
     noMatch: 'Passwords don\'t match', 
+  },
+  titleErrors: {
+    noTitle: 'Type title',
+    longTitle: 'Title is long'
+  },
+  descriptionError: {
+    noDescription: 'Type description',
+  },
+  typeError: {
+    noType: 'Choose type',
   }
 }
 

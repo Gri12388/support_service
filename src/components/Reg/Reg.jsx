@@ -64,15 +64,6 @@ function Reg({toggleBlockModal}) {
     setForm(state=>({...state, isVisible: false}));
     setLoading(state=>({...state, isVisible: true}));
     toggleBlockModal();
-    
-
-    //---------------------------------------------------
-    // testAsync();
-    // setForm(state=>({...state, isVisible: false}));
-    // setLoading(state=>({...state, isVisible: true}));
-    // toggleBlockModal();
-    //---------------------------------------------------
-
   }
 
   async function sendRequest(body) {
@@ -94,20 +85,6 @@ function Reg({toggleBlockModal}) {
       default:  setMessage(state=>({...state, isVisible: true, content: messages.regBad, isRegistered: false}));
     }
   }
-
-  //------------------------------------------
-  // async function testAsync() {
-  //   let promise = await (() => new Promise(resolve => setTimeout(()=>resolve({}), 5000)))();
-  //   promise.status = 201;
-
-  //   setLoading(state=>({...state, isVisible: false}));
-  //   toggleBlockModal();
-  //   console.log (promise);
-
-  //   if (promise.status === 200) setMessage(state=>({...state, isVisible: true, content: 'You are registered successfully', isRegistered: true})); 
-  //   else setMessage(state=>({...state, isVisible: true, content: 'You are  not registered', isRegistered: false}));
-  // }
-  //------------------------------------------
 
   const onBlur = (setter, checker) => {
     setter(state=>({...state, touched: true}));
@@ -283,3 +260,22 @@ export default Reg;
 // }
 
 //--------------------------------
+
+// testAsync();
+// setForm(state=>({...state, isVisible: false}));
+// setLoading(state=>({...state, isVisible: true}));
+// toggleBlockModal();
+
+//---------------------------------------------------
+
+// async function testAsync() {
+//   let promise = await (() => new Promise(resolve => setTimeout(()=>resolve({}), 5000)))();
+//   promise.status = 201;
+//   setLoading(state=>({...state, isVisible: false}));
+//   toggleBlockModal();
+//   console.log (promise);
+//   if (promise.status === 200) setMessage(state=>({...state, isVisible: true, content: 'You are registered successfully', isRegistered: true})); 
+//   else setMessage(state=>({...state, isVisible: true, content: 'You are  not registered', isRegistered: false}));
+// }
+
+//------------------------------------------

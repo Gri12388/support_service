@@ -8,6 +8,14 @@
   height: 48px;
 }
 
+.Sel__input_wrapper {
+  margin-bottom: 0px;
+}
+
+.Sel__error {
+  border: solid 1px v.$color18;
+}
+
 .Sel__base {
   @extend %base;
   position: relative;

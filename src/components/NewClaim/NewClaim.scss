@@ -7,8 +7,9 @@
 
 .NewClaim__input {
   max-width: 589px;
+  height: 105px;
   margin-left: 64px;
-  margin-bottom: 40px;
+  margin-bottom: 8px;
 }
 
 .NewClaim__buttons {
@@ -16,4 +17,9 @@
   gap: 24px;
   width: fit-content;
   margin-left: 64px;
+}
+
+.NewClaim__button {
+  width: 82px;
+  height: 48px;
 }
