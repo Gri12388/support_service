@@ -23,11 +23,15 @@ const pagerSlice = createSlice({
       if (action.payload.displayLeft !== null && action.payload.displayLeft !== undefined) state.displayLeft = action.payload.displayLeft;
       if (action.payload.displayRight !== null && action.payload.displayRight !== undefined) state.displayRight = action.payload.displayRight;
 
+    },
+    resetPagerState: state => {
+      state = initialState;
+
     }
   },
 });
 
-export const { setPagerState } = pagerSlice.actions;
+export const { setPagerState, resetPagerState } = pagerSlice.actions;
 
 export const selectPagerState = state => state.pager;
 

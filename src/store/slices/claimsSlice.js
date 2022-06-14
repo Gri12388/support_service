@@ -3,7 +3,6 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { pager } from '../../data/data.js';
 
 const initialState = {
-  //token: '',
   totalItems: 0,
   values: {},
   status: 'ok',
@@ -35,6 +34,9 @@ const claimsSlice = createSlice({
   name: 'claims',
   initialState,
   reducers: {
+    reset: state => {
+      state = initialState
+    },
     upload: (state, action) => {
       if (action.payload.token) state.token = action.payload.token;
       state.totalItems = action.payload.totalItems;
@@ -76,7 +78,7 @@ const claimsSlice = createSlice({
   }, 
 });
 
-export const { upload, configSettings } = claimsSlice.actions;
+export const { reset, upload, configSettings } = claimsSlice.actions;
 
 export const selectClaims = state => Object.values(state.claims.values);
 

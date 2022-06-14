@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { reset } from '../../store/slices/claimsSlice.js';
+import { resetPagerState, selectPagerState } from '../../store/slices/pagerSlice.js';
 
 import Login from '../Login/Login.jsx';
 import Reg from '../Reg/Reg.jsx';
+
 import { errors } from '../../data/data.js';
 
 import mainLogo from '../../assets/images/logo.svg';
@@ -13,6 +18,11 @@ import '../../assets/styles/common.scss';
 import './Auth.scss';
 
 function Auth() {
+
+  const dispatch = useDispatch();
+  const state = useSelector(selectPagerState);
+
+
   const [email, setEmail] = useState({content: '', status: false, touched: false, error: errors.emailErrors.noEmail});
   const [password, setPassword] = useState({content: '', status: false, touched: false, error: errors.passwordErrors.noPassword});
 
@@ -35,7 +45,11 @@ function Auth() {
     if (!isModalBlocked && (e.target.id === 'Auth__modal-area' || e.target.id === 'Reg__button')) setIsVisible(false);
   };
 
-  if (sessionStorage.key(0)) sessionStorage.clear();
+  if (sessionStorage.key(0)) {
+    sessionStorage.clear();
+    dispatch(reset());
+    dispatch(resetPagerState());
+  }
 
   return (
     <div className='container1'>

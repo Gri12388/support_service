@@ -44,10 +44,8 @@ function Base() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const quitSession = () => {
-    sessionStorage.clear();
-    navigate('/', {replace: true});
-  }
+  const quitSession = () => navigate('/', {replace: true});
+  
 
   const baseIconsData = [
     {id: 0, name: 'home'},
