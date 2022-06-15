@@ -1,3 +1,18 @@
+export const hosts = {
+  local: 'http://localhost:3001',
+}
+
+export const methods = {
+  get: 'GET',
+  post: 'POST',
+  put: 'PUT',
+  delete: 'DELETE'
+}
+
+export const publicPaths = {
+  claim: '/claim',
+}
+
 export const rules = {
   nameLengthMin: 1,
   nameLengthMax: 20,

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import Type from '../Type/Type.jsx';
 import Status from '../Status/Status.jsx';
@@ -6,6 +7,13 @@ import Status from '../Status/Status.jsx';
 import './ClaimTile.scss';
 
 function ClaimTile({item, type, status}) {
+
+  const navigate = useNavigate();
+
+  const onBrowse = () => {
+    navigate('/base/claim', {state: {id: item._id, title: item.title, description: item.description, typeSlug: item.type.slug}})
+  }
+
   if (type === null || type === undefined || status === null || status === undefined || type.id === null || type.id === undefined || status.id === null || status.id === undefined) return;
   return (
     <section className='CT__container'>
@@ -25,7 +33,7 @@ function ClaimTile({item, type, status}) {
           <p className='text11'>Status</p>
           <Status statusId={status.id}/>
         </div>
-        <button className='button3'>Browse</button>
+        <button className='button3' onClick={onBrowse}>Browse</button>
       </main>
     </section>
   );

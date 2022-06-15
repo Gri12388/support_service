@@ -12,7 +12,6 @@ import arrowDown from '../../assets/images/arrow-down.svg';
 function Sel({id, label, value, groupId, state, callbacks, placeholder}) {
   
   let types = Object.values(JSON.parse(sessionStorage.getItem('types'))).filter(item => item.slug);
-
   let [isVisible, setIsVisible] = useState(false);
   let [color, setColor] = useState(value ? types[value].color : 'transparent');
   let [content, setContent] = useState(value ? types[value].type : placeholder ?? `Select ${(label ?? 'item').toLowerCase()}`);

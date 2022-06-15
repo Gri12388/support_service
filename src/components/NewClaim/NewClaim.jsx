@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 import InputText from '../InputText/InputText.jsx';
 import Sel from '../Sel/Sel.jsx';
 
-import { rules, errors, messages } from '../../data/data.js'
+import { hosts, methods, publicPaths, rules, errors, messages } from '../../data/data.js'
 import { configSettings } from '../../store/slices/claimsSlice.js';
 
 import '../../assets/styles/common.scss';
@@ -15,10 +15,47 @@ function NewClaim() {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  let typeID = useMemo(() => {
+    if (location.state) {
+      let types = Object.values(JSON.parse(sessionStorage.getItem('types')));
+      let temp = types.find(item => item.slug === location.state.typeSlug).id;
+      let other = types.find(item => item.type === 'Other').id;
+      return temp === other ? '' : temp.toString();
+    }
+    return null;
+  }, []);
+  let doneSlug = useMemo(() => location.state && Object.values(JSON.parse(sessionStorage.getItem('statuses'))).find(item => item.status === 'DONE').slug, []);
+  let declineSlug = useMemo(() => location.state && Object.values(JSON.parse(sessionStorage.getItem('statuses'))).find(item => item.status === 'DECLINED').slug, []);
   
-  const [title, setTitle] = useState({content: '', status: false, touched: false, error: errors.titleErrors.noTitle});
-  const [description, setDescription] = useState({content: '', status: false, touched: false, error: errors.descriptionError.noDescription});
-  const [type, setType] = useState({content: '', status: false, touched: false, error: errors.typeError.noType});
+  
+  
+
+
+  //location.state && Object.values(JSON.parse(sessionStorage.getItem('types'))).find(item => item.slug === location.slug).id;
+  
+  
+  const [title, setTitle] = useState({
+    content: location.state ? location.state.title : '', 
+    status: location.state ? true : false, 
+    touched: false, 
+    error: errors.titleErrors.noTitle
+  });
+  
+  const [description, setDescription] = useState({
+    content: location.state ? location.state.description : '', 
+    status: location.state ? true : false, 
+    touched: false, 
+    error: errors.descriptionError.noDescription
+  });
+  
+  const [type, setType] = useState({
+    content: location.state ? typeID : '', 
+    status: location.state ? true : false, 
+    touched: false, 
+    error: errors.typeError.noType
+  });
 
   const states = [
     {state: title, setState: setTitle},
@@ -36,39 +73,59 @@ function NewClaim() {
     setType({content: '', status: false, touched: false, error: errors.typeError.noType});
   }
 
-  const onSubmit = e => {
-    e.preventDefault();
 
+  const checkForm = () => {
     let isValid = states.every(item => item.state.status);
     if (!isValid) {
       states.forEach(item => {
         if (!item.state.status) item.setState(state=>({...state, touched: true}));
       });
-      return;
+      return false;
     }
+    return true;
+  }
 
+  const createBody = claimStatus => JSON.stringify({
+    title: title.content,
+    description: description.content,
+    type: JSON.parse(sessionStorage.getItem('types'))[type.content].slug,
+    status: Object.values(JSON.parse(sessionStorage.getItem('statuses'))).find(item => item.status === claimStatus).slug,
+  });
+
+  const submit = claimStatus => {
+
+    if (!checkForm()) return;
+
+    let method;
+    let publicPath;
     let token = sessionStorage.getItem('token');
-    let postBodyJSON = JSON.stringify({
-      title: title.content,
-      description: description.content,
-      type: JSON.parse(sessionStorage.getItem('types'))[type.content].slug,
-      status: Object.values(JSON.parse(sessionStorage.getItem('statuses'))).find(item => item.status === 'NEW').slug,
-    });
-
-
+    let bodyJSON = createBody(claimStatus);
+    switch (claimStatus) {
+      case 'NEW': method = methods.post;
+                  publicPath = publicPaths.claim;
+                  break;
+      case 'DONE':
+      case 'DECLINED':  method = methods.put;
+                        publicPath = publicPaths.claim;
+                        break;
+      default: return;
+    }
+    
+    if (location.state) publicPath += `/${location.state.id}`;
+   
     dispatch(configSettings({status: 'loading'}));
-    sendRequest(token, postBodyJSON).catch(err => {
+
+    sendRequest(publicPath, method, token, bodyJSON).catch(err => {
       setStatesDefault();
       dispatch(configSettings({status: 'ok', error: true, errorMessage: err.message}));
       console.log(err);
-
     })
   }
 
-  async function sendRequest(token, body) {
+  async function sendRequest(publicPath, method, token, body) {
 
-    let promise = await fetch('http://localhost:3001/claimss', {
-      method: 'POST',
+    let promise = await fetch(hosts.local + publicPath, {
+      method: method,
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
@@ -78,11 +135,26 @@ function NewClaim() {
     
     switch (promise.status) {
       case 200: dispatch(configSettings({status: 'ok'}));
-                sessionStorage.setItem('offset', 'last');
+                if (!location.state) sessionStorage.setItem('offset', 'last');
                 navigate('/base/claims');
                 break;
       default:  throw Error(messages.default);
     }
+  }
+
+  const onCreate = e => {
+    e.preventDefault();
+    submit('NEW')
+  }
+
+  const onDone = e => {
+    e.preventDefault();
+    submit('DONE')
+  }
+
+  const onDecline = e => {
+    e.preventDefault();
+    submit('DECLINED')
   }
 
   const onBlur = (setter, checker) => {
@@ -90,7 +162,7 @@ function NewClaim() {
     checker();
   }
 
-  const onCancel = (e) => {
+  const onCancel = e => {
     e.preventDefault();
     navigate(-1);
   }
@@ -112,9 +184,10 @@ function NewClaim() {
   }
 
   return(
-    <form className='container2' onSubmit={onSubmit}>
+    <form className='container2'>
       <div className='subcontainer'>
-      <p className='text4 NewClaim__title'>Creating new claim</p>
+      {!location.state && <p className='text4 NewClaim__title'>Creating new claim</p>}
+      {location.state && <p className='text4 NewClaim__title'>Incoming claim</p>}
         <section className='NewClaim__input'>
           <InputText 
             id='fromNewClaim__title'
@@ -148,7 +221,22 @@ function NewClaim() {
         </section>
         <section className='NewClaim__buttons'>
           <button className='button3 NewClaim__button' onClick={onCancel}>Cancel</button>
-          <input  type='submit' className='button2 xbutton1 NewClaim__button' value='Create' />
+          {!location.state && <input  type='submit' 
+                                      className='button2 xbutton1 NewClaim__button' 
+                                      value='Create'
+                                      onClick={onCreate}  
+          />}
+          {location.state && <input   type='submit' 
+                                      className='button2 xbutton1 NewClaim__button' 
+                                      value='Done'
+                                      onClick={onDone}
+          />}
+          {location.state && <input   type='submit' 
+                                      className='button1 xbutton1 NewClaim__button' 
+                                      value='Decline'
+                                      onClick={onDecline}
+
+          />}
         </section>
       </div>
     </form>

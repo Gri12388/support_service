@@ -17,6 +17,7 @@ createRoot(document.getElementById('root')).render(
         <Route path="/" element={<Auth />} />
         <Route path="/base" element={<Base />} >
           <Route path="claims" element={<Claims />} />
+          <Route path="claim" element={<NewClaim />} />
           <Route path="new" element={<NewClaim />} />
         </Route>
         <Route path="*" element={<NotFound />} />
