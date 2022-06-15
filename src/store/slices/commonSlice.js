@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   search: '',
   sort: '',
+  column: ''
 };
 
 const commonSlice = createSlice({
@@ -12,6 +13,7 @@ const commonSlice = createSlice({
     setCommonState: (state, action) => {
       if (action.payload.search !== null && action.payload.search !== undefined) state.search = action.payload.search;
       if (action.payload.sort !== null && action.payload.sort !== undefined) state.sort = action.payload.sort;
+      if (action.payload.column !== null && action.payload.column !== undefined) state.column = action.payload.column;
     },
   },
 });

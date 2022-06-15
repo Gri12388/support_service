@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { selectCommonState, setCommonState } from '../../store/slices/commonSlice.js';
+import { fetchClaims } from '../../store/slices/claimsSlice.js';
+
+import { pager } from '../../data/data.js';
 
 import '../../assets/styles/common.scss';
 import './Search.scss';
@@ -10,17 +13,30 @@ import searchSprite from '../../assets/images/sprite.svg';
 
 function Search() {
 
-  let search = useSelector(selectCommonState).search;
+  let [search, setSearch] = useState('') 
+  let commonSearch = useSelector(selectCommonState).search;
+  let token = sessionStorage.getItem('token');
+  let offset = +sessionStorage.getItem('offset');
+  let { sort, column } = useSelector(selectCommonState);
 
   const dispatch = useDispatch();
 
-  const onChange = e => {
-    dispatch(setCommonState({search: e.target.value}));
-  } 
-
-  const onCross = e => {
-    dispatch(setCommonState({search: ''}));
+  const onChange = e => setSearch(e.target.value);
+  const onCross = () => setSearch('');
+  const onLoupe = () => {
+    dispatch(setCommonState({search: search}));
+    dispatch(fetchClaims({token: token, offset: 0, limit: pager.base, search: search, column: column, sort: sort}));
   }
+
+  useEffect(() => {
+    if (search === '' && search !== commonSearch) {
+      dispatch(setCommonState({search: ''}));
+      dispatch(fetchClaims({token: token, offset: 0, limit: pager.base, search: search, column: column, sort: sort}));
+    }
+  }, [search]);
+
+  
+
 
   console.log(search)
 
@@ -41,7 +57,7 @@ function Search() {
         value={search}
         onChange={onChange}
       />
-      <div className='image_wrapper'>
+      <div className='image_wrapper' onClick={onLoupe}>
         <svg className='Search__loupe_svg'>
           <use href={searchSprite + `#loupe`}></use>
         </svg>

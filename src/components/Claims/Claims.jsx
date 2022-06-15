@@ -6,10 +6,11 @@ import ClaimRow from '../ClaimRow/ClaimRow.jsx';
 import ClaimTile from '../ClaimTile/ClaimTile.jsx';
 import Pager from '../Pager/Pager.jsx';
 
-import { selectClaims } from '../../store/slices/claimsSlice.js';
-import { selectTypes } from '../../store/slices/typesSlice.js';
-import { selectStatuses } from '../../store/slices/statusesSlice.js';
-import { fetchClaims } from '../../store/slices/claimsSlice.js';
+import { selectClaims, fetchClaims } from '../../store/slices/claimsSlice.js';
+import { selectCommonState } from '../../store/slices/commonSlice.js';
+// import { selectTypes } from '../../store/slices/typesSlice.js';
+// import { selectStatuses } from '../../store/slices/statusesSlice.js';
+
 
 import '../../assets/styles/common.scss';
 import './Claims.scss';
@@ -20,8 +21,8 @@ function Claims() {
   let [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   let token = sessionStorage.getItem('token');
-  
   let offset = +sessionStorage.getItem('offset');
+  let { search, sort, column } = useSelector(selectCommonState);
   
   const dispatch = useDispatch();
 
@@ -37,7 +38,7 @@ function Claims() {
 
   
   useEffect(()=>{
-    dispatch(fetchClaims({token: token, offset: offset, limit: 10}));
+    dispatch(fetchClaims({token: token, offset: offset, limit: 10, search: search, column: column, sort: sort}));
   }, [])
 
 

@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { pager } from '../../data/data.js';
-import { selectTotalClaimsNumber, fetchClaims, selectToken } from '../../store/slices/claimsSlice.js';
+import { selectTotalClaimsNumber, fetchClaims } from '../../store/slices/claimsSlice.js';
 import { selectPagerState, setPagerState } from '../../store/slices/pagerSlice.js';
+import { selectCommonState } from '../../store/slices/commonSlice.js';
 
 import './Pager.scss';
 
@@ -11,6 +12,7 @@ function Pager() {
 
   let pagerState = useSelector(selectPagerState);
   let token = sessionStorage.getItem('token');
+  let { search, sort, column } = useSelector(selectCommonState);
   
   let dispatchPagerState = useDispatch();
   let dispatch = useDispatch();
@@ -116,7 +118,7 @@ function Pager() {
     if (temp.pointer < temp.last) temp.pointer++;
     controlRight(temp);
     dispatchPagerState(setPagerState(temp));
-    dispatch(fetchClaims({token: token, offset: (temp.pointer - 1) * pager.base, limit: pager.base}));
+    dispatch(fetchClaims({token: token, offset: (temp.pointer - 1) * pager.base, limit: pager.base, search: search, column: column, sort: sort}));
   }
 
   const decrementPointer = () => {
@@ -125,7 +127,7 @@ function Pager() {
     if (temp.pointer > 1) temp.pointer--;
     controlLeft(temp);
     dispatchPagerState(setPagerState(temp));
-    dispatch(fetchClaims({token: token, offset: (temp.pointer - 1) * pager.base, limit: pager.base}));
+    dispatch(fetchClaims({token: token, offset: (temp.pointer - 1) * pager.base, limit: pager.base, search: search, column: column, sort: sort}));
   }
 
   const choosePage = e => {
@@ -136,13 +138,13 @@ function Pager() {
     controlLeft(temp);
     controlRight(temp);
     dispatchPagerState(setPagerState(temp));
-    dispatch(fetchClaims({token: token, offset: (temp.pointer - 1) * pager.base, limit: pager.base}));
+    dispatch(fetchClaims({token: token, offset: (temp.pointer - 1) * pager.base, limit: pager.base, search: search, column: column, sort: sort}));
 
   } 
 
   const chooseExtremePage = e => {
     let temp = {...pagerState};
-    // let temp = pagerState;
+    debugger
     temp.pointer = +e.target.id;
     if (temp.pointer === temp.last) {
       temp.stop = temp.last - 1;
@@ -159,7 +161,7 @@ function Pager() {
       temp.stop--;
     }
     dispatchPagerState(setPagerState(temp));
-    dispatch(fetchClaims({token: token, offset: (temp.pointer - 1) * pager.base, limit: pager.base}));
+    dispatch(fetchClaims({token: token, offset: (temp.pointer - 1) * pager.base, limit: pager.base, search: search, column: column, sort: sort}));
   }
   
 

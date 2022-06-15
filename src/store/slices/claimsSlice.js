@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { useLayoutEffect } from 'react';
 
-import { pager } from '../../data/data.js';
+import { pager, hosts, methods, publicPaths } from '../../data/data.js';
 
 const initialState = {
   totalItems: 0,
@@ -10,9 +11,14 @@ const initialState = {
   errorMessage: ''
 }
 
-export const fetchClaims = createAsyncThunk('claims/fetchClaims', async ({token, offset, limit}) => {
-  let promise = await fetch ('http://localhost:3001/claim?offset=0&limit=1', {
-      method: 'GET',
+export const fetchClaims = createAsyncThunk('claims/fetchClaims', async ({token, offset, limit, search, column, sort}) => {
+  let urlTest = new URL(publicPaths.claim, hosts.local);
+  urlTest.searchParams.append('offset', 0);
+  urlTest.searchParams.append('limit', 1);
+  if (search) urlTest.searchParams.append('search', `${search}`);
+  
+  let promise = await fetch (urlTest, {
+      method: methods.get,
       headers: {
       Authorization: `Bearer ${token}`
       },
@@ -23,8 +29,18 @@ export const fetchClaims = createAsyncThunk('claims/fetchClaims', async ({token,
   let maxOffset = (Math.floor(result.totalItems / pager.base) * pager.base);
   if (isNaN(offset) || offset > maxOffset) offset = maxOffset;
   sessionStorage.setItem('offset', offset);
-  promise = await fetch (`http://localhost:3001/claim?offset=${offset}&limit=${limit}`, {
-    method: 'GET',
+
+  let url = new URL(publicPaths.claim, hosts.local);
+  url.searchParams.append('offset', `${offset}`);
+  url.searchParams.append('limit', `${limit}`);
+  if (search) url.searchParams.append('search', `${search}`);
+  if (sort) {
+    url.searchParams.append('column', `${column}`);
+    url.searchParams.append('sort', `${sort}`);
+  }
+
+  promise = await fetch (url, {
+    method: methods.get,
     headers: {
     Authorization: `Bearer ${token}`
     },
