@@ -1,14 +1,14 @@
+@use '../../assets/styles/variables.scss' as v;
+@use '../../assets/styles/mixins.scss' as m;
 @import url('../../assets/styles/normalize.scss');
 
 .NewClaim__title {
-  margin-left: 64px;
   margin-bottom: 48px;
 }
 
 .NewClaim__input {
   max-width: 589px;
   height: 105px;
-  margin-left: 64px;
   margin-bottom: 8px;
 }
 
@@ -16,10 +16,17 @@
   display: flex;
   gap: 24px;
   width: fit-content;
-  margin-left: 64px;
 }
 
 .NewClaim__button {
   width: 82px;
   height: 48px;
+}
+
+
+@media (max-width: 799px) {
+  .NewClaim__title {
+    @include m.text(v.$font2, 24px, 29.05px, v.$color16);
+    cursor: default;
+  }
 }

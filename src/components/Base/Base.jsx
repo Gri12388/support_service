@@ -69,7 +69,6 @@ function Base() {
 
   return (
     <div className='container1 Base__container'>
-      {console.log(error)}
       <aside className='Base__aside'>
         <img src={baseLogo} alt='logotype' className='Base__logo' />
         {baseIcons}

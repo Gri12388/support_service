@@ -90,7 +90,10 @@ function NewClaim() {
     checker();
   }
 
-  const onCancel = () => navigate(-1);
+  const onCancel = (e) => {
+    e.preventDefault();
+    navigate(-1);
+  }
 
   const checkTitle = () => {
     if (title.content.length === 0) return setTitle(state=>({...state, status: false, error: errors.titleErrors.noTitle}));
@@ -110,42 +113,44 @@ function NewClaim() {
 
   return(
     <form className='container2' onSubmit={onSubmit}>
+      <div className='subcontainer'>
       <p className='text4 NewClaim__title'>Creating new claim</p>
-      <section className='NewClaim__input'>
-        <InputText 
-          id='fromNewClaim__title'
-          label='TITLE'
-          placeholder='Type claim title'
-          value={title.content}
-          callbacks={{onChange: onTitleInput, onBlur: onBlur.bind(null, setTitle, checkTitle)}}
-          state={title}
-        />
-      </section>
-      <section className='NewClaim__input'>
-        <Sel 
-          id='fromNewClaim__type'
-          label='TYPE'
-          groupId={'fromNewClaim__sel1'}
-          placeholder='Select type'
-          value={type.content}
-          callbacks={{onChange: onTypeInput, onBlur: onBlur.bind(null, setType, checkType)}}
-          state={type}
-        />
-      </section>
-      <section className='NewClaim__input'>
-        <InputText 
-          id='fromNewClaim__description'
-          label='DESCRIPTION'
-          placeholder='Type claim description'
-          value={description.content}
-          callbacks={{onChange: onDescriptionInput, onBlur: onBlur.bind(null, setDescription, checkDescription)}}
-          state={description}
-        />
-      </section>
-      <section className='NewClaim__buttons'>
-        <button className='button3 NewClaim__button' onClick={onCancel}>Cancel</button>
-        <input  type='submit' className='button2 xbutton1 NewClaim__button' value='Create' />
-      </section>
+        <section className='NewClaim__input'>
+          <InputText 
+            id='fromNewClaim__title'
+            label='TITLE'
+            placeholder='Type claim title'
+            value={title.content}
+            callbacks={{onChange: onTitleInput, onBlur: onBlur.bind(null, setTitle, checkTitle)}}
+            state={title}
+          />
+        </section>
+        <section className='NewClaim__input'>
+          <Sel 
+            id='fromNewClaim__type'
+            label='TYPE'
+            groupId={'fromNewClaim__sel1'}
+            placeholder='Select type'
+            value={type.content}
+            callbacks={{onChange: onTypeInput, onBlur: onBlur.bind(null, setType, checkType)}}
+            state={type}
+          />
+        </section>
+        <section className='NewClaim__input'>
+          <InputText 
+            id='fromNewClaim__description'
+            label='DESCRIPTION'
+            placeholder='Type claim description'
+            value={description.content}
+            callbacks={{onChange: onDescriptionInput, onBlur: onBlur.bind(null, setDescription, checkDescription)}}
+            state={description}
+          />
+        </section>
+        <section className='NewClaim__buttons'>
+          <button className='button3 NewClaim__button' onClick={onCancel}>Cancel</button>
+          <input  type='submit' className='button2 xbutton1 NewClaim__button' value='Create' />
+        </section>
+      </div>
     </form>
   ); 
 }
