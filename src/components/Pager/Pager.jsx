@@ -39,7 +39,19 @@ function Pager() {
     temp.last = pageNumber;
     temp.offset = windowWidth < 500 ? pager.offsetMin : pager.offsetMax;
     temp.pointer = (+sessionStorage.getItem('offset')) / pager.base + 1;
-  
+    
+    temp = computePagerState(temp);
+    
+    dispatchPagerState(setPagerState(temp));
+  }, [offset, pageNumber]);
+
+  const computePagerState = ({last, offset, pointer}) => {
+    let temp = {
+      last: last,
+      offset: offset,
+      pointer: pointer
+    }
+
     if (temp.last > 1 && temp.last <= temp.offset + 3) {
       temp.start = 2;
       temp.stop = temp.last - 1;
@@ -78,93 +90,33 @@ function Pager() {
         else temp.displayLeft = false;
       }
     }
-    dispatchPagerState(setPagerState(temp));
-  }, [offset, pageNumber]);
 
-  const controlRight = temp => {
-    if (temp.displayRight && temp.pointer === temp.stop) {
-      temp.start++;
-      temp.stop++;
-      if (!temp.displayLeft) {
-        temp.displayLeft = true;
-        temp.start++;
-      }
-      if (temp.stop === temp.last - 1) {
-        temp.displayRight = false;
-        temp.start--;
-      }
-    }
-  }
-
-  const controlLeft = temp => {
-    if (temp.displayLeft && temp.pointer === temp.start) {
-      temp.start--;
-      temp.stop--;
-      if (!temp.displayRight) {
-        temp.displayRight = true;
-        temp.stop--;
-      }
-      if (temp.start === 2) {
-        temp.displayLeft = false;
-        temp.stop++;
-      }
-    }
+    return temp;
   }
 
   const incrementPointer = () => {
-
     let temp = {...pagerState};
-    //let temp = pagerState;
     if (temp.pointer < temp.last) temp.pointer++;
-    controlRight(temp);
+    temp = computePagerState(temp);
     dispatchPagerState(setPagerState(temp));
     dispatch(fetchClaims({token: token, offset: (temp.pointer - 1) * pager.base, limit: pager.base, search: search, column: column, sort: sort}));
   }
 
   const decrementPointer = () => {
     let temp = {...pagerState};
-    // let temp = pagerState;
     if (temp.pointer > 1) temp.pointer--;
-    controlLeft(temp);
+    temp = computePagerState(temp);
     dispatchPagerState(setPagerState(temp));
     dispatch(fetchClaims({token: token, offset: (temp.pointer - 1) * pager.base, limit: pager.base, search: search, column: column, sort: sort}));
   }
 
   const choosePage = e => {
     let temp = {...pagerState};
-    // let temp = pagerState;
-    
     temp.pointer = +e.target.id;
-    controlLeft(temp);
-    controlRight(temp);
+    temp = computePagerState(temp);
     dispatchPagerState(setPagerState(temp));
     dispatch(fetchClaims({token: token, offset: (temp.pointer - 1) * pager.base, limit: pager.base, search: search, column: column, sort: sort}));
-
   } 
-
-  const chooseExtremePage = e => {
-    let temp = {...pagerState};
-    debugger
-    temp.pointer = +e.target.id;
-    if (temp.pointer === temp.last) {
-      temp.stop = temp.last - 1;
-      temp.start = temp.stop - temp.offset;
-      temp.displayRight = false;
-      temp.displayLeft = true; 
-      temp.start++;
-    }
-    if (temp.pointer === 1) {
-      temp.start = 2;
-      temp.stop = temp.start + temp.offset;
-      temp.displayLeft = false;
-      temp.displayRight = true;
-      temp.stop--;
-    }
-    dispatchPagerState(setPagerState(temp));
-    dispatch(fetchClaims({token: token, offset: (temp.pointer - 1) * pager.base, limit: pager.base, search: search, column: column, sort: sort}));
-  }
-  
-
 
   const pages = [];
   for (let i = pagerState.start; i <= pagerState.stop; i++) {
@@ -183,14 +135,14 @@ function Pager() {
         >&lt;</div>
         <div  id={1} 
               className={pagerState.pointer === 1 ? 'Pager__item Pager__pointer' : 'Pager__item'} 
-              onClick={chooseExtremePage}
+              onClick={choosePage}
         >{1}</div>
         {pagerState.displayLeft && <div className='Pager__item1'>...</div>}
         {pages}
         {pagerState.displayRight && <div className='Pager__item1'>...</div>}
         <div  id={pagerState.last} 
               className={pagerState.pointer === pagerState.last ? 'Pager__item Pager__pointer' : 'Pager__item'} 
-              onClick={chooseExtremePage}
+              onClick={choosePage}
         >{pagerState.last}</div>
         <div  className='Pager__item' 
               onClick={incrementPointer}
@@ -202,36 +154,3 @@ function Pager() {
 }
 
 export default Pager;
-
-//--------------------------------------------------------
-
-// const incrementPointer = () => {
-//   let temp = {...pageBar};
-//   if (temp.pointer < temp.last) temp.pointer++;
-//   if (temp.displayRight && temp.pointer === temp.stop) {
-//     temp.start++;
-//     temp.stop++;
-//     temp.displayLeft = true;
-//     if (temp.stop === temp.last - 1) {
-//       temp.displayRight = false;
-//     }
-//   }
-
-//   setPageBar(temp);
-// }
-
-//-----------------------------------------------
-
-    // if (!pagerState.pointer) {
-    //   temp.pointer = (+sessionStorage.getItem('offset')) / pager.base + 1;
-    //   //debugger
-    // }
-    // else if (pagerState.pointer > temp.last) {
-    //   temp.pointer = temp.last;
-    //   //debugger
-    // }
-    // else {
-    //   temp.pointer = pagerState.pointer;
-    //   //debugger
-    // }
-    //debugger
