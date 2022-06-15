@@ -27,6 +27,18 @@
   }
 }
 
+.Search__cross_svg {
+  width: 15px;
+  height: 15px;
+  margin-left: 16px;
+  cursor: pointer;
+  fill: v.$color16;
+  transition: v.$transition;
+  &:hover {
+    fill: v.$color8;
+  }
+}
+
 .Search__loupe_svg {
   @extend %svg;
   cursor: pointer;

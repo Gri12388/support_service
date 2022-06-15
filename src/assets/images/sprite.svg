@@ -56,6 +56,11 @@
     <path d="M27.9999 28.9999L23.6499 24.6499" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
   </symbol>
 
+  <symbol id="cross" viewBox="0 0 490 490">
+    <polygon points="386.813,0 245,141.812 103.188,0 0,103.188 141.813,245 0,386.812 103.187,489.999 245,348.187 386.813,490 490,386.812 348.187,244.999 490,103.187 "/>
+    <g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g>
+  </symbol>
+
 </svg>
 
 

@@ -37,20 +37,7 @@ function Pager() {
     temp.last = pageNumber;
     temp.offset = windowWidth < 500 ? pager.offsetMin : pager.offsetMax;
     temp.pointer = (+sessionStorage.getItem('offset')) / pager.base + 1;
-    
-    // if (!pagerState.pointer) {
-    //   temp.pointer = (+sessionStorage.getItem('offset')) / pager.base + 1;
-    //   //debugger
-    // }
-    // else if (pagerState.pointer > temp.last) {
-    //   temp.pointer = temp.last;
-    //   //debugger
-    // }
-    // else {
-    //   temp.pointer = pagerState.pointer;
-    //   //debugger
-    // }
-    //debugger
+  
     if (temp.last > 1 && temp.last <= temp.offset + 3) {
       temp.start = 2;
       temp.stop = temp.last - 1;
@@ -91,14 +78,6 @@ function Pager() {
     }
     dispatchPagerState(setPagerState(temp));
   }, [offset, pageNumber]);
-
-
-
-
-
-  
-
-  
 
   const controlRight = temp => {
     if (temp.displayRight && temp.pointer === temp.stop) {
@@ -238,3 +217,19 @@ export default Pager;
 
 //   setPageBar(temp);
 // }
+
+//-----------------------------------------------
+
+    // if (!pagerState.pointer) {
+    //   temp.pointer = (+sessionStorage.getItem('offset')) / pager.base + 1;
+    //   //debugger
+    // }
+    // else if (pagerState.pointer > temp.last) {
+    //   temp.pointer = temp.last;
+    //   //debugger
+    // }
+    // else {
+    //   temp.pointer = pagerState.pointer;
+    //   //debugger
+    // }
+    //debugger
