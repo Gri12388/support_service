@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 
-import { selectStatus } from '../../store/slices/claimsSlice.js';
+import { selectStatus, selectError, configSettings } from '../../store/slices/claimsSlice.js';
 
 import Search from '../Search/Search.jsx';
 import Slider from '../Slider/Slider.jsx';
@@ -20,6 +20,11 @@ import baseSprite from '../../assets/images/sprite.svg';
 function Base() {
 
   let status = useSelector(selectStatus);
+  let error = useSelector(selectError);
+  
+  const dispatch = useDispatch();
+  const location = useLocation();
+  const navigate = useNavigate();
 
   let [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
@@ -36,16 +41,15 @@ function Base() {
 
   const showSlider = () => setSliderConfig(state=>({...state, isVisible: true}));
   const hideSlider = () => setSliderConfig(state=>({...state, isVisible: false}));
+  const quitSession = () => navigate('/', {replace: true});
   const burgerHandler = () => {
     if (sliderConfig.isVisible) hideSlider();
     else showSlider();
   }
+  const hideModal = e => {
+    if (e.target.dataset.groupid !== 'Base__message') dispatch(configSettings({error: false, errorMessage: ''}));
+  }
 
-  const location = useLocation();
-  const navigate = useNavigate();
-
-  const quitSession = () => navigate('/', {replace: true});
-  
 
   const baseIconsData = [
     {id: 0, name: 'home'},
@@ -65,6 +69,7 @@ function Base() {
 
   return (
     <div className='container1 Base__container'>
+      {console.log(error)}
       <aside className='Base__aside'>
         <img src={baseLogo} alt='logotype' className='Base__logo' />
         {baseIcons}
@@ -98,6 +103,14 @@ function Base() {
         <div className='modal-area'>
           <div className='modal-message'>
             <img src={loadingImage} alt='loading' className='loading' />
+          </div>
+        </div>
+      )}
+      {error.error && (
+        <div className='modal-area' onClick={hideModal}>
+          <div className='modal-message' datagroupid='Base__message'>
+            <p className='text3' datagroupid='Base__message'>{error.errorMessage}</p>
+            <div className='button2 close-button'>╳</div>
           </div>
         </div>
       )}

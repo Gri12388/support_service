@@ -22,6 +22,7 @@ export const fetchClaims = createAsyncThunk('claims/fetchClaims', async ({token,
   if (result.totalItems === 0) return result;
   let maxOffset = (Math.floor(result.totalItems / pager.base) * pager.base);
   if (isNaN(offset) || offset > maxOffset) offset = maxOffset;
+  sessionStorage.setItem('offset', offset);
   promise = await fetch (`http://localhost:3001/claim?offset=${offset}&limit=${limit}`, {
     method: 'GET',
     headers: {
@@ -47,11 +48,11 @@ const claimsSlice = createSlice({
       });
     }, 
     configSettings: (state, action) => {
-      state.status = action.payload.status;
-      if (action.payload.error !== null || action.payload.error !== undefined) {
+      if (action.payload.status !== null && action.payload.status !== undefined) state.status = action.payload.status; 
+      if (action.payload.error !== null && action.payload.error !== undefined) {
         state.error = action.payload.error;
         state.errorMessage = action.payload.errorMessage;
-      }
+      } 
     }
   },
   extraReducers: builder => {
@@ -91,6 +92,8 @@ export const selectTotalClaimsNumber = state => state.claims.totalItems;
 export const selectToken = state => state.claims.token;
 
 export const selectStatus = state => state.claims.status;
+
+export const selectError = state => ({error: state.claims.error, errorMessage: state.claims.errorMessage})
 
 export default claimsSlice.reducer;
 

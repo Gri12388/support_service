@@ -90,6 +90,8 @@ function NewClaim() {
     checker();
   }
 
+  const onCancel = () => navigate(-1);
+
   const checkTitle = () => {
     if (title.content.length === 0) return setTitle(state=>({...state, status: false, error: errors.titleErrors.noTitle}));
     if (title.content.length > rules.titleLengthMax) return setTitle(state=>({...state, status: false, error: errors.titleErrors.longTitle}));
@@ -141,7 +143,7 @@ function NewClaim() {
         />
       </section>
       <section className='NewClaim__buttons'>
-        <button className='button3 NewClaim__button'>Cancel</button>
+        <button className='button3 NewClaim__button' onClick={onCancel}>Cancel</button>
         <input  type='submit' className='button2 xbutton1 NewClaim__button' value='Create' />
       </section>
     </form>
