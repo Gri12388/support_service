@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 import InputText from '../InputText/InputText.jsx';
 
-import { rules, errors, messages, typeColors, statusColors } from '../../data/data.js';
+import { rules, errors, messages, typeColors, statusColors, onPressedEnter } from '../../data/data.js';
 
 import '../../assets/styles/common.scss';
 import './Login.scss';
@@ -184,20 +184,17 @@ function Login({ setLoading, email, setEmail, password, setPassword }) {
   //------------------------------------------------------------//
   let [loginElement, setLoginElement] = useState();
   let [passwordElement, setPasswordElement] = useState();
-  let [submitElement, setSubmitElement] = useState();
 
 
 
   //------------------------------------------------------------//
   // Массивоподобный объект, хранящий данные для реализации 
   // смены фокуса при нажатии на кнопку Enter, а именно: id
-  // элемента, сам элемент и его Tab позиция в форме. Последнее
-  // свойство объекта всегда содержит данные кнопки submit.                                  
+  // элемента, сам элемент и его Tab позиция в форме.                                  
   //------------------------------------------------------------//
   const elements = {
     0: { id: 'fromLogin__email', state: loginElement, pos: 0 }, 
     1: { id: 'fromLogin__password', state: passwordElement, pos: 1 },
-    2: { id: 'Login__submit_button', state: submitElement, pos: 2 }
   } 
 
 
@@ -209,22 +206,8 @@ function Login({ setLoading, email, setEmail, password, setPassword }) {
   useEffect(() => {
     setLoginElement(document.getElementById(elements[0].id));
     setPasswordElement(document.getElementById(elements[1].id));
-    setSubmitElement(document.getElementById(elements[2].id));
   }, []);
 
-
-
-  //------------------------------------------------------------//
-  // Реализация функции, которая будет перемещать фокус с
-  // текущего элемента input на следующий или на кнопку submit                                
-  //------------------------------------------------------------//
-  function onPressedEnter(e) {
-    if (e.code === 'Enter' || e.key === 'Enter') {
-      e.preventDefault();
-      let pos = Object.values(elements).find(item => item.id === e.target.id).pos;
-      elements[++pos].state.focus();
-    }
-  }
   
 
   return (
@@ -235,13 +218,13 @@ function Login({ setLoading, email, setEmail, password, setPassword }) {
           type='email'
           label='E-MAIL'
           placeholder='Type your e-mail'
-          value={email.content}
+          value={ email.content }
           img='mail'
-          state={email}
+          state={ email }
           callbacks={{  
             onChange: onEmailInput, 
             onBlur: onBlur.bind(null, setEmail, checkEmail),
-            onPressedEnter: onPressedEnter
+            onPressedEnter: onPressedEnter(elements)
           }}
         />
       </div>
@@ -251,34 +234,27 @@ function Login({ setLoading, email, setEmail, password, setPassword }) {
           type='password'
           label='PASSWORD'
           placeholder='Type your password'
-          value={password.content}
+          value={ password.content }
           img='lock'
-          state={password}
+          state={ password }
           callbacks={{
             onChange: onPasswordInput, 
             onBlur: onBlur.bind(null, setPassword, checkPassword),
-            onPressedEnter: onPressedEnter
+            onPressedEnter: onPressedEnter(elements)
           }}
         />
       </div>
       <div className='Login__checkbox_wrapper'>
-        <input type='checkbox' id='Login__checkbox' name='Login__checkbox' className='Login__checkbox' />
+        <input  type='checkbox' 
+                id='Login__checkbox' 
+                name='Login__checkbox' 
+                className='Login__checkbox' 
+        />
         <label htmlFor='' className='text2'>Keep me logged in</label>
       </div>
-      <button id={ elements[2].id } className='button2 xbutton1'>Login</button>
+      <button className='button2 xbutton1'>Login</button>
     </form>
   );
 }
 
 export default Login;
-
-//---------------------------
-
-  // let [email, setEmail] = useState('');
-  // let [password, setPassword] = useState();
-
-//---------------------------
-
-//  {/* <button className='button2 xbutton1'>Login</button> */}
-
-//---------------------------

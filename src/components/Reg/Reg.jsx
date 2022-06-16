@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import InputText from '../InputText/InputText.jsx';
-import { rules, errors, messages } from '../../data/data.js'
+import { rules, errors, messages, onPressedEnter } from '../../data/data.js'
 
 import '../../assets/styles/common.scss';
 import './Reg.scss';
@@ -124,6 +124,49 @@ function Reg({toggleBlockModal}) {
     setPasswordCopy(state=>({...state, status: true, error: ''}));
   }
 
+  //------------------------------------------------------------//
+  // Данный блок предназначен для хранения input элементов DOM  
+  // дерева, которые будут задействованы при использовании      
+  // функции element.focus() для реализации перемещения фокуса  
+  // при нажатии клавиши Enter                                  
+  //------------------------------------------------------------//
+  let [nameElement, setNameElement] = useState();
+  let [surnameElement, setSurnameElement] = useState();
+  let [emailElement, setEmailElement] = useState();
+  let [passwordElement, setPasswordElement] = useState();
+  let [passwordCopyElement, setPasswordCopyElement] = useState();
+
+
+
+  //------------------------------------------------------------//
+  // Массивоподобный объект, хранящий данные для реализации 
+  // смены фокуса при нажатии на кнопку Enter, а именно: id
+  // элемента, сам элемент и его Tab позиция в форме.                                   
+  //------------------------------------------------------------//
+  const elements = {
+    0: { id: 'fromReg__name', state: nameElement, pos: 0 }, 
+    1: { id: 'fromReg__surname', state: surnameElement, pos: 1 },
+    2: { id: 'fromReg__email', state: emailElement, pos: 2 },
+    3: { id: 'fromReg__password', state: passwordElement, pos: 3 },
+    4: { id: 'fromReg__password-copy', state: passwordCopyElement, pos: 4 },
+  } 
+
+
+
+  //------------------------------------------------------------//
+  // Данный хук ищет только после первого рендера нужные элемены 
+  // DOM дерева и сохраняет их в своответствующем состоянии                                 
+  //------------------------------------------------------------//
+  useEffect(() => {
+    setNameElement(document.getElementById(elements[0].id));
+    setSurnameElement(document.getElementById(elements[1].id));
+    setEmailElement(document.getElementById(elements[2].id));
+    setPasswordElement(document.getElementById(elements[3].id));
+    setPasswordCopyElement(document.getElementById(elements[4].id));
+  }, []);
+
+
+
   return (
     <div className='container3'>
       {form.isVisible && (
@@ -133,8 +176,12 @@ function Reg({toggleBlockModal}) {
             id='fromReg__name'
             label='NAME'
             placeholder='Type your name'
-            callbacks={{onChange: onNameInput, onBlur: onBlur.bind(null, setName, checkName)}}
-            state={name}
+            state={ name }
+            callbacks={{
+              onChange: onNameInput, 
+              onBlur: onBlur.bind(null, setName, checkName),
+              onPressedEnter: onPressedEnter(elements)
+            }}
           />
           </section>
           <section className='Reg__section'>
@@ -142,8 +189,12 @@ function Reg({toggleBlockModal}) {
             id='fromReg__surname'
             label='SURNAME'
             placeholder='Type your surname'
-            callbacks={{onChange: onSurnameInput, onBlur: onBlur.bind(null, setSurname, checkSurname)}}
-            state={surname}
+            state={ surname }
+            callbacks={{
+              onChange: onSurnameInput, 
+              onBlur: onBlur.bind(null, setSurname, checkSurname),
+              onPressedEnter: onPressedEnter(elements)
+            }}
           />
           </section>
           <section className='Reg__section'>
@@ -152,8 +203,12 @@ function Reg({toggleBlockModal}) {
             id='fromReg__email'
             label='E-MAIL'
             placeholder='Type your e-mail'
-            callbacks={{onChange: onEmailInput, onBlur: onBlur.bind(null, setEmail, checkEmail)}}
-            state={email}
+            state={ email }
+            callbacks={{
+              onChange: onEmailInput, 
+              onBlur: onBlur.bind(null, setEmail, checkEmail),
+              onPressedEnter: onPressedEnter(elements)
+            }}
           />
           </section>
           <section className='Reg__section'>
@@ -162,8 +217,12 @@ function Reg({toggleBlockModal}) {
             id='fromReg__password'
             label='PASSWORD'
             placeholder='Type your password'
-            callbacks={{onChange: onPasswordInput, onBlur: onBlur.bind(null, setPassword, checkPassword)}}
-            state={password}
+            state={ password }
+            callbacks={{
+              onChange: onPasswordInput, 
+              onBlur: onBlur.bind(null, setPassword, checkPassword),
+              onPressedEnter: onPressedEnter(elements)
+            }}
           />
           </section>
           <section className='Reg__section'>
@@ -172,11 +231,15 @@ function Reg({toggleBlockModal}) {
             id='fromReg__password-copy'
             label='PASSWORD AGAIN'
             placeholder='Type your password again'
-            callbacks={{onChange: onPasswordCopyInput, onBlur: onBlur.bind(null, setPasswordCopy, checkPasswordCopy)}}
-            state={passwordCopy}
+            state={ passwordCopy }
+            callbacks={{
+              onChange: onPasswordCopyInput, 
+              onBlur: onBlur.bind(null, setPasswordCopy, checkPasswordCopy),
+              onPressedEnter: onPressedEnter(elements)
+            }}
           />
           </section>
-          <input type='submit' className='button2 xbutton1' value='Register' />
+          <button className='button2 xbutton1'>Register</button>
           <div className='button2 close-button' id='Reg__button'>╳</div>
         </form>
       )}
@@ -202,80 +265,3 @@ function Reg({toggleBlockModal}) {
 
 export default Reg;
 
-//--------------------------------------
-
-// const onBlurName = () => {
-//   setName(state=>({...state, touched: true}));
-//   checkName();
-// }
-
-// const onBlurSurname = () => {
-//   setSurname(state=>({...state, touched: true}));
-//   checkSurname();
-// }
-
-// const onBlurEmail = () => {
-//   setEmail(state=>({...state, touched: true}));
-//   checkEmail();
-// }
-
-//--------------------------------
-
-{/* <button className='button2 xbutton1'>Register</button> */}
-
-//--------------------------------
-
-// const rules = {
-//   nameLengthMin: 1,
-//   nameLengthMax: 20,
-//   surnameLengthMin: 1,
-//   surnameLengthMax: 20,
-//   emailRegExp: /^\w[-._\w]*\w@\w[-._\w]*\w\.\w{2,3}$/,
-//   passwordLengthMin: 6,
-//   passwordLengthMax: 20,
-// }
-
-// const errors = {
-//   nameErrors: {
-//     noName: 'Type name',
-//     shortName: 'Name is short',
-//     longName: 'Name is long',
-//   },
-//   surnameErrors: {
-//     noSurname: 'Type surname',
-//     shortSurname: 'Surname is short',
-//     longSurname: 'Surname is long',
-//   },
-//   emailErrors: {
-//     noEmail: 'Type email',
-//     wrongEmail: 'Wrong email',
-//   },
-//   passwordErrors: {
-//     noPassword: 'Type password',
-//     noPasswordCopy: 'Repeat password',
-//     shortPassword: 'Password is short',
-//     longPassword: 'Password is long',
-//     noMatch: 'Passwords don\'t match', 
-//   }
-// }
-
-//--------------------------------
-
-// testAsync();
-// setForm(state=>({...state, isVisible: false}));
-// setLoading(state=>({...state, isVisible: true}));
-// toggleBlockModal();
-
-//---------------------------------------------------
-
-// async function testAsync() {
-//   let promise = await (() => new Promise(resolve => setTimeout(()=>resolve({}), 5000)))();
-//   promise.status = 201;
-//   setLoading(state=>({...state, isVisible: false}));
-//   toggleBlockModal();
-//   console.log (promise);
-//   if (promise.status === 200) setMessage(state=>({...state, isVisible: true, content: 'You are registered successfully', isRegistered: true})); 
-//   else setMessage(state=>({...state, isVisible: true, content: 'You are  not registered', isRegistered: false}));
-// }
-
-//------------------------------------------

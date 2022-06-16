@@ -13,6 +13,11 @@ export const publicPaths = {
   claim: '/claim',
 }
 
+export const roles = {
+  admin: 'Administrator',
+  user: 'User'
+}
+
 export const rules = {
   nameLengthMin: 1,
   nameLengthMax: 20,
@@ -78,11 +83,6 @@ export const sortOptions = {
   desc: 'desc'
 }
 
-export const roles = {
-  admin: 'Administrator',
-  user: 'User'
-}
-
 export const columnOptions = {
   title: 'title', 
   description: 'description',
@@ -103,3 +103,16 @@ export const statusColors = [
   '#00B894',
   '#FDCB6E'
 ]
+
+  //------------------------------------------------------------//
+  // Реализация функции, которая будет перемещать фокус с
+  // текущего элемента input на следующий                                 
+  //------------------------------------------------------------//
+  export const onPressedEnter = elements => e => {
+    if (e.code === 'Enter' || e.key === 'Enter') {
+      e.preventDefault();
+      let arr = Object.values(elements);
+      let pos = arr.find(item => item.id === e.target.id).pos;
+      elements[++pos % arr.length].state.focus();
+    }
+  }
