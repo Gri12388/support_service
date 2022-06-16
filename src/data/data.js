@@ -73,6 +73,23 @@ export const pager = {
   offsetMax: 6
 }
 
+export const sortOptions = {
+  asc: 'asc',
+  desc: 'desc'
+}
+
+export const roles = {
+  admin: 'Administrator',
+  user: 'User'
+}
+
+export const columnOptions = {
+  title: 'title', 
+  description: 'description',
+  type: 'type',
+  status: 'status'
+}
+
 export const typeColors = [
   '#7DB59A',
   '#FF7675',

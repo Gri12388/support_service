@@ -34,7 +34,7 @@ export const fetchClaims = createAsyncThunk('claims/fetchClaims', async ({token,
   url.searchParams.append('offset', `${offset}`);
   url.searchParams.append('limit', `${limit}`);
   if (search) url.searchParams.append('search', `${search}`);
-  if (sort) {
+  if (column) {
     url.searchParams.append('column', `${column}`);
     url.searchParams.append('sort', `${sort}`);
   }

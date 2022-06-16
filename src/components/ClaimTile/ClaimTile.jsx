@@ -1,12 +1,16 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import Type from '../Type/Type.jsx';
 import Status from '../Status/Status.jsx';
 
+import { roles } from '../../data/data.js';
+
 import './ClaimTile.scss';
 
 function ClaimTile({item, type, status}) {
+
+  const role = useMemo(() => sessionStorage.getItem('role'), []);
 
   const navigate = useNavigate();
 
@@ -33,7 +37,7 @@ function ClaimTile({item, type, status}) {
           <p className='text11'>Status</p>
           <Status statusId={status.id}/>
         </div>
-        <button className='button3' onClick={onBrowse}>Browse</button>
+        {role === roles.admin && <button className='button3' onClick={onBrowse}>Browse</button>}
       </main>
     </section>
   );

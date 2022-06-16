@@ -1,8 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+import { sortOptions } from '../../data/data.js';
+
 const initialState = {
   search: '',
-  sort: '',
+  sort: sortOptions.asc,
   column: ''
 };
 

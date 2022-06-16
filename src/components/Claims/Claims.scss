@@ -2,11 +2,8 @@
 @import url('../../assets/styles/normalize.scss');
 
 .Claims__header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 48px;
-  margin: 0 0 48px 8px;
+  height: 48px + 48px;
+  margin: 0 0 0 8px;
 
 }
 
@@ -16,6 +13,29 @@
   align-items: center;
   width: 174px;
   height: 48px;
+}
+
+.Claims__banner, .Claims__radio {
+  height: 48px;
+}
+
+.Claims__banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.Claims__radio {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.Claims__radiobutton {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 6px;
 }
 
 .Claims__table {
@@ -59,16 +79,20 @@
 }
 
 @media (max-width: 799px) {
+  .Claims__header {
+    height: 48px + 24px;
+  }
+  
+  .Claims__radio {
+    display: none;
+  }
+  
   .Claims__table {
     display: none;
   }
 
   .Claims__tiles {
     display: flex;
-  }
-
-  .Claims__header {
-    margin: 0 0 24px 0;
   }
 
   .Claims__button {

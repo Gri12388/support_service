@@ -1,13 +1,17 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import Type from '../Type/Type.jsx';
 import Status from '../Status/Status.jsx';
 
+import { roles } from '../../data/data.js';
+
 import '../../assets/styles/common.scss';
 import './ClaimRow.scss';
 
 function ClaimRow({item, type, status}) {
+  
+  const role = useMemo(() => sessionStorage.getItem('role'), []);
 
   const navigate = useNavigate();
 
@@ -31,7 +35,7 @@ function ClaimRow({item, type, status}) {
         <Status statusId={status.id}/>
       </div>
       <div className='column5'>
-        <p className='text3-link' onClick={onBrowse}>Browse</p>
+        {role === roles.admin && <p className='text3-link' onClick={onBrowse}>Browse</p>}
       </div>
     </>
   )

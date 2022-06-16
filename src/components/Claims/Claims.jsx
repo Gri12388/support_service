@@ -7,10 +7,11 @@ import ClaimTile from '../ClaimTile/ClaimTile.jsx';
 import Pager from '../Pager/Pager.jsx';
 
 import { selectClaims, fetchClaims } from '../../store/slices/claimsSlice.js';
-import { selectCommonState } from '../../store/slices/commonSlice.js';
+import { selectCommonState, setCommonState } from '../../store/slices/commonSlice.js';
 // import { selectTypes } from '../../store/slices/typesSlice.js';
 // import { selectStatuses } from '../../store/slices/statusesSlice.js';
 
+import { pager, sortOptions, columnOptions } from '../../data/data.js';
 
 import '../../assets/styles/common.scss';
 import './Claims.scss';
@@ -27,6 +28,24 @@ function Claims() {
   const dispatch = useDispatch();
 
   const onClaimsWindowWidthResize = () => setWindowWidth(window.innerWidth);
+  const onSortRadioButton = e => {
+    dispatch(setCommonState({sort: e.target.value}));
+    dispatch(fetchClaims({token: token, offset: offset, limit: pager.base, search: search, column: column, sort: e.target.value}));
+  }
+  const onColumn = e => {
+    let temp;
+    if (e.target.id === 'Claims__title' && column === columnOptions.title) temp = '';
+    else if (e.target.id === 'Claims__title' && column !== columnOptions.title) temp = columnOptions.title;
+    else if (e.target.id === 'Claims__type' && column === columnOptions.type) temp = '';
+    else if (e.target.id === 'Claims__type' && column !== columnOptions.type) temp = columnOptions.type;
+    else if (e.target.id === 'Claims__status' && column === columnOptions.status) temp = '';
+    else if (e.target.id === 'Claims__status' && column !== columnOptions.status) temp = columnOptions.status;
+    else return;
+    dispatch(setCommonState({column: temp}));
+    dispatch(fetchClaims({token: token, offset: offset, limit: pager.base, search: search, column: temp, sort: sort}));
+  }
+
+  console.log(sort)
 
   useEffect(()=> {
     window.addEventListener('resize', onClaimsWindowWidthResize);
@@ -113,21 +132,54 @@ function Claims() {
   return (
     <div className='container2'>
       <header className='Claims__header'>
-        <p className={windowWidth > 799 ? 'text4' : 'text9'}>Your claims</p>
-        <Link 
-          className='button2 Claims__button'
-          to='/base/new'
-        >
-          {windowWidth > 799 ? '🞣 Create claim' : '🞣'}
-        </Link>
+        <section className='Claims__banner'>
+          <p className={windowWidth > 799 ? 'text4' : 'text9'}>Your claims</p>
+          <Link 
+            className='button2 Claims__button'
+            to='/base/new'
+          >
+            {windowWidth > 799 ? '🞣 Create claim' : '🞣'}
+          </Link>
+        </section>
+        <section className='Claims__radio' style={{visibility: column ? 'visible' : 'hidden'}}>
+          <div className='Claims__radiobutton'>
+            <input  type='radio' 
+                    id='Calims__asc' 
+                    name='Claims__sort_radio'
+                    value={sortOptions.asc} 
+                    onChange={onSortRadioButton}
+                    checked={sort === sortOptions.asc}
+            />
+            <label htmlFor='Calims__asc' className='text3'>ascending sort</label>
+          </div>
+          <div className='Claims__radiobutton'>
+            <input  type='radio' 
+                    id='Calims__desc' 
+                    name='Claims__sort_radio'
+                    value={sortOptions.desc}
+                    onChange={onSortRadioButton}
+                    checked={sort === sortOptions.desc}
+            />
+            <label htmlFor='Calims__desc' className='text3'>descending sort</label>
+          </div>
+        </section>
       </header>
       <main className='Claims__table'>
         <section className='Claims__table-head'>
-          <p className='text7 column1'>Title</p>
-          <p className='text7 column2'>Created</p>
-          <p className='text7 column3'>Type</p>
-          <p className='text7 column4'>Status</p>
-          <p className='text7 column5'>Actions</p>
+          <p  className={column && column === columnOptions.title ? 'text7 column1 chosen' : 'text7 column1'}
+              id='Claims__title'
+              onClick={onColumn}
+          >Title</p>
+          <p  className='text7 column2'>Created</p>
+          <p  className={column && column === columnOptions.type ? 'text7 column3 chosen' : 'text7 column3'}
+              id='Claims__type'
+              onClick={onColumn}
+        >Type</p>
+          <p  className={column && column === columnOptions.status ? 'text7 column4 chosen' : 'text7 column4'}
+              id='Claims__status'
+              onClick={onColumn}
+          >Status</p>
+          <p  className='text7 column5'>Actions</p>
         </section>
         {rows}
       </main>
