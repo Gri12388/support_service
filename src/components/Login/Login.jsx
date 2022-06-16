@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from "react-router-dom";
 
@@ -8,9 +8,6 @@ import { rules, errors, messages, typeColors, statusColors } from '../../data/da
 
 import '../../assets/styles/common.scss';
 import './Login.scss';
-
-import mail from '../../assets/images/mail.svg';
-import lock from '../../assets/images/lock.svg';
 
 
 function Login({ setLoading, email, setEmail, password, setPassword }) {
@@ -177,42 +174,98 @@ function Login({ setLoading, email, setEmail, password, setPassword }) {
     setPassword(state=>({...state, status: true, error: ''}));
   }
 
+
+
+  //------------------------------------------------------------//
+  // Данный блок предназначен для хранения input элементов DOM  
+  // дерева, которые будут задействованы при использовании      
+  // функции element.focus() для реализации перемещения фокуса  
+  // при нажатии клавиши Enter                                  
+  //------------------------------------------------------------//
+  let [loginElement, setLoginElement] = useState();
+  let [passwordElement, setPasswordElement] = useState();
+  let [submitElement, setSubmitElement] = useState();
+
+
+
+  //------------------------------------------------------------//
+  // Массивоподобный объект, хранящий данные для реализации 
+  // смены фокуса при нажатии на кнопку Enter, а именно: id
+  // элемента, сам элемент и его Tab позиция в форме. Последнее
+  // свойство объекта всегда содержит данные кнопки submit.                                  
+  //------------------------------------------------------------//
+  const elements = {
+    0: { id: 'fromLogin__email', state: loginElement, pos: 0 }, 
+    1: { id: 'fromLogin__password', state: passwordElement, pos: 1 },
+    2: { id: 'Login__submit_button', state: submitElement, pos: 2 }
+  } 
+
+
+
+  //------------------------------------------------------------//
+  // Данный хук ищет только после первого рендера нужные элемены 
+  // DOM дерева и сохраняет их в своответствующем состоянии                                 
+  //------------------------------------------------------------//
+  useEffect(() => {
+    setLoginElement(document.getElementById(elements[0].id));
+    setPasswordElement(document.getElementById(elements[1].id));
+    setSubmitElement(document.getElementById(elements[2].id));
+  }, []);
+
+
+
+  //------------------------------------------------------------//
+  // Реализация функции, которая будет перемещать фокус с
+  // текущего элемента input на следующий или на кнопку submit                                
+  //------------------------------------------------------------//
+  function onPressedEnter(e) {
+    if (e.code === 'Enter' || e.key === 'Enter') {
+      e.preventDefault();
+      let pos = Object.values(elements).find(item => item.id === e.target.id).pos;
+      elements[++pos].state.focus();
+    }
+  }
+  
+
   return (
     <form className='Login__form' onSubmit={onSubmit} onKeyDown={onKeyDown}>
       <div className='Login__InputText1_wrapper'>
         <InputText
-          id='fromLogin__email'
+          id={ elements[0].id }
           type='email'
           label='E-MAIL'
           placeholder='Type your e-mail'
           value={email.content}
-          img={mail}
-          alt='mail'
-          callbacks={{onChange: onEmailInput, onBlur: onBlur.bind(null, setEmail, checkEmail)}}
+          img='mail'
           state={email}
+          callbacks={{  
+            onChange: onEmailInput, 
+            onBlur: onBlur.bind(null, setEmail, checkEmail),
+            onPressedEnter: onPressedEnter
+          }}
         />
       </div>
       <div className='Login__InputText1_wrapper'>
         <InputText
-          id='fromLogin__password'
+          id={ elements[1].id }
           type='password'
           label='PASSWORD'
           placeholder='Type your password'
           value={password.content}
-          img={lock}
-          alt='lock'
-          callbacks={{onChange: onPasswordInput, onBlur: onBlur.bind(null, setPassword, checkPassword)}}
+          img='lock'
           state={password}
+          callbacks={{
+            onChange: onPasswordInput, 
+            onBlur: onBlur.bind(null, setPassword, checkPassword),
+            onPressedEnter: onPressedEnter
+          }}
         />
       </div>
       <div className='Login__checkbox_wrapper'>
         <input type='checkbox' id='Login__checkbox' name='Login__checkbox' className='Login__checkbox' />
         <label htmlFor='' className='text2'>Keep me logged in</label>
       </div>
-
-      
-     
-      <input type='submit' className='button2 xbutton1' value='Login' />
+      <button id={ elements[2].id } className='button2 xbutton1'>Login</button>
     </form>
   );
 }

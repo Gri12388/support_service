@@ -16,7 +16,6 @@ function Search() {
   let [search, setSearch] = useState('') 
   let commonSearch = useSelector(selectCommonState).search;
   let token = sessionStorage.getItem('token');
-  let offset = +sessionStorage.getItem('offset');
   let { sort, column } = useSelector(selectCommonState);
 
   const dispatch = useDispatch();
@@ -43,11 +42,11 @@ function Search() {
   return (
     <div className='input_wrapper Search__input_wrapper'>
       <div  className='image_wrapper' 
-            style={{display: search ? 'flex' : 'none'}}
-            onClick={onCross}
+            style={{ display: search ? 'flex' : 'none' }}
+            onClick={ onCross }
       >
         <svg className='Search__cross_svg'>
-          <use href={searchSprite + `#cross`}></use>
+          <use href={ searchSprite + '#cross' }></use>
         </svg>
       </div>
       <input 
@@ -57,9 +56,9 @@ function Search() {
         value={search}
         onChange={onChange}
       />
-      <div className='image_wrapper' onClick={onLoupe}>
+      <div className='image_wrapper' onClick={ onLoupe }>
         <svg className='Search__loupe_svg'>
-          <use href={searchSprite + `#loupe`}></use>
+          <use href={ searchSprite + '#loupe' }></use>
         </svg>
       </div>
     </div>

@@ -22,3 +22,10 @@
     @include m.text(v.$font1, 18px, 22px, v.$color7);
   }
 }
+
+.InputText__icon_svg {
+  width: 40px;
+  height: 40px;
+  fill: v.$color0;
+  stroke: v.$color5;
+}
