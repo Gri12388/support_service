@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 
-import { selectStatus, selectError, configSettings } from '../../store/slices/claimsSlice.js';
+import { selectStatus, configSettings } from '../../store/slices/claimsSlice.js';
 
 import Search from '../Search/Search.jsx';
 import Slider from '../Slider/Slider.jsx';

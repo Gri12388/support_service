@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { reset } from '../../store/slices/claimsSlice.js';
+import { configSettings, reset, selectStatus } from '../../store/slices/claimsSlice.js';
 import { resetPagerState, selectPagerState } from '../../store/slices/pagerSlice.js';
 
 import Login from '../Login/Login.jsx';
 import Reg from '../Reg/Reg.jsx';
 
-import { errors } from '../../data/data.js';
+import { claimsStatuses, errors } from '../../data/data.js';
 
 import mainLogo from '../../assets/images/logo.svg';
 import footerLogo from '../../assets/images/logo-invert.svg';
@@ -20,6 +20,8 @@ import './Auth.scss';
 function Auth() {
 
   const dispatch = useDispatch();
+  let claimStatus = useSelector(selectStatus);
+
   const state = useSelector(selectPagerState);
 
 
@@ -29,7 +31,7 @@ function Auth() {
   let isModalBlocked = false;
   const setIsModalBlocked = () => isModalBlocked = !isModalBlocked;
 
-  const [isVisible, setIsVisible] = useState(true);
+  //const [isVisible, setIsVisible] = useState(true);
   const [loading, setLoading] = useState({isLoading: false, isBlocked: false, message: ''});
 
   // const showLoading = () => setLoading(state=>({...state, isLoading: true, isBlocked: true}));
@@ -40,9 +42,9 @@ function Auth() {
       setPassword({content: '', status: false, touched: false, error: errors.passwordErrors.noPassword});
     }
   } 
-  const showModal = () => setIsVisible(true);
+  const showModal = () => dispatch(configSettings({ status: claimsStatuses.modal }))
   const hideModal = (e) => {
-    if (!isModalBlocked && (e.target.id === 'Auth__modal-area' || e.target.id === 'Reg__button')) setIsVisible(false);
+    if (!isModalBlocked && (e.target.id === 'Auth__modal-area' || e.target.id === 'Reg__button')) dispatch(configSettings({ status: claimsStatuses.default }));
   };
 
   if (sessionStorage.key(0)) {
@@ -71,7 +73,7 @@ function Auth() {
       <footer className='Auth__footer'>
         <img src={footerLogo} alt="logotype" className='Auth__footer-logo' />
       </footer>
-      {isVisible && (
+      {claimStatus !== claimsStatuses.default && (
         <div 
           className='Auth__modal-area'
           id='Auth__modal-area' 
@@ -102,28 +104,3 @@ function Auth() {
 
 export default Auth;
 
-//-----------------------------
-
-//  {/* <div 
-//         className={isVisible ? 'Auth__modal-area' : 'Auth__modal-area_hidden'}
-//         id='Auth__modal-area' 
-//         //className='Auth__modal-area' 
-//         onClick={hideModal}
-//       >
-//         <Reg />
-//       </div> */}
-
-//-----------------------------
-
-// useEffect(() => {
-  //   const body = document.getElementsByTagName('body');
-  //   if (isVisible) {
-  //     body[0].style.overflow = 'hidden';
-  //     body[0].style.paddingRight = '15px';
-  //   }
-  //   else {
-  //     body[0].style.overflow = 'unset';
-  //     body[0].style.paddingRight = 'unset';
-  //     let temp = document.querySelectorAll('.Reg__section .InputText__input').forEach(item => item.value = '');
-  //   }
-  // }, [isVisible]);

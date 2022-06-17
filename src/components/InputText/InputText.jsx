@@ -12,6 +12,11 @@ function InputText({ id, img, type, label, value, state, callbacks, placeholder 
   //------------------------------------------------------------//
   let types = [ 'password', 'email' ];
 
+  //------------------------------------------------------------//
+  // Данная функция анализирует конфигурацию состояния state, 
+  // относящегося к данному input и определяет как отображать
+  // компонент                            
+  //------------------------------------------------------------//
   function configInputWrapperView() {
     if (state && !state.focused && !state.touched) {
       return { 

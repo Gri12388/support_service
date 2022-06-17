@@ -3,14 +3,15 @@ export const hosts = {
 }
 
 export const methods = {
+  delete: 'DELETE',
   get: 'GET',
   post: 'POST',
   put: 'PUT',
-  delete: 'DELETE'
 }
 
 export const publicPaths = {
   claim: '/claim',
+  reg: '/auth/registration'
 }
 
 export const roles = {
@@ -71,6 +72,14 @@ export const messages = {
   default: 'Something went wrong'
 }
 
+export const claimsStatuses = {
+  error: 'error',
+  default: 'default', 
+  loading: 'loading',
+  message: 'message',
+  modal: 'modal',
+}
+
 export const pager = {
   base: 10,
   edge: 500,
@@ -115,4 +124,37 @@ export const statusColors = [
       let pos = arr.find(item => item.id === e.target.id).pos;
       elements[++pos % arr.length].state.focus();
     }
+  }
+
+  export function checkForm(states) {
+    if (!Array.isArray(states)) return false;
+    let isValid = states.every(item => item.state.status);
+    if (!isValid) {
+      states.forEach(item => {
+        if (!item.state.status) item.setState(state=>({...state, touched: true}));
+      });
+      return false;
+    }
+    return true;
+  }
+
+  export async function sendRequestBodyfull(publicPath, method, body, token ) {
+    return await fetch(new URL(publicPath, hosts.local), {
+      method: method,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }, 
+      body: body,
+    });
+  }
+
+  export async function sendRequestBodyless(publicPath, method, token ) {
+    return await fetch(new URL(publicPath, hosts.local), {
+      method: method,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    });
   }

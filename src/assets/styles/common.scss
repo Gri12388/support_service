@@ -76,6 +76,13 @@
   transition: v.$transition;
 }
 
+.button-inactiv {
+  @extend %button;
+  @include m.text(v.$font2, 18px, 36px, v.$color13);
+  cursor: default;
+  background-color: v.$color15;
+}
+
 .button1 {
   @extend %button;
   @include m.text(v.$font2, 18px, 36px, v.$color3);

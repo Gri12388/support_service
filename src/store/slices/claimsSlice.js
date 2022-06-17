@@ -1,14 +1,13 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { useLayoutEffect } from 'react';
 
-import { pager, hosts, methods, publicPaths } from '../../data/data.js';
+
+import { pager, hosts, methods, publicPaths, claimsStatuses } from '../../data/data.js';
 
 const initialState = {
   totalItems: 0,
   values: {},
-  status: 'ok',
-  error: false,
-  errorMessage: ''
+  status: claimsStatuses.default,
+  message: ''
 }
 
 export const fetchClaims = createAsyncThunk('claims/fetchClaims', async ({token, offset, limit, search, column, sort}) => {
@@ -54,10 +53,9 @@ const claimsSlice = createSlice({
   initialState,
   reducers: {
     reset: state => {
-      state = initialState
+      state = initialState;
     },
     upload: (state, action) => {
-      if (action.payload.token) state.token = action.payload.token;
       state.totalItems = action.payload.totalItems;
       action.payload.claims.forEach((item, index) => {
         state.values[index] = item;
@@ -65,16 +63,13 @@ const claimsSlice = createSlice({
     }, 
     configSettings: (state, action) => {
       if (action.payload.status !== null && action.payload.status !== undefined) state.status = action.payload.status; 
-      if (action.payload.error !== null && action.payload.error !== undefined) {
-        state.error = action.payload.error;
-        state.errorMessage = action.payload.errorMessage;
-      } 
-    }
+      if (action.payload.message !== null && action.payload.message !== undefined) state.message = action.payload.message;
+    },  
   },
   extraReducers: builder => {
     builder
       .addCase(fetchClaims.pending, state => {
-        state.status = 'loading';
+        state.status = claimsStatuses.loading;
       })
       .addCase(fetchClaims.fulfilled, (state, action) => {
         state.totalItems = action.payload.totalItems;
@@ -85,16 +80,13 @@ const claimsSlice = createSlice({
           });
         }
         state.values = temp;
-        state.status = 'ok';
+        state.status = claimsStatuses.default;
       })
       .addCase(fetchClaims.rejected, (state, action) => {
-        state.status = 'ok';
-        state.error = true;
-        state.errorMessage = action.error.message ? action.error.message : 'Something wrong';
+        state.status = claimsStatuses.error;
+        state.message = action.error.message ? action.error.message : 'Something wrong';
         state.totalItems = 0;
         state.values = {};
-        console.log (action);
-        //debugger
       })
   }, 
 });
@@ -105,37 +97,8 @@ export const selectClaims = state => Object.values(state.claims.values);
 
 export const selectTotalClaimsNumber = state => state.claims.totalItems;
 
-export const selectToken = state => state.claims.token;
-
 export const selectStatus = state => state.claims.status;
 
-export const selectError = state => ({error: state.claims.error, errorMessage: state.claims.errorMessage})
+export const selectMessage = state => state.claims.message;
 
 export default claimsSlice.reducer;
-
-//----------------------------
-
-// export const postNewClaim = createAsyncThunk('claims/postNewClaim', async ({token, body}) => {
-//   const promise = await fetch (`http://localhost:3001/claim`, {
-//     method: 'POST',
-//     headers: {
-//       Authorization: `Bearer ${token}`
-//     },
-//     body: body
-//   });
-//   if (promise.status !== 200) throw Error(promise.status);
-//   else return;
-// })
-
-// .addCase(postNewClaim.pending, state => {
-//   state.status = 'loading';
-// })
-// .addCase(postNewClaim.fulfilled, state => {
-//   state.status = 'ok';
-// })
-// .addCase(postNewClaim.rejected, state => {
-//   state.status = 'ok';
-//   state.error = true;
-//   state.errorMessage = action.error.message ? action.error.message : 'Something wrong';
-//   console.log (action);
-// })
