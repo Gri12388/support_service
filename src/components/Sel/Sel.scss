@@ -49,7 +49,20 @@
   width: 86%;
   height: 100%;
   margin-left: 16px;
+  outline: none;
   background-color: transparent;
+}
+
+.Sel__icon_svg {
+  width: 40px;
+  height: 40px;
+  fill: v.$color0;
+  stroke: v.$color5;
+}
+
+.Sel__icon-rotated_svg {
+  @extend .Sel__icon_svg;
+  transform: rotate(180deg);
 }
 
 .Sel__drop {
