@@ -11,6 +11,10 @@
   margin-bottom: 0px;
 }
 
+.InputText__focused {
+  border: solid 1px v.$color1;
+}
+
 .InputText__error {
   border: solid 1px v.$color18;
 }

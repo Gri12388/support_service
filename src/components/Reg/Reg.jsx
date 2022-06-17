@@ -14,11 +14,40 @@ function Reg({toggleBlockModal}) {
   const [loading, setLoading] = useState({isVisible: false});
   const [message, setMessage] = useState({isVisible: false, content: '', isRegistered: false});
 
-  const [name, setName] = useState({content: '', status: false, touched: false, error: errors.nameErrors.noName});
-  const [surname, setSurname] = useState({content: '', status: false, touched: false, error: errors.surnameErrors.noSurname});
-  const [email, setEmail] = useState({content: '', status: false, touched: false, error: errors.emailErrors.noEmail});
-  const [password, setPassword] = useState({content: '', status: false, touched: false, error: errors.passwordErrors.noPassword});
-  const [passwordCopy, setPasswordCopy] = useState({content: '', status: false, touched: false, error: errors.passwordErrors.noPassword});
+  const [name, setName] = useState({
+    content: '',
+    error: errors.nameErrors.noName,
+    focused: true, 
+    status: false, 
+    touched: false, 
+  });
+  const [surname, setSurname] = useState({
+    content: '', 
+    error: errors.surnameErrors.noSurname,
+    fucused: false,
+    status: false, 
+    touched: false, 
+  });
+  const [email, setEmail] = useState({
+    content: '', 
+    error: errors.emailErrors.noEmail,
+    focused: false,
+    status: false, 
+    touched: false, 
+  });
+  const [password, setPassword] = useState({
+    content: '', 
+    error: errors.passwordErrors.noPassword,
+    focused: false,
+    status: false, 
+    touched: false, 
+  });
+  const [passwordCopy, setPasswordCopy] = useState({
+    content: '', 
+    status: false, 
+    touched: false, 
+    error: errors.passwordErrors.noPassword,
+  });
 
   const states = [
     {state: name, setState: setName},
@@ -86,8 +115,12 @@ function Reg({toggleBlockModal}) {
     }
   }
 
-  const onBlur = (setter, checker) => {
-    setter(state=>({...state, touched: true}));
+  function onFocus( setter ) {
+    setter(state=>({ ...state, focused: true }));
+  }
+
+  const onBlur = ( setter, checker ) => {
+    setter(state=>({...state, touched: true, focused: false}));
     checker();
   }
 
@@ -178,7 +211,8 @@ function Reg({toggleBlockModal}) {
             placeholder='Type your name'
             state={ name }
             callbacks={{
-              onChange: onNameInput, 
+              onChange: onNameInput,
+              onFocus: onFocus.bind(null, setName), 
               onBlur: onBlur.bind(null, setName, checkName),
               onPressedEnter: onPressedEnter(elements)
             }}
@@ -191,7 +225,8 @@ function Reg({toggleBlockModal}) {
             placeholder='Type your surname'
             state={ surname }
             callbacks={{
-              onChange: onSurnameInput, 
+              onChange: onSurnameInput,
+              onFocus: onFocus.bind(null, setSurname), 
               onBlur: onBlur.bind(null, setSurname, checkSurname),
               onPressedEnter: onPressedEnter(elements)
             }}
@@ -206,6 +241,7 @@ function Reg({toggleBlockModal}) {
             state={ email }
             callbacks={{
               onChange: onEmailInput, 
+              onFocus: onFocus.bind(null, setEmail),
               onBlur: onBlur.bind(null, setEmail, checkEmail),
               onPressedEnter: onPressedEnter(elements)
             }}
@@ -220,6 +256,7 @@ function Reg({toggleBlockModal}) {
             state={ password }
             callbacks={{
               onChange: onPasswordInput, 
+              onFocus: onFocus.bind(null, setPassword),
               onBlur: onBlur.bind(null, setPassword, checkPassword),
               onPressedEnter: onPressedEnter(elements)
             }}
@@ -233,7 +270,8 @@ function Reg({toggleBlockModal}) {
             placeholder='Type your password again'
             state={ passwordCopy }
             callbacks={{
-              onChange: onPasswordCopyInput, 
+              onChange: onPasswordCopyInput,
+              onFocus: onFocus.bind(null, setPasswordCopy), 
               onBlur: onBlur.bind(null, setPasswordCopy, checkPasswordCopy),
               onPressedEnter: onPressedEnter(elements)
             }}
