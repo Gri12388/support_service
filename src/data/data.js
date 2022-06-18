@@ -72,12 +72,16 @@ export const messages = {
   default: 'Something went wrong'
 }
 
+export const claimsModes = {
+  default: 'default',
+  modal: 'modal',
+}
+
 export const claimsStatuses = {
+  ok: 'ok',
   error: 'error',
-  default: 'default', 
   loading: 'loading',
   message: 'message',
-  modal: 'modal',
 }
 
 export const pager = {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import InputText from '../InputText/InputText.jsx';
@@ -20,6 +20,7 @@ import '../../assets/styles/common.scss';
 import './Reg.scss';
 
 import loadingImage from '../../assets/images/loading.png';
+
 
 
 
@@ -88,7 +89,7 @@ function Reg({ toggleBlockModal }) {
 
   //------------------------------------------------------------//
   // Объединение состояний input элементов в массив для их 
-  // более удобного обхода                                
+  // более удобного обхода в некторых функциях                               
   //------------------------------------------------------------//
   const states = [
     {state: name, setState: setName},
@@ -99,34 +100,60 @@ function Reg({ toggleBlockModal }) {
   ];
   
 
+
+  //------------------------------------------------------------//
+  // Массивоподобный объект, хранящий данные для реализации 
+  // смены фокуса при нажатии на кнопку Enter, а именно: id
+  // элемента, сам элемент и его Tab позиция в форме.                                   
+  //------------------------------------------------------------//
+  const elements = {
+    0: { id: 'fromReg__name', state: nameElement, pos: 0 }, 
+    1: { id: 'fromReg__surname', state: surnameElement, pos: 1 },
+    2: { id: 'fromReg__email', state: emailElement, pos: 2 },
+    3: { id: 'fromReg__password', state: passwordElement, pos: 3 },
+    4: { id: 'fromReg__password-copy', state: passwordCopyElement, pos: 4 },
+  } 
+
+
+
+  //------------------------------------------------------------//
+  // Обработчик кнопки "Try again", появляющейся в 
+  // информационном сообщении в случае неудачной попытки 
+  // регистрации. Функция приводит форму в изначальное состояние.                              
+  //------------------------------------------------------------//
   function onTryAgainButton() {
-    dispatch(configSettings({ status: claimsStatuses.modal, message: '' }));
+    dispatch(configSettings({ status: claimsStatuses.ok, message: '' }));
     nameElement.focus();
     setName({
+      content: '',
       error: errors.nameErrors.noName,
       focused: true,
       status: false, 
       touched: false, 
     });
     setSurname({
+      content: '',
       error: errors.surnameErrors.noSurname,
       focused: false,
       status: false, 
       touched: false, 
     });
     setEmail({
+      content: '',
       error: errors.emailErrors.noEmail,
       focused: false,
       status: false, 
       touched: false, 
     });
     setPassword({
+      content: '',
       error: errors.passwordErrors.noPassword,
       focused: false,
       status: false, 
       touched: false, 
     });
     setPasswordCopy({
+      content: '',
       error: errors.passwordErrors.noPassword,
       focused: false,
       status: false, 
@@ -136,26 +163,31 @@ function Reg({ toggleBlockModal }) {
 
 
 
+  //------------------------------------------------------------//
+  // Группа функций-обработчиков события onChange соотвествующих
+  // input элементов                              
+  //------------------------------------------------------------//
   function onNameInput(e) {
     setName(state => ({...state, content: e.target.value }))
   }
-
   function onSurnameInput(e) {
     setSurname(state => ({ ...state, content: e.target.value }));
   }
-  
   function onEmailInput(e) {
     setEmail(state => ({ ...state, content: e.target.value }));
   };
-
   function onPasswordInput(e) {
     setPassword(state => ({ ...state, content: e.target.value }));
   }
-
   function onPasswordCopyInput(e) {
     setPasswordCopy(state=>({...state, content: e.target.value}));
   }
   
+
+
+  //------------------------------------------------------------//
+  // Функция формирует содержание body-компонента AJAX запроса                              
+  //------------------------------------------------------------//  
   function createBody() {
     return JSON.stringify({
       fullName: name.content + ' ' + surname.content,
@@ -164,6 +196,12 @@ function Reg({ toggleBlockModal }) {
     });
   }
 
+
+
+  //------------------------------------------------------------//
+  // Функция-организатор: собирает и/или проверяет необходимые
+  // компоненты для AJAX-запроса и отправляет его.                             
+  //------------------------------------------------------------// 
   function onSubmit(e) {
     e.preventDefault();
 
@@ -197,15 +235,32 @@ function Reg({ toggleBlockModal }) {
     toggleBlockModal();
   }
 
-  function onFocus( setter ) {
+
+
+  //------------------------------------------------------------//
+  // Обработчик события onFocus input элемента                            
+  //------------------------------------------------------------//   
+  function onFocus(setter) {
     setter(state=>({ ...state, focused: true }));
   }
 
-  function onBlur( setter, checker ) {
+
+
+  //------------------------------------------------------------//
+  // Обработчик события onBlur input элемента                            
+  //------------------------------------------------------------//   
+  function onBlur(setter, checker) {
     setter(state=>({...state, touched: true, focused: false}));
     checker();
   }
 
+
+
+  //------------------------------------------------------------//
+  // Группа функций, валидирующих содержание input элементов
+  // по наступлению события onBlur. Нужна для того, чтобы 
+  // отображать ошибки, если они есть, сразу после смены фокуса.                            
+  //------------------------------------------------------------// 
   function checkName () {
     if (name.content.length === 0) {
       return setName(state => ({
@@ -230,7 +285,6 @@ function Reg({ toggleBlockModal }) {
     }
     setName(state => ({ ...state, status: true, error: '' }));
   }
-
   const checkSurname = () => {
     if (surname.content.length === 0) {
       return setSurname( state=> ({
@@ -255,7 +309,6 @@ function Reg({ toggleBlockModal }) {
     }
     setSurname(state => ({ ...state, status: true, error: '' }));
   }
-
   const checkEmail = () => {
     if (email.content.length === 0) {
       return setEmail(state => ({
@@ -273,7 +326,6 @@ function Reg({ toggleBlockModal }) {
     }
     setEmail(state => ({ ...state, status: true, error: '' }));
   }
-
   const checkPassword = () => {
     if (password.content.length === 0) {
       return setPassword(state => ({
@@ -298,7 +350,6 @@ function Reg({ toggleBlockModal }) {
     }
     setPassword(state => ({ ...state, status: true, error: '' }));
   }
-
   const checkPasswordCopy = () => {
     if (passwordCopy.content.length === 0) {
       return setPasswordCopy(state => ({
@@ -320,23 +371,51 @@ function Reg({ toggleBlockModal }) {
 
 
   //------------------------------------------------------------//
-  // Массивоподобный объект, хранящий данные для реализации 
-  // смены фокуса при нажатии на кнопку Enter, а именно: id
-  // элемента, сам элемент и его Tab позиция в форме.                                   
-  //------------------------------------------------------------//
-  const elements = {
-    0: { id: 'fromReg__name', state: nameElement, pos: 0 }, 
-    1: { id: 'fromReg__surname', state: surnameElement, pos: 1 },
-    2: { id: 'fromReg__email', state: emailElement, pos: 2 },
-    3: { id: 'fromReg__password', state: passwordElement, pos: 3 },
-    4: { id: 'fromReg__password-copy', state: passwordCopyElement, pos: 4 },
-  } 
+  // Группа функций, валидирующих содержание input элементов
+  // по наступлению события onChange. Нужна для того, чтобы 
+  // определять отображать ли кнопку submit действующей или нет.                             
+  //------------------------------------------------------------// 
+  let isNameOk = useMemo (() => !(
+    name.content.length === 0 ||
+    name.content.length < rules.nameLengthMin ||
+    name.content.length > rules.nameLengthMax
+    ), [name]);
+
+  let isSurnameOk = useMemo (() => !(
+    surname.content.length === 0 ||
+    surname.content.length < rules.surnameLengthMin ||
+    surname.content.length > rules.surnameLengthMax
+    ), [surname]);
+
+  let isEmailOk = useMemo (() => !(
+    email.content.length === 0 ||
+    !rules.emailRegExp.test(email.content)
+    ), [email]);
+  
+  let isPasswordOk = useMemo (() => !(
+    password.content.length === 0 ||
+    password.content.length < rules.passwordLengthMin ||
+    password.content.length > rules.passwordLengthMax
+    ), [password]);
+
+  let isPasswordCopyOk = useMemo (() => !(
+    passwordCopy.content.length === 0 ||
+    passwordCopy.content !== password.content
+    ), [passwordCopy]);
+
+  let isFormOk = useMemo (() => (
+    isNameOk &&
+    isSurnameOk && 
+    isEmailOk &&
+    isPasswordOk &&
+    isPasswordCopyOk
+    ), [name, surname, email, password, passwordCopy]); 
 
 
 
   //------------------------------------------------------------//
-  // Данный хук ищет только после первого рендера нужные элемены 
-  // DOM дерева и сохраняет их в своответствующем состоянии                                 
+  // Данный хук ищет нужные элемены DOM дерева только после 
+  // первого рендера и сохраняет их в своответствующем состоянии                                 
   //------------------------------------------------------------//
   useEffect(() => {
     setNameElement(document.getElementById(elements[0].id));
@@ -348,9 +427,11 @@ function Reg({ toggleBlockModal }) {
 
   
 
+  //--------------------------------------------------------------------
+
   return (
     <div className='container3'>
-      {claimStatus === claimsStatuses.modal && (
+      {claimStatus === claimsStatuses.ok && (
         <form className='Reg__modal'>
           <section className='Reg__section'>
           <InputText 
@@ -426,7 +507,7 @@ function Reg({ toggleBlockModal }) {
           />
           </section>
           
-          <button className='button2 xbutton1' onClick={onSubmit}>Register</button>
+          {isFormOk ? (<button className='button2 xbutton1' onClick={onSubmit}>Register</button>) : (<button className='button-inactiv xbutton1'>Register</button>)}
         
           <div className='button2 close-button' id='Reg__button'>╳</div>
         </form>

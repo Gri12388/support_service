@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { configSettings, reset, selectStatus } from '../../store/slices/claimsSlice.js';
+import { configSettings, reset, selectModes, selectStatus } from '../../store/slices/claimsSlice.js';
 import { resetPagerState, selectPagerState } from '../../store/slices/pagerSlice.js';
 
 import Login from '../Login/Login.jsx';
 import Reg from '../Reg/Reg.jsx';
 
-import { claimsStatuses, errors } from '../../data/data.js';
+import { claimsModes, claimsStatuses, errors } from '../../data/data.js';
 
 import mainLogo from '../../assets/images/logo.svg';
 import footerLogo from '../../assets/images/logo-invert.svg';
@@ -21,6 +21,7 @@ function Auth() {
 
   const dispatch = useDispatch();
   let claimStatus = useSelector(selectStatus);
+  let claimMode = useSelector(selectModes);
 
   const state = useSelector(selectPagerState);
 
@@ -42,9 +43,9 @@ function Auth() {
       setPassword({content: '', status: false, touched: false, error: errors.passwordErrors.noPassword});
     }
   } 
-  const showModal = () => dispatch(configSettings({ status: claimsStatuses.modal }))
+  const showModal = () => dispatch(configSettings({ mode: claimsModes.modal }))
   const hideModal = (e) => {
-    if (!isModalBlocked && (e.target.id === 'Auth__modal-area' || e.target.id === 'Reg__button')) dispatch(configSettings({ status: claimsStatuses.default }));
+    if (!isModalBlocked && (e.target.id === 'Auth__modal-area' || e.target.id === 'Reg__button')) dispatch(configSettings({ mode: claimsModes.default }));
   };
 
   if (sessionStorage.key(0)) {
@@ -73,7 +74,7 @@ function Auth() {
       <footer className='Auth__footer'>
         <img src={footerLogo} alt="logotype" className='Auth__footer-logo' />
       </footer>
-      {claimStatus !== claimsStatuses.default && (
+      {claimMode === claimsModes.modal && (
         <div 
           className='Auth__modal-area'
           id='Auth__modal-area' 

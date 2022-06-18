@@ -1,12 +1,13 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 
-import { pager, hosts, methods, publicPaths, claimsStatuses } from '../../data/data.js';
+import { pager, hosts, methods, publicPaths, claimsModes, claimsStatuses } from '../../data/data.js';
 
 const initialState = {
   totalItems: 0,
   values: {},
-  status: claimsStatuses.default,
+  mode: claimsModes.default,
+  status: claimsStatuses.ok,
   message: ''
 }
 
@@ -62,6 +63,7 @@ const claimsSlice = createSlice({
       });
     }, 
     configSettings: (state, action) => {
+      if (action.payload.mode !== null && action.payload.mode !== undefined) state.mode = action.payload.mode; 
       if (action.payload.status !== null && action.payload.status !== undefined) state.status = action.payload.status; 
       if (action.payload.message !== null && action.payload.message !== undefined) state.message = action.payload.message;
     },  
@@ -80,7 +82,7 @@ const claimsSlice = createSlice({
           });
         }
         state.values = temp;
-        state.status = claimsStatuses.default;
+        state.status = claimsStatuses.ok;
       })
       .addCase(fetchClaims.rejected, (state, action) => {
         state.status = claimsStatuses.error;
@@ -96,6 +98,8 @@ export const { reset, upload, configSettings } = claimsSlice.actions;
 export const selectClaims = state => Object.values(state.claims.values);
 
 export const selectTotalClaimsNumber = state => state.claims.totalItems;
+
+export const selectModes = state => state.claims.mode;
 
 export const selectStatus = state => state.claims.status;
 
