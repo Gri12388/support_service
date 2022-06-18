@@ -3,9 +3,10 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import InputText from '../InputText/InputText.jsx';
 
-import { configSettings, selectMessage, selectStatus } from '../../store/slices/claimsSlice.js';
+import { configSettings, selectMessage, selectModes, selectStatus } from '../../store/slices/claimsSlice.js';
 import {  
   checkForm, 
+  claimsModes,
   claimsStatuses,
   errors, 
   messages, 
@@ -28,6 +29,7 @@ function Reg({ toggleBlockModal }) {
   //------------------------------------------------------------//
   // Подготовка инструментов для взаимодействия с claimsSlice.js                                  
   //------------------------------------------------------------//
+  let claimMode = useSelector(selectModes);
   let claimStatus = useSelector(selectStatus);
   let claimMessage = useSelector(selectMessage);
   const dispatch = useDispatch(); 
@@ -431,7 +433,7 @@ function Reg({ toggleBlockModal }) {
 
   return (
     <div className='container3'>
-      {claimStatus === claimsStatuses.ok && (
+      {claimMode === claimsModes.modal && claimStatus === claimsStatuses.ok && (
         <form className='Reg__modal'>
           <section className='Reg__section'>
           <InputText 
@@ -512,13 +514,13 @@ function Reg({ toggleBlockModal }) {
           <div className='button2 close-button' id='Reg__button'>╳</div>
         </form>
       )}
-      {claimStatus === claimsStatuses.loading && (
+      {claimMode === claimsModes.modal && claimStatus === claimsStatuses.loading && (
         <div className='Reg__modal1'>
           <img src={ loadingImage } alt='loading' className='loading' />
           <p className='text3'>Loading...</p>
         </div>  
       )}
-      {(claimStatus === claimsStatuses.message || claimStatus === claimsStatuses.error) && (
+      {claimMode === claimsModes.modal && (claimStatus === claimsStatuses.message || claimStatus === claimsStatuses.error) && (
         <div className='Reg__modal2'>
           <p className='text3'>{ claimMessage }</p>
           {claimStatus === claimsStatuses.error && (

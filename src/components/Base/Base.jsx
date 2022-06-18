@@ -122,16 +122,3 @@ function Base() {
 
 export default Base;
 
-//---------------
-
-// {/* <img src={baseHome} alt='home' className='interactiv Base__pic' />
-//         <img src={baseGlobe} alt='globe' className='interactiv Base__pic' />
-//         <img src={baseArchive} alt='globe' className='interactiv Base__pic' />
-//         <img src={basePieChart} alt='globe' className='interactiv Base__pic' />
-//         <img src={baseDollar} alt='globe' className='interactiv Base__pic' />
-//         <img src={baseDatabase} alt='globe' className='interactiv Base__pic' />
-//         <img src={baseNavigation} alt='globe' className='interactiv Base__pic' /> */}
-
-//-----------------------------
-
-// {/* <img src={windowWidth > 799 ? baseBell : baseBell1} alt='bell' className='Base__bell'/> */}

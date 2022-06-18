@@ -32,10 +32,8 @@ function Auth() {
   let isModalBlocked = false;
   const setIsModalBlocked = () => isModalBlocked = !isModalBlocked;
 
-  //const [isVisible, setIsVisible] = useState(true);
   const [loading, setLoading] = useState({isLoading: false, isBlocked: false, message: ''});
 
-  // const showLoading = () => setLoading(state=>({...state, isLoading: true, isBlocked: true}));
   const hideLoading = e => {
     if (!loading.isBlocked && (e.target.id === 'Auth__modal-area1' || e.target.id === 'Auth__close-button')) {
       setLoading({isLoading: false, isBlocked: false, message: ''});
