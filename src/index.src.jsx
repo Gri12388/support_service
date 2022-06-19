@@ -17,11 +17,11 @@ createRoot(document.getElementById('root')).render(
       <Routes>
         <Route path="/" element={<Common />} >
           <Route path='/auth' element={<Auth />} />
-          {/* <Route path="/base" element={<Base />} >
+          <Route path="/base" element={<Base />} >
             <Route path="claims" element={<Claims />} />
             <Route path="claim" element={<NewClaim />} />
             <Route path="new" element={<NewClaim />} />
-          </Route> */}
+          </Route>
         </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>

@@ -6,6 +6,7 @@ import { pager, hosts, methods, publicPaths, claimsModes, claimsStatuses } from 
 const initialState = {
   totalItems: 0,
   values: {},
+  focus: null,
   mode: claimsModes.default,
   status: claimsStatuses.ok,
   message: ''
@@ -63,6 +64,7 @@ const claimsSlice = createSlice({
       });
     }, 
     configSettings: (state, action) => {
+      if (action.payload.focus !== null && action.payload.focus !== undefined) state.focus = action.payload.focus; 
       if (action.payload.mode !== null && action.payload.mode !== undefined) state.mode = action.payload.mode; 
       if (action.payload.status !== null && action.payload.status !== undefined) state.status = action.payload.status; 
       if (action.payload.message !== null && action.payload.message !== undefined) state.message = action.payload.message;
@@ -98,6 +100,8 @@ export const { reset, upload, configSettings } = claimsSlice.actions;
 export const selectClaims = state => Object.values(state.claims.values);
 
 export const selectTotalClaimsNumber = state => state.claims.totalItems;
+
+export const selectFocus = state => state.claims.focus;
 
 export const selectModes = state => state.claims.mode;
 

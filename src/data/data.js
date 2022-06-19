@@ -10,8 +10,11 @@ export const methods = {
 }
 
 export const publicPaths = {
+  auth: '/auth/logins',
   claim: '/claim',
-  reg: '/auth/registration'
+  reg: '/auth/registration',
+  status: '/status',
+  types: '/types'
 }
 
 export const roles = {
@@ -65,11 +68,16 @@ export const errors = {
 }
 
 export const messages = {
-  regGood: 'You are registered successfully',
-  regBad: 'You are not registered',
-  noAuth: 'You are not authenticated',
   alreadyRegistered: 'User with the same credentials is already registered',
-  default: 'Something went wrong'
+  default: 'Something went wrong',
+  regBad: 'You are not registered',
+  regGood: 'You are registered successfully',
+  noAuth: 'You are not authenticated',
+  noData: 'Data is not recieved',
+  noFound: 'Page is not found',
+  noRole: 'Role is not defined',
+  noToken: 'Token is not recieved',
+  wrongData: 'Recieved data are not correct'
 }
 
 export const claimsModes = {

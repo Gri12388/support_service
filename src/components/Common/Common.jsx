@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { configSettings, selectMessage, selectModes, selectStatus } from '../../store/slices/claimsSlice.js';
+import { configSettings, selectFocus, selectMessage, selectModes, selectStatus } from '../../store/slices/claimsSlice.js';
 
 import { claimsModes, claimsStatuses } from '../../data/data.js';
 
@@ -15,19 +15,26 @@ function Common() {
 
   const location = useLocation();
   const dispatch = useDispatch();
+  let claimFocus = useSelector(selectFocus);
   let claimMode = useSelector(selectModes);
   let claimStatus = useSelector(selectStatus);
   let claimMessage = useSelector(selectMessage);
-
+  let [focusId, setFocusId] = useState(null);
+  
   function hideModal(e) {
     if (e.target.dataset.groupid !== 'Common__message' &&  claimStatus !== claimsStatuses.loading) {
-      dispatch(configSettings({ status: claimsStatuses.ok, message: '' }));
+      setFocusId(claimFocus);
+      dispatch(configSettings({ focus: null, status: claimsStatuses.ok, message: '' }));
     }
   }
 
+  useEffect(() => {
+    if (focusId) document.getElementById(focusId).focus()
+  }, [focusId]);
+
   return (
     <>
-      {location.pathname === '/' && <Navigate to={'/auth'} replace={true}/>}
+      { location.pathname === '/' && <Navigate to={ '/auth' } replace={ true }/>}
       <Outlet />
       { claimMode === claimsModes.default && claimStatus === claimsStatuses.loading && (
         <div className='modal-area'>

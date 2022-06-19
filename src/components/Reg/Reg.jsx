@@ -25,7 +25,7 @@ import loadingImage from '../../assets/images/loading.png';
 
 
 
-function Reg({ toggleBlockModal }) {
+function Reg() {
   //------------------------------------------------------------//
   // Подготовка инструментов для взаимодействия с claimsSlice.js                                  
   //------------------------------------------------------------//
@@ -170,7 +170,7 @@ function Reg({ toggleBlockModal }) {
   // input элементов                              
   //------------------------------------------------------------//
   function onNameInput(e) {
-    setName(state => ({...state, content: e.target.value }))
+    setName(state => ({...state, content: e.target.value }));
   }
   function onSurnameInput(e) {
     setSurname(state => ({ ...state, content: e.target.value }));
@@ -207,20 +207,12 @@ function Reg({ toggleBlockModal }) {
   function onSubmit(e) {
     e.preventDefault();
 
-    if (!checkForm(states)) {
-      states.forEach(item => {
-        if (!item.state.status) item.setState(state=>({...state, touched: true}));
-      });
-      return;
-    }
-
     let publicPath = publicPaths.reg;
     let method = methods.post;
     let bodyJSON = createBody();
     
     sendRequestBodyfull(publicPath, method, bodyJSON)
     .then(res => {
-      toggleBlockModal();
       switch (res.status) {
         case 200: dispatch(configSettings({ status: claimsStatuses.message, message: messages.regGood }));
                   break;
@@ -229,12 +221,10 @@ function Reg({ toggleBlockModal }) {
       }
     })
     .catch(err => {
-        dispatch(configSettings({ status: claimsStatuses.error, message: err.message }));
-      }
-    )
+      dispatch(configSettings({ status: claimsStatuses.error, message: err.message }));
+    });
 
     dispatch(configSettings({ status: claimsStatuses.loading }));
-    toggleBlockModal();
   }
 
 
@@ -263,7 +253,7 @@ function Reg({ toggleBlockModal }) {
   // по наступлению события onBlur. Нужна для того, чтобы 
   // отображать ошибки, если они есть, сразу после смены фокуса.                            
   //------------------------------------------------------------// 
-  function checkName () {
+  function checkName() {
     if (name.content.length === 0) {
       return setName(state => ({
         ...state, 
@@ -287,7 +277,7 @@ function Reg({ toggleBlockModal }) {
     }
     setName(state => ({ ...state, status: true, error: '' }));
   }
-  const checkSurname = () => {
+  function checkSurname() {
     if (surname.content.length === 0) {
       return setSurname( state=> ({
         ...state, 
@@ -311,7 +301,7 @@ function Reg({ toggleBlockModal }) {
     }
     setSurname(state => ({ ...state, status: true, error: '' }));
   }
-  const checkEmail = () => {
+  function checkEmail() {
     if (email.content.length === 0) {
       return setEmail(state => ({
         ...state, 
@@ -328,7 +318,7 @@ function Reg({ toggleBlockModal }) {
     }
     setEmail(state => ({ ...state, status: true, error: '' }));
   }
-  const checkPassword = () => {
+  function checkPassword() {
     if (password.content.length === 0) {
       return setPassword(state => ({
         ...state, 
@@ -352,7 +342,7 @@ function Reg({ toggleBlockModal }) {
     }
     setPassword(state => ({ ...state, status: true, error: '' }));
   }
-  const checkPasswordCopy = () => {
+  function checkPasswordCopy() {
     if (passwordCopy.content.length === 0) {
       return setPasswordCopy(state => ({
         ...state, 
@@ -509,7 +499,7 @@ function Reg({ toggleBlockModal }) {
           />
           </section>
           
-          {isFormOk ? (<button className='button2 xbutton1' onClick={onSubmit}>Register</button>) : (<button className='button-inactiv xbutton1'>Register</button>)}
+          {isFormOk ? (<button className='button2 xbutton1' onClick={ onSubmit }>Register</button>) : (<button className='button-inactiv xbutton1'>Register</button>)}
         
           <div className='button2 close-button' id='Reg__button'>╳</div>
         </form>
@@ -536,3 +526,10 @@ function Reg({ toggleBlockModal }) {
 
 export default Reg;
 
+//---------------------------------------------------
+// if (!checkForm(states)) {
+//   states.forEach(item => {
+//     if (!item.state.status) item.setState(state=>({...state, touched: true}));
+//   });
+//   return;
+// }
