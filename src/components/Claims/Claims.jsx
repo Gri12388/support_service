@@ -29,6 +29,7 @@ function Claims() {
   let token = sessionStorage.getItem('token');
   let offset = +sessionStorage.getItem('offset');
 
+
   const types = Object.values(JSON.parse(sessionStorage.getItem('types')));
   const statuses =  Object.values(JSON.parse(sessionStorage.getItem('statuses')));
 

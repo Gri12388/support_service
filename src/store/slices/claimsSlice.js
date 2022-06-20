@@ -75,7 +75,7 @@ export const fetchClaims = createAsyncThunk('claims/fetchClaims', async ({ token
   if (result.totalItems === 0) {
     if (
       !result.claims ||
-      !Array.isArray(resule.claims)
+      !Array.isArray(result.claims)
     ) throw new Error(messages.wrongData);
     return result;
   }
@@ -143,7 +143,7 @@ export const fetchClaims = createAsyncThunk('claims/fetchClaims', async ({ token
     !result || 
     typeof result !== 'object' || 
     !result.claims ||
-    !Array.isArray(resule.claims)
+    !Array.isArray(result.claims)
   ) throw new Error(messages.wrongData);
   return result;
 });

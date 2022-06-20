@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useDispatch, useSelector  } from 'react-redux';
 
 import { pager } from '../../data/data.js';
 import { selectTotalClaimsNumber, fetchClaims } from '../../store/slices/claimsSlice.js';
@@ -11,11 +11,11 @@ import './Pager.scss';
 function Pager() {
 
   let pagerState = useSelector(selectPagerState);
-  let token = sessionStorage.getItem('token');
   let { search, sort, column } = useSelector(selectCommonState);
+  const dispatch = useDispatch();
+  const dispatchPagerState = useDispatch();
   
-  let dispatchPagerState = useDispatch();
-  let dispatch = useDispatch();
+  let token = sessionStorage.getItem('token');
 
   let pageNumber = Math.ceil(useSelector(selectTotalClaimsNumber) / pager.base);
   
@@ -45,7 +45,7 @@ function Pager() {
     dispatchPagerState(setPagerState(temp));
   }, [offset, pageNumber]);
 
-  const computePagerState = ({last, offset, pointer}) => {
+  function computePagerState({ last, offset, pointer }) {
     let temp = {
       last: last,
       offset: offset,
@@ -74,7 +74,6 @@ function Pager() {
         temp.start++;
       }
       else {
-        //debugger
         temp.start = temp.pointer - temp.offset + 1 > 1 ? temp.pointer - temp.offset + 1 : 2;
         temp.stop = temp.start + temp.offset;
         if (temp.stop + 1 !== temp.last) {
@@ -94,34 +93,55 @@ function Pager() {
     return temp;
   }
 
-  const incrementPointer = () => {
-    let temp = {...pagerState};
+  function incrementPointer() {
+    let temp = { ...pagerState };
     if (temp.pointer < temp.last) temp.pointer++;
     temp = computePagerState(temp);
     dispatchPagerState(setPagerState(temp));
-    dispatch(fetchClaims({token: token, offset: (temp.pointer - 1) * pager.base, limit: pager.base, search: search, column: column, sort: sort}));
+    dispatch(fetchClaims({
+      token: token, 
+      offset: (temp.pointer - 1) * pager.base, 
+      limit: pager.base, 
+      search: search, 
+      column: column, 
+      sort: sort
+    }));
   }
 
-  const decrementPointer = () => {
-    let temp = {...pagerState};
+  function decrementPointer() {
+    let temp = { ...pagerState };
     if (temp.pointer > 1) temp.pointer--;
     temp = computePagerState(temp);
     dispatchPagerState(setPagerState(temp));
-    dispatch(fetchClaims({token: token, offset: (temp.pointer - 1) * pager.base, limit: pager.base, search: search, column: column, sort: sort}));
+    dispatch(fetchClaims({
+      token: token, 
+      offset: (temp.pointer - 1) * pager.base, 
+      limit: pager.base, 
+      search: search, 
+      column: column, 
+      sort: sort
+    }));
   }
 
-  const choosePage = e => {
-    let temp = {...pagerState};
+  function choosePage(e) {
+    let temp = { ...pagerState };
     temp.pointer = +e.target.id;
     temp = computePagerState(temp);
     dispatchPagerState(setPagerState(temp));
-    dispatch(fetchClaims({token: token, offset: (temp.pointer - 1) * pager.base, limit: pager.base, search: search, column: column, sort: sort}));
+    dispatch(fetchClaims({
+      token: token, 
+      offset: (temp.pointer - 1) * pager.base, 
+      limit: pager.base, 
+      search: search, 
+      column: column, 
+      sort: sort
+    }));
   } 
 
   const pages = [];
   for (let i = pagerState.start; i <= pagerState.stop; i++) {
     pages.push(
-      <div key={i} id={i} className={pagerState.pointer === i ? 'Pager__item Pager__pointer' : 'Pager__item'} onClick={choosePage}>{i}</div>
+      <div key={ i } id={ i } className={ pagerState.pointer === i ? 'Pager__item Pager__pointer' : 'Pager__item' } onClick={ choosePage }>{ i }</div>
     );
   }
 
@@ -131,22 +151,22 @@ function Pager() {
       <div className='Pager__bar'>
         <div  className='Pager__item' 
               onClick={decrementPointer}
-              style={{visibility: pagerState.pointer !== 1 ? 'visible' : 'hidden'}}
+              style={{ visibility: pagerState.pointer !== 1 ? 'visible' : 'hidden' }}
         >&lt;</div>
-        <div  id={1} 
-              className={pagerState.pointer === 1 ? 'Pager__item Pager__pointer' : 'Pager__item'} 
-              onClick={choosePage}
-        >{1}</div>
-        {pagerState.displayLeft && <div className='Pager__item1'>...</div>}
-        {pages}
-        {pagerState.displayRight && <div className='Pager__item1'>...</div>}
-        <div  id={pagerState.last} 
-              className={pagerState.pointer === pagerState.last ? 'Pager__item Pager__pointer' : 'Pager__item'} 
-              onClick={choosePage}
-        >{pagerState.last}</div>
+        <div  id={ 1 } 
+              className={ pagerState.pointer === 1 ? 'Pager__item Pager__pointer' : 'Pager__item' } 
+              onClick={ choosePage }
+        >{ 1 }</div>
+        { pagerState.displayLeft && <div className='Pager__item1'>...</div> }
+        { pages }
+        { pagerState.displayRight && <div className='Pager__item1'>...</div> }
+        <div  id={ pagerState.last } 
+              className={ pagerState.pointer === pagerState.last ? 'Pager__item Pager__pointer' : 'Pager__item' } 
+              onClick={ choosePage }
+        >{ pagerState.last }</div>
         <div  className='Pager__item' 
-              onClick={incrementPointer}
-              style={{visibility: pagerState.pointer !== pagerState.last ? 'visible' : 'hidden'}}
+              onClick={ incrementPointer }
+              style={{ visibility: pagerState.pointer !== pagerState.last ? 'visible' : 'hidden' }}
         >&gt;</div>
       </div>
     </section>

@@ -108,16 +108,19 @@ function Login({ signal }) {
   // Функция, нормализующая данные, полученные с сервера                                  
   //------------------------------------------------------------//
   function handleData(arr, str) {
+    let name;
     let database;
     let length;
     let obj;
 
     switch(str) {
-      case 'type':    database = typeColors;
+      case 'type':    name = 'type';
+                      database = typeColors;
                       length = typeColors.length;
                       obj = { id: length, type: 'Other', color: '#ADADAD' };
                       break;
-      case 'status':  database = statusColors;
+      case 'status':  name = 'status';
+                      database = statusColors;
                       length = statusColors.length;
                       obj = {id: length, status: 'UNDEFINED', color: '#ADADAD'}
                       break;
@@ -126,7 +129,7 @@ function Login({ signal }) {
 
     let tempArr = arr.map((item, index) => ({
       id: index,
-      type: item.name,
+      [name]: item.name,
       slug: item.slug,
       color: database[index % length] 
     }));
@@ -235,7 +238,8 @@ function Login({ signal }) {
 
       sessionStorage.setItem('statuses', handleData(res, 'status'));
 
-      dispatch(configSettings({ status: claimsStatuses.ok }))
+      dispatch(configSettings({ status: claimsStatuses.ok }));
+      debugger
       navigate('/base/claims');
     })
     .catch(err => {

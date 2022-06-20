@@ -71,7 +71,7 @@ function Auth() {
       dispatch(reset());
       dispatch(resetPagerState());
     }
-  });
+  }, []);
   
 
 

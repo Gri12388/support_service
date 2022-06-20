@@ -10,7 +10,7 @@ export const methods = {
 }
 
 export const publicPaths = {
-  auth: '/auth/logins',
+  auth: '/auth/login',
   claim: '/claim',
   reg: '/auth/registration',
   status: '/status',
