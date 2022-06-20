@@ -7,10 +7,10 @@ import sliderSprite from '../../assets/images/sprite.svg';
 
 
 
-function Slider({sliderConfig, functions}) {
+function Slider({ sliderConfig, functions }) {
 
-  const hideSlider = e => {
-    let temp = {...sliderConfig};
+  function hideSlider(e) {
+    let temp = { ...sliderConfig };
     if (e.target.id === 'Slider__modal-area') temp.isVisible = false;
     functions.setSliderConfig(temp);
   }
@@ -26,34 +26,25 @@ function Slider({sliderConfig, functions}) {
   ];
 
   const sliderItems = sliderItemsData.map(item => (
-    <div className='Slider__item' key={item.id}>
-      <svg className="Slider__svg">
-        <use href={sliderSprite + `#${item.name}`}></use>
+    <div className='Slider__item' key={ item.id }>
+      <svg className='Slider__svg'>
+        <use href={ sliderSprite + `#${ item.name }` }></use>
       </svg>
-      <p className='text10 interactiv Slider__text'>{item.content}</p>
+      <p className='text10 interactiv Slider__text'>{ item.content }</p>
     </div>
   ));
 
   return (
     <section  className='modal-area1' 
               id='Slider__modal-area'
-              style={{visibility: sliderConfig.isVisible ? 'visible' : 'hidden'}}
-              onClick={hideSlider}
+              style={{ visibility: sliderConfig.isVisible ? 'visible' : 'hidden' }}
+              onClick={ hideSlider }
     >
-      <div className={sliderConfig.isVisible ? 'Slider__slider_on' : 'Slider__slider_off'}>
-        {sliderItems}
+      <div className={ sliderConfig.isVisible ? 'Slider__slider_on' : 'Slider__slider_off' }>
+        { sliderItems }
       </div>
     </section>
   );
 }
 
 export default Slider;
-
-// --------------------------------------
-
-// const sliderItems = sliderItemsData.map(item => (
-//   <div className='Slider__item' key={item.id}>
-//     <img src={item.image} alt={item.alt} className='Slider__image interactiv' />
-//     <p className='text10 interactiv Slider__text'>{item.content}</p>
-//   </div>
-// ));
