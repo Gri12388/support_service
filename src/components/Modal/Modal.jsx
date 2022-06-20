@@ -31,6 +31,10 @@ function Modal({ afterHideModalFunctionsArray }) {
     }
   }
 
+
+
+  //--------------------------------------------------------------------
+  
   return (
     <>
       { claimMode === claimsModes.default && claimStatus === claimsStatuses.loading && (

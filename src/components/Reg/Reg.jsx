@@ -62,7 +62,7 @@ function Reg() {
   let [surname, setSurname] = useState({
     content: '', 
     error: errors.surnameErrors.noSurname,
-    fucused: false,
+    focused: false,
     status: false, 
     touched: false, 
   });

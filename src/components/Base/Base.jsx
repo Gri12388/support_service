@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+// import { useSelector, useDispatch } from 'react-redux';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 
-import { selectStatus, configSettings } from '../../store/slices/claimsSlice.js';
+// import { selectStatus, configSettings } from '../../store/slices/claimsSlice.js';
 
 import Search from '../Search/Search.jsx';
 import Slider from '../Slider/Slider.jsx';
@@ -12,43 +12,54 @@ import './Base.scss';
 
 
 import baseUser from '../../assets/images/user.png';
-import loadingImage from '../../assets/images/loading.png';
+//import loadingImage from '../../assets/images/loading.png';
 
 import baseLogo from '../../assets/images/logo-invert.svg';
 import baseSprite from '../../assets/images/sprite.svg';
 
 function Base() {
 
-  let status = useSelector(selectStatus);
-  let error = useSelector(selectError);
+  // let status = useSelector(selectStatus);
+  // let error = useSelector(selectError);
   
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
 
-  let [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  // let [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
-  let [sliderConfig, setSliderConfig] = useState({isVisible: false});
+  let [sliderConfig, setSliderConfig] = useState({ isVisible: false });
 
-  const onBaseWindowWidthResize = () => setWindowWidth(window.innerWidth);
+  // function onBaseWindowWidthResize () {
+  //   setWindowWidth(window.innerWidth);
+  // }
 
-  useEffect(()=> {
-    window.addEventListener('resize', onBaseWindowWidthResize);
-    return () => {
-      window.removeEventListener('resize', onBaseWindowWidthResize);
-    }
-  }, []);
+  // useEffect(()=> {
+  //   window.addEventListener('resize', onBaseWindowWidthResize);
+  //   return () => window.removeEventListener('resize', onBaseWindowWidthResize);
+  // }, []);
 
-  const showSlider = () => setSliderConfig(state=>({...state, isVisible: true}));
-  const hideSlider = () => setSliderConfig(state=>({...state, isVisible: false}));
-  const quitSession = () => navigate('/', {replace: true});
-  const burgerHandler = () => {
+  function showSlider() {
+    setSliderConfig(state => ({ ...state, isVisible: true }));
+  }
+
+  function hideSlider() {
+    setSliderConfig(state => ({ ...state, isVisible: false }));
+  }
+
+  function quitSession() {
+    navigate('/', {replace: true});
+  }
+
+  function burgerHandler() {
     if (sliderConfig.isVisible) hideSlider();
     else showSlider();
   }
-  const hideModal = e => {
-    if (e.target.dataset.groupid !== 'Base__message') dispatch(configSettings({error: false, errorMessage: ''}));
-  }
+
+
+  // const hideModal = e => {
+  //   if (e.target.dataset.groupid !== 'Base__message') dispatch(configSettings({error: false, errorMessage: ''}));
+  // }
 
 
   const baseIconsData = [
@@ -63,34 +74,38 @@ function Base() {
 
   const baseIcons = baseIconsData.map(item => (
     <svg className='Base__aside_svg' key={item.id}>
-      <use href={baseSprite + `#${item.name}`}></use>
+      <use href={ baseSprite + `#${ item.name }` }></use>
     </svg>
   ));
+
+
+
+  //--------------------------------------------------------------------
 
   return (
     <div className='container1 Base__container'>
       <aside className='Base__aside'>
-        <img src={baseLogo} alt='logotype' className='Base__logo' />
-        {baseIcons}
+        <img src={ baseLogo } alt='logotype' className='Base__logo' />
+        { baseIcons }
       </aside>
       <section className='Base__section'>
         <div className='Base__header_wrapper'>
-          <div className='Base__burger interactiv' onClick={burgerHandler}>
+          <div className='Base__burger interactiv' onClick={ burgerHandler }>
             <div className={sliderConfig.isVisible ? 'Base__burger-line1_cross' : 'Base__burger-line1'} />
             <div className={sliderConfig.isVisible ? 'Base__burger-line2_cross' : 'Base__burger-line2'} />
             <div className={sliderConfig.isVisible ? 'Base__burger-line3_cross' : 'Base__burger-line3'} />
           </div>
           <header className='Base__header'>
-            {location.pathname === '/base/claims' ? <Search /> : null}
+            { location.pathname === '/base/claims' ? <Search /> : null }
             <svg className='Base__bell-off_svg'>
-              <use href={baseSprite + `#bellOff`}></use>
+              <use href={ baseSprite + `#bellOff` }></use>
             </svg>
             <img src={baseUser} alt='user' className='Base__user'/>
             <span className={sessionStorage.key(0) ? 'Base__full-name' : 'Base__full-name_unauthenticated'} >
-              {sessionStorage.key(0) ? sessionStorage.getItem('fullName') : 'Not authenticated'}
+              { sessionStorage.key(0) ? sessionStorage.getItem('fullName') : 'Not authenticated'}
             </span>
-            <svg className='Base__quit_svg' onClick={quitSession}>
-              <use href={baseSprite + `#quit`}></use>
+            <svg className='Base__quit_svg' onClick={ quitSession }>
+              <use href={ baseSprite + `#quit` }></use>
             </svg>
           </header>
         </div>
@@ -98,23 +113,8 @@ function Base() {
           <Outlet />
         </main>
       </section>
-      {status === 'loading' && (
-        <div className='modal-area'>
-          <div className='modal-message'>
-            <img src={loadingImage} alt='loading' className='loading' />
-          </div>
-        </div>
-      )}
-      {error.error && (
-        <div className='modal-area' onClick={hideModal}>
-          <div className='modal-message' datagroupid='Base__message'>
-            <p className='text3' datagroupid='Base__message'>{error.errorMessage}</p>
-            <div className='button2 close-button'>╳</div>
-          </div>
-        </div>
-      )}
-      <Slider sliderConfig={sliderConfig} 
-              functions={{setSliderConfig: setSliderConfig}}
+      <Slider sliderConfig={ sliderConfig } 
+              functions={{ setSliderConfig: setSliderConfig }}
       />
     </div>
   );
@@ -122,3 +122,20 @@ function Base() {
 
 export default Base;
 
+//-------------------------------------------------
+
+// {status === 'loading' && (
+//   <div className='modal-area'>
+//     <div className='modal-message'>
+//       <img src={loadingImage} alt='loading' className='loading' />
+//     </div>
+//   </div>
+// )}
+// {error.error && (
+//   <div className='modal-area' onClick={hideModal}>
+//     <div className='modal-message' datagroupid='Base__message'>
+//       <p className='text3' datagroupid='Base__message'>{error.errorMessage}</p>
+//       <div className='button2 close-button'>╳</div>
+//     </div>
+//   </div>
+// )}

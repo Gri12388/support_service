@@ -1,7 +1,14 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-
-import { pager, hosts, methods, publicPaths, claimsModes, claimsStatuses } from '../../data/data.js';
+import { 
+  claimsModes, 
+  claimsStatuses, 
+  hosts,
+  messages, 
+  methods, 
+  pager, 
+  publicPaths 
+} from '../../data/data.js';
 
 const initialState = {
   totalItems: 0,
@@ -11,25 +18,87 @@ const initialState = {
   message: ''
 }
 
-export const fetchClaims = createAsyncThunk('claims/fetchClaims', async ({token, offset, limit, search, column, sort}) => {
+export const fetchClaims = createAsyncThunk('claims/fetchClaims', async ({ token, offset, limit, search, column, sort }) => {
+  //------------------------------------------------------------//
+  // Готовим пробный запрос на сервер, чтобы узнать общее 
+  // количество элементов на момент запроса (totalItems)                                 
+  //------------------------------------------------------------//
   let urlTest = new URL(publicPaths.claim, hosts.local);
   urlTest.searchParams.append('offset', 0);
   urlTest.searchParams.append('limit', 1);
   if (search) urlTest.searchParams.append('search', `${search}`);
   
+
+
+  //------------------------------------------------------------//
+  // Отправляем запрос и ждем ответа                                
+  //------------------------------------------------------------//
   let promise = await fetch (urlTest, {
       method: methods.get,
       headers: {
       Authorization: `Bearer ${token}`
       },
     });
-  if (promise.status !== 200) throw Error(promise.status);
+
+
+  //------------------------------------------------------------//
+  // Если ответ не объект или объект без свойства status или 
+  // свойство status не содержат значение 200, генерируем ошибку. 
+  // Иначе запрашиваем json                              
+  //------------------------------------------------------------//
+  if (
+    !promise || 
+    typeof promise !== 'object' || 
+    !promise.status
+  ) throw new Error(messages.wrongData);
+  if (promise.status !== 200) throw new Error(promise.status);
   let result = await promise.json();
-  if (result.totalItems === 0) return result;
+
+
+
+  //------------------------------------------------------------//
+  // Анализируем ответ: 
+  // Если ответ не объект, или объект без свойства totalItems,
+  // или свойство totalItems falsy или свойство totalItems    
+  // не преобразуется в число или свойство totalItems равно 0,
+  // но ответ не содержит свойства claims или свойство claims
+  // не является массивом, то генерируем ошибку. 
+  // Иначе готовимся к запросу по существу, если свойство
+  // totalItems не равно 0, или возвращаем ответ, если равно 0.                        
+  //------------------------------------------------------------//
+  if (
+    !result || 
+    typeof result !== 'object' || 
+    !result.totalItems || 
+    isNaN(+result.totalItems)
+  ) throw new Error(messages.wrongData);
+  if (result.totalItems === 0) {
+    if (
+      !result.claims ||
+      !Array.isArray(resule.claims)
+    ) throw new Error(messages.wrongData);
+    return result;
+  }
+  
+  
+
+  //------------------------------------------------------------//
+  // Исходя из полученных данных вычисляем максимально 
+  // возможный offset. Если поступивший в аргументах offset
+  // не число или число, большее чем максимально возможный offset
+  // корректируем поступивший в аргументах offset на максимально
+  // возможный offset. Это делается для того, чтобы на запросить
+  // несуществующие данные с сервера.                      
+  //------------------------------------------------------------//
   let maxOffset = (Math.floor(result.totalItems / pager.base) * pager.base);
   if (isNaN(offset) || offset > maxOffset) offset = maxOffset;
   sessionStorage.setItem('offset', offset);
 
+
+
+  //------------------------------------------------------------//
+  // Готовим на сервер запрос по существу                                 
+  //------------------------------------------------------------//
   let url = new URL(publicPaths.claim, hosts.local);
   url.searchParams.append('offset', `${offset}`);
   url.searchParams.append('limit', `${limit}`);
@@ -39,15 +108,48 @@ export const fetchClaims = createAsyncThunk('claims/fetchClaims', async ({token,
     url.searchParams.append('sort', `${sort}`);
   }
 
+
+
+  //------------------------------------------------------------//
+  // Отправляем запрос и ждем ответа                                
+  //------------------------------------------------------------//
   promise = await fetch (url, {
     method: methods.get,
     headers: {
     Authorization: `Bearer ${token}`
     },
   });
-  if (promise.status !== 200) throw Error(promise.status);
-  return await promise.json();
+
+
+  //------------------------------------------------------------//
+  // Если ответ не объект или объект без свойства status или 
+  // свойство status не содержат значение 200, генерируем ошибку. 
+  // Иначе запрашиваем json                              
+  //------------------------------------------------------------//
+  if (!promise || typeof promise !== 'object' || !promise.status) throw new Error(messages.wrongData);
+  if (promise.status !== 200) throw new Error(promise.status);
+  result = await promise.json();
+
+
+
+  //------------------------------------------------------------//
+  // Анализируем ответ: 
+  // Если ответ не объект, или объект без свойства claims,
+  // или свойство claims falsy или свойство claims    
+  // не массив, генерируем ошибку. 
+  // Иначе возвращаем ответ.                       
+  //------------------------------------------------------------//
+  if (
+    !result || 
+    typeof result !== 'object' || 
+    !result.claims ||
+    !Array.isArray(resule.claims)
+  ) throw new Error(messages.wrongData);
+  return result;
 });
+
+
+
 
 const claimsSlice = createSlice({
   name: 'claims',
@@ -76,11 +178,7 @@ const claimsSlice = createSlice({
       .addCase(fetchClaims.fulfilled, (state, action) => {
         state.totalItems = action.payload.totalItems;
         let temp = {};
-        if (action.payload.claims && Array.isArray(action.payload.claims)) {
-          action.payload.claims.forEach((item, index) => {
-            temp[index] = item;
-          });
-        }
+        action.payload.claims.forEach((item, index) => temp[index] = item);
         state.values = temp;
         state.status = claimsStatuses.ok;
       })
