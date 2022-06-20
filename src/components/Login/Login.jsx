@@ -1,10 +1,11 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
+import Modal from '../Modal/Modal.jsx';
 import InputText from '../InputText/InputText.jsx';
 
-import { configSettings } from '../../store/slices/claimsSlice.js';
+import { configSettings, selectModes, selectStatus, selectMessage } from '../../store/slices/claimsSlice.js';
 import { 
   claimsStatuses,
   errors, 
@@ -22,19 +23,19 @@ import {
 import '../../assets/styles/common.scss';
 import './Login.scss';
 
+function Login({ signal }) {
 
-function Login() {
+
+
   //------------------------------------------------------------//
   // Подготовка инструментов для взаимодействия с другими
   // страницами, файлами, компонентами и т.д.                                   
   //------------------------------------------------------------//
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  // let claimMode = useSelector(selectModes);
-  // let claimStatus = useSelector(selectStatus);
-  // let claimMessage = useSelector(selectMessage);
 
 
+  
   //------------------------------------------------------------//
   // Данный блок предназначен для хранения input элементов DOM  
   // дерева, которые будут задействованы при использовании      
@@ -44,7 +45,7 @@ function Login() {
   let [emailElement, setEmailElement] = useState();
   let [passwordElement, setPasswordElement] = useState();
 
-
+  
 
   //------------------------------------------------------------//
   // Состояния input элементов                                
@@ -66,17 +67,6 @@ function Login() {
 
 
 
-//------------------------------------------------------------//
-  // Объединение состояний input элементов в массив для их 
-  // более удобного обхода в некторых функциях                               
-  //------------------------------------------------------------//
-  const states = [
-    {state: email, setState: setEmail},
-    {state: password, setState: setPassword},
-  ];
-
-
-
   //------------------------------------------------------------//
   // Массивоподобный объект, хранящий данные для реализации 
   // смены фокуса при нажатии на кнопку Enter, а именно: id
@@ -87,8 +77,8 @@ function Login() {
     1: { id: 'fromLogin__password', state: passwordElement, pos: 1 },
   } 
 
-
-
+  
+  
   //------------------------------------------------------------//
   // Группа функций-обработчиков события onChange соотвествующих
   // input элементов                              
@@ -112,6 +102,11 @@ function Login() {
     });
   }
 
+
+
+  //------------------------------------------------------------//
+  // Функция, нормализующая данные, полученные с сервера                                  
+  //------------------------------------------------------------//
   function handleData(arr, str) {
     let database;
     let length;
@@ -145,6 +140,12 @@ function Login() {
     return JSON.stringify(tempArr);
   }
 
+
+
+  //------------------------------------------------------------//
+  // Функция, устанавливающая все состояния input элементов
+  // в изначальное положение                                 
+  //------------------------------------------------------------//
   function setAllStatesDefault() {
     setEmail({
       content: '',
@@ -162,6 +163,12 @@ function Login() {
     });
   }
 
+
+
+  //------------------------------------------------------------//
+  // Функция-организатор: собирает и/или проверяет необходимые
+  // компоненты для AJAX-запроса и отправляет его.                             
+  //------------------------------------------------------------// 
   function onSubmit(e) {
     e.preventDefault();
 
@@ -232,7 +239,7 @@ function Login() {
       navigate('/base/claims');
     })
     .catch(err => {
-      dispatch(configSettings({ focus: elements[0].id, status: claimsStatuses.error, message: err.message }));
+      dispatch(configSettings({ status: claimsStatuses.error, message: err.message }));
     });
     
     dispatch(configSettings({ status: claimsStatuses.loading }));
@@ -245,10 +252,6 @@ function Login() {
   //------------------------------------------------------------//
   // Обработчик события onFocus input элемента                            
   //------------------------------------------------------------// 
-  
-  
-  
-  
   function onFocus(setter) {
     setter(state=>({ ...state, focused: true }));
   }
@@ -259,15 +262,11 @@ function Login() {
   // Обработчик события onBlur input элемента                            
   //------------------------------------------------------------// 
   function onBlur(setter, checker) {
-    setter(state=>({...state, touched: true, focused: false}));
+    setter(state=>({ ...state, touched: true, focused: false }));
     checker();
   }
 
-  // const onKeyDown = e => {
-  //   if (e.code === 'Enter' || e.key === 'Enter') {
-  //     e.preventDefault();
-  //   }
-  // }
+
 
 
 
@@ -277,14 +276,7 @@ function Login() {
   // отображать ошибки, если они есть, сразу после смены фокуса.                            
   //------------------------------------------------------------// 
   function checkEmail() {
-    if (email.content.length === 0) {
-      return setEmail(state => ({
-        ...state, 
-        status: false, 
-        error: errors.emailErrors.noEmail
-      }));
-    }
-    if (!rules.emailRegExp.test(email.content)) {
+    if (email.content.length !== 0 && !rules.emailRegExp.test(email.content)) {
       return setEmail(state => ({
         ...state, 
         status: false, 
@@ -294,14 +286,7 @@ function Login() {
     setEmail(state => ({...state, status: true, error: '' }));
   }
   function checkPassword() {
-    if (password.content.length === 0) {
-      return setPassword(state => ({
-        ...state, 
-        status: false, 
-        error: errors.passwordErrors.noPassword
-      }));
-    }
-    if (password.content.length < rules.passwordLengthMin) {
+    if (email.content.length > 0 && password.content.length < rules.passwordLengthMin) {
       return setPassword(state => ({
         ...state, 
         status: false, 
@@ -344,8 +329,8 @@ function Login() {
 
 
   //------------------------------------------------------------//
-  // Данный хук ищет только после первого рендера нужные элемены 
-  // DOM дерева и сохраняет их в своответствующем состоянии                                 
+  // Хук ищущий только после первого рендера нужные элемены 
+  // DOM дерева и сохраняющий их в своответствующем состоянии                                 
   //------------------------------------------------------------//
   useEffect(() => {
     setEmailElement(document.getElementById(elements[0].id));
@@ -354,11 +339,35 @@ function Login() {
 
 
 
+  //------------------------------------------------------------//
+  // Хук, устанавливающий фокус на нужный input элемент по
+  // получению сигнала                                
+  //------------------------------------------------------------//
+  useEffect(() => {
+    if (emailElement) {
+      emailElement.focus();
+      setEmail(state => ({ ...state, touched: false }));
+    }
+  }, [signal]);
 
+
+
+  //------------------------------------------------------------//
+  // Функция, устанавливающая фокус на нужный input элемент
+  // после сокрытия модального окна
+  //------------------------------------------------------------//
+  function setFocus() {
+    emailElement.focus();
+    setEmail(state => ({ ...state, touched: false }));
+  }
+
+
+  
   //--------------------------------------------------------------------
 
   return (
-    <form className='Login__form'>
+    <>
+      <form className='Login__form'>
       <div className='Login__InputText1_wrapper'>
         <InputText
           id={ elements[0].id }
@@ -403,7 +412,9 @@ function Login() {
       </div>
       {isFormOk ? (<button className='button2 xbutton1' onClick={ onSubmit }>Login</button>) : (<button className='button-inactiv xbutton1'>Login</button>)}
 
-    </form>
+      </form>
+      <Modal afterHideModalFunctionsArray={ [setFocus] }/>
+    </>
   );
 }
 
@@ -446,3 +457,42 @@ export default Login;
 
 // let statusesObject = {};
 // statusesArray.forEach(item => statusesObject[item.id] = item);
+
+//---------------------------------------------------------------
+
+// if (password.content.length === 0) {
+//   return setPassword(state => ({
+//     ...state, 
+//     status: false, 
+//     error: errors.passwordErrors.noPassword
+//   }));
+// }
+
+//----------------------------------------------------------------
+
+// if (email.content.length === 0) {
+//   return setEmail(state => ({
+//     ...state, 
+//     status: false, 
+//     error: errors.emailErrors.noEmail
+//   }));
+// }
+
+//------------------------------------------------------------
+
+// const onKeyDown = e => {
+//   if (e.code === 'Enter' || e.key === 'Enter') {
+//     e.preventDefault();
+//   }
+// }
+
+//------------------------------------------------------------
+
+//------------------------------------------------------------//
+  // Объединение состояний input элементов в массив для их 
+  // более удобного обхода в некторых функциях                               
+  //------------------------------------------------------------//
+  // const states = [
+  //   {state: email, setState: setEmail},
+  //   {state: password, setState: setPassword},
+  // ];

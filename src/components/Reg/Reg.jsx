@@ -5,7 +5,6 @@ import InputText from '../InputText/InputText.jsx';
 
 import { configSettings, selectMessage, selectModes, selectStatus } from '../../store/slices/claimsSlice.js';
 import {  
-  checkForm, 
   claimsModes,
   claimsStatuses,
   errors, 
@@ -89,18 +88,6 @@ function Reg() {
     touched: false, 
   });
 
-  //------------------------------------------------------------//
-  // Объединение состояний input элементов в массив для их 
-  // более удобного обхода в некторых функциях                               
-  //------------------------------------------------------------//
-  const states = [
-    {state: name, setState: setName},
-    {state: surname, setState: setSurname},
-    {state: email, setState: setEmail},
-    {state: password, setState: setPassword},
-    {state: passwordCopy, setState: setPasswordCopy},
-  ];
-  
 
 
   //------------------------------------------------------------//
@@ -117,15 +104,12 @@ function Reg() {
   } 
 
 
-
+  
   //------------------------------------------------------------//
-  // Обработчик кнопки "Try again", появляющейся в 
-  // информационном сообщении в случае неудачной попытки 
-  // регистрации. Функция приводит форму в изначальное состояние.                              
+  // Функция, устанавливающая все состояния input элементов
+  // в изначальное положение                                 
   //------------------------------------------------------------//
-  function onTryAgainButton() {
-    dispatch(configSettings({ status: claimsStatuses.ok, message: '' }));
-    nameElement.focus();
+  function setAllStatesDefault() {
     setName({
       content: '',
       error: errors.nameErrors.noName,
@@ -161,6 +145,19 @@ function Reg() {
       status: false, 
       touched: false, 
     });
+  }
+
+
+
+  //------------------------------------------------------------//
+  // Обработчик кнопки "Try again", появляющейся в 
+  // информационном сообщении в случае неудачной попытки 
+  // регистрации. Функция приводит форму в изначальное состояние.                              
+  //------------------------------------------------------------//
+  function onTryAgainButton() {
+    dispatch(configSettings({ status: claimsStatuses.ok, message: '' }));
+    nameElement.focus();
+    setAllStatesDefault();
   }
 
 
@@ -423,7 +420,7 @@ function Reg() {
 
   return (
     <div className='container3'>
-      {claimMode === claimsModes.modal && claimStatus === claimsStatuses.ok && (
+      { claimMode === claimsModes.modal && claimStatus === claimsStatuses.ok && (
         <form className='Reg__modal'>
           <section className='Reg__section'>
           <InputText 
@@ -499,27 +496,27 @@ function Reg() {
           />
           </section>
           
-          {isFormOk ? (<button className='button2 xbutton1' onClick={ onSubmit }>Register</button>) : (<button className='button-inactiv xbutton1'>Register</button>)}
+          { isFormOk ? (<button className='button2 xbutton1' onClick={ onSubmit }>Register</button>) : (<button className='button-inactiv xbutton1'>Register</button>)}
         
           <div className='button2 close-button' id='Reg__button'>╳</div>
         </form>
       )}
-      {claimMode === claimsModes.modal && claimStatus === claimsStatuses.loading && (
+      { claimMode === claimsModes.modal && claimStatus === claimsStatuses.loading && (
         <div className='Reg__modal1'>
           <img src={ loadingImage } alt='loading' className='loading' />
           <p className='text3'>Loading...</p>
         </div>  
       )}
-      {claimMode === claimsModes.modal && (claimStatus === claimsStatuses.message || claimStatus === claimsStatuses.error) && (
+      { claimMode === claimsModes.modal && (claimStatus === claimsStatuses.message || claimStatus === claimsStatuses.error) && (
         <div className='Reg__modal2'>
           <p className='text3'>{ claimMessage }</p>
-          {claimStatus === claimsStatuses.error && (
+          { claimStatus === claimsStatuses.error && (
             <button className='button4' onClick={ onTryAgainButton }>Try again?</button>
           )}
           <div className='button2 close-button' id='Reg__button'>╳</div>
         </div>
       )}
-      
+
     </div>
   );
 }
@@ -533,3 +530,17 @@ export default Reg;
 //   });
 //   return;
 // }
+
+//---------------------------------------------------
+
+  //------------------------------------------------------------//
+  // Объединение состояний input элементов в массив для их 
+  // более удобного обхода в некторых функциях                               
+  //------------------------------------------------------------//
+  // const states = {
+  //   0:  {id: 'fromReg__name', state: name, setState: setName, pos: 0},
+  //   1:  {id: 'fromReg__surname', state: surname, setState: setSurname, pos: 1},
+  //   2:  {id: 'fromReg__email', state: email, setState: setEmail, pos: 2},
+  //   3:  {id: 'fromReg__password', state: password, setState: setPassword, pos: 3},
+  //   4:  {id: 'fromReg__password-copy', state: passwordCopy, setState: setPasswordCopy, pos: 4},
+  // };
