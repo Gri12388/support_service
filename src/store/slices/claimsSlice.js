@@ -43,14 +43,17 @@ export const fetchClaims = createAsyncThunk('claims/fetchClaims', async ({ token
 
   //------------------------------------------------------------//
   // Если ответ не объект или объект без свойства status или 
-  // свойство status не содержат значение 200, генерируем ошибку. 
-  // Иначе запрашиваем json                              
+  // свойство status не содержат значение truthy, или свойство 
+  // status не может быть преобразовано в число, генерируем 
+  // ошибку. Иначе запрашиваем json                              
   //------------------------------------------------------------//
   if (
     !promise || 
     typeof promise !== 'object' || 
-    !promise.status
+    !promise.status || 
+    isNaN(+promise.status)
   ) throw new Error(messages.wrongData);
+
   if (promise.status !== 200) throw new Error(promise.status);
   let result = await promise.json();
 
@@ -123,10 +126,17 @@ export const fetchClaims = createAsyncThunk('claims/fetchClaims', async ({ token
 
   //------------------------------------------------------------//
   // Если ответ не объект или объект без свойства status или 
-  // свойство status не содержат значение 200, генерируем ошибку. 
-  // Иначе запрашиваем json                              
+  // свойство status не содержат значение truthy, или свойство 
+  // status не может быть преобразовано в число, генерируем 
+  // ошибку. Иначе запрашиваем json                              
   //------------------------------------------------------------//
-  if (!promise || typeof promise !== 'object' || !promise.status) throw new Error(messages.wrongData);
+  if (
+    !promise || 
+    typeof promise !== 'object' || 
+    !promise.status || 
+    isNaN(+promise.status)
+  ) throw new Error(messages.wrongData);
+
   if (promise.status !== 200) throw new Error(promise.status);
   result = await promise.json();
 
@@ -147,7 +157,6 @@ export const fetchClaims = createAsyncThunk('claims/fetchClaims', async ({ token
   ) throw new Error(messages.wrongData);
   return result;
 });
-
 
 
 

@@ -17,6 +17,12 @@ export const publicPaths = {
   types: '/types'
 }
 
+export const claims = {
+  declined: 'Declined',
+  done: 'Done',
+  new: 'New'
+}
+
 export const roles = {
   admin: 'Administrator',
   user: 'User'

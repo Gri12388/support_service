@@ -93,6 +93,29 @@ function Login({ signal }) {
 
 
   //------------------------------------------------------------//
+  // Функция, устанавливающая все состояния input элементов
+  // в изначальное положение                                 
+  //------------------------------------------------------------//
+  function setAllStatesDefault() {
+    setEmail({
+      content: '',
+      error: errors.emailErrors.noEmail,
+      focused: false,
+      status: false, 
+      touched: false, 
+    });
+    setPassword({
+      content: '',
+      error: errors.passwordErrors.noPassword,
+      focused: false,
+      status: false, 
+      touched: false, 
+    });
+  }
+
+
+
+  //------------------------------------------------------------//
   // Функция формирует содержание body-компонента AJAX запроса                              
   //------------------------------------------------------------//  
   function createBody() {
@@ -146,29 +169,6 @@ function Login({ signal }) {
 
 
   //------------------------------------------------------------//
-  // Функция, устанавливающая все состояния input элементов
-  // в изначальное положение                                 
-  //------------------------------------------------------------//
-  function setAllStatesDefault() {
-    setEmail({
-      content: '',
-      error: errors.emailErrors.noEmail,
-      focused: false,
-      status: false, 
-      touched: false, 
-    });
-    setPassword({
-      content: '',
-      error: errors.passwordErrors.noPassword,
-      focused: false,
-      status: false, 
-      touched: false, 
-    });
-  }
-
-
-
-  //------------------------------------------------------------//
   // Функция-организатор: собирает и/или проверяет необходимые
   // компоненты для AJAX-запроса и отправляет его.                             
   //------------------------------------------------------------// 
@@ -183,6 +183,13 @@ function Login({ signal }) {
 
     sendRequestBodyfull(publicPath, method, bodyJSON)
     .then(res => {
+      if (
+        !res || 
+        typeof res !== 'object' || 
+        !res.status || 
+        isNaN(+res.status)
+      ) throw new Error(messages.wrongData);
+      
       switch (res.status) {
         case 200: return res.json();
         case 401: throw new Error(messages.noAuth);
@@ -191,7 +198,7 @@ function Login({ signal }) {
       }
     })
     .then(res => {
-      if (res === null || typeof res !== 'object') throw new Error(messages.noData);
+      if (!res || typeof res !== 'object') throw new Error(messages.noData);
       
       if (!res.token) throw new Error(messages.noToken);
       else sessionStorage.setItem('token', res.token);  
@@ -209,6 +216,13 @@ function Login({ signal }) {
       return sendRequestBodyless(publicPath, method, token);
     })
     .then(res => {
+      if (
+        !res || 
+        typeof res !== 'object' || 
+        !res.status || 
+        isNaN(+res.status)
+      ) throw new Error(messages.wrongData);
+
       switch (res.status) {
         case 200: return res.json();
         case 404: throw new Error(messages.noFound);
@@ -227,6 +241,13 @@ function Login({ signal }) {
       return sendRequestBodyless(publicPath, method, token);
     })
     .then(res => {
+      if (
+        !res || 
+        typeof res !== 'object' || 
+        !res.status || 
+        isNaN(+res.status)
+      ) throw new Error(messages.wrongData);
+
       switch (res.status) {
         case 200: return res.json();
         case 404: throw new Error(messages.noFound);
@@ -239,7 +260,6 @@ function Login({ signal }) {
       sessionStorage.setItem('statuses', handleData(res, 'status'));
 
       dispatch(configSettings({ status: claimsStatuses.ok }));
-      debugger
       navigate('/base/claims');
     })
     .catch(err => {
@@ -250,8 +270,6 @@ function Login({ signal }) {
   }
 
   
-
-
 
   //------------------------------------------------------------//
   // Обработчик события onFocus input элемента                            
@@ -271,6 +289,14 @@ function Login({ signal }) {
   }
 
 
+  //------------------------------------------------------------//
+  // Функция, устанавливающая фокус на нужный input элемент
+  // после сокрытия модального окна
+  //------------------------------------------------------------//
+  function setFocus() {
+    emailElement.focus();
+    setEmail(state => ({ ...state, touched: false }));
+  }
 
 
 
@@ -287,7 +313,7 @@ function Login({ signal }) {
         error: errors.emailErrors.wrongEmail
       }));
     }
-    setEmail(state => ({...state, status: true, error: '' }));
+    setEmail(state => ({ ...state, status: true, error: '' }));
   }
   function checkPassword() {
     if (email.content.length > 0 && password.content.length < rules.passwordLengthMin) {
@@ -310,9 +336,10 @@ function Login({ signal }) {
 
 
   //------------------------------------------------------------//
-  // Группа функций, валидирующих содержание input элементов
-  // по наступлению события onChange. Нужна для того, чтобы 
-  // определять отображать ли кнопку submit действующей или нет.                             
+  // Группа переменных, содержащих результат валидации 
+  // содержания input элементов по наступлению события onChange.  
+  // Нужна для того, чтобы определять отображать ли кнопку submit 
+  // действующей или нет.                             
   //------------------------------------------------------------// 
   let isEmailOk = useMemo (() => !(
     email.content.length === 0 ||
@@ -333,7 +360,7 @@ function Login({ signal }) {
 
 
   //------------------------------------------------------------//
-  // Хук ищущий только после первого рендера нужные элемены 
+  // Хук, ищущий только после первого рендера нужные элемены 
   // DOM дерева и сохраняющий их в своответствующем состоянии                                 
   //------------------------------------------------------------//
   useEffect(() => {
@@ -356,17 +383,6 @@ function Login({ signal }) {
 
 
 
-  //------------------------------------------------------------//
-  // Функция, устанавливающая фокус на нужный input элемент
-  // после сокрытия модального окна
-  //------------------------------------------------------------//
-  function setFocus() {
-    emailElement.focus();
-    setEmail(state => ({ ...state, touched: false }));
-  }
-
-
-  
   //--------------------------------------------------------------------
 
   return (
@@ -414,7 +430,7 @@ function Login({ signal }) {
         />
         <label htmlFor='' className='text2'>Keep me logged in</label>
       </div>
-      {isFormOk ? (<button className='button2 xbutton1' onClick={ onSubmit }>Login</button>) : (<button className='button-inactiv xbutton1'>Login</button>)}
+      { isFormOk ? (<button className='button2 xbutton1' onClick={ onSubmit }>Login</button>) : (<button className='button-inactiv xbutton1'>Login</button>) }
 
       </form>
       <Modal afterHideModalFunctionsArray={ [setFocus] }/>
