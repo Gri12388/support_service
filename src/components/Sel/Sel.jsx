@@ -39,10 +39,12 @@ function Sel({ id, label, value, groupId, state, callbacks, placeholder }) {
     setIsVisible(!isVisible);
     console.log('click')
   }
+
   function onButtonClick(e) {
     e.preventDefault();
     toggleVisibility();  
   }
+
   function chooseItem(e) {
     setPointed(null);
     let temp = +e.currentTarget.dataset.id;
@@ -52,11 +54,20 @@ function Sel({ id, label, value, groupId, state, callbacks, placeholder }) {
     toggleVisibility();
     callbacks.onChange(types[temp].id.toString());
   }
+
   function onKeyDown(e) {
     e.preventDefault();
     let temp = pointed;
-    if (state.content && (e.code === 'Enter' || e.key === 'Enter')) callbacks && callbacks.onPressedEnter && callbacks.onPressedEnter(e);
-    else if (!state.content && (e.code === 'Enter' || e.key === 'Enter')) toggleVisibility();
+    if (!isVisible && state.content && (e.code === 'Enter' || e.key === 'Enter')) {
+      callbacks && callbacks.onPressedEnter && callbacks.onPressedEnter(e);
+    }
+    else if (!state.content && pointed === null && (e.code === 'Enter' || e.key === 'Enter')) {
+      toggleVisibility();
+    }
+    else if (pointed !== null && (e.code === 'Enter' || e.key === 'Enter')) {
+      chooseItem({ currentTarget: { dataset: { id: pointed }}});
+      temp = null;
+    }
     else if (isVisible && temp === null && (e.code === 'ArrowUp' || e.key === 'ArrowUp')) {
       setIsVisible(false);
     }
@@ -152,11 +163,14 @@ function Sel({ id, label, value, groupId, state, callbacks, placeholder }) {
     return (
       <div  key={ item.id } 
             className={ configureItemView(item.id) } 
-            onClick={ chooseItem } 
-            onMouseEnter={ onMouseEnter }
-            data-id={ item.id } 
             data-group={ groupId }
       >
+        <div  className='Sel__shell'
+              onClick={ chooseItem } 
+              onMouseEnter={ onMouseEnter }
+              data-id={ item.id } 
+              data-group={ groupId }
+        />
         <div  className='Sel__select' 
               data-group={ groupId }
         >
@@ -166,8 +180,8 @@ function Sel({ id, label, value, groupId, state, callbacks, placeholder }) {
             <div  className='Sel__mark' 
                   style={{ backgroundColor: item.color }} 
                   data-group={ groupId }
-            >
-            </div>
+            />
+            
           </div>
           <p  className='text3' 
               data-group={ groupId }
@@ -178,7 +192,7 @@ function Sel({ id, label, value, groupId, state, callbacks, placeholder }) {
       </div>
     );
   })
-  //console.log (state)
+
   return(
     <>
       {label && <label htmlFor={ id } className='text1 InputText__label'>{ label }</label>}
