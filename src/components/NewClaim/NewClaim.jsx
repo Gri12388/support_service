@@ -21,6 +21,13 @@ import {
 import '../../assets/styles/common.scss';
 import './NewClaim.scss';
 
+
+
+//------------------------------------------------------------//
+// Компонент отвечает за отображение и функционирование
+// уникальной части страницы, расположенной по адресу:
+// '/base/new'.                             
+//------------------------------------------------------------//
 function NewClaim() {
   
   //------------------------------------------------------------//
@@ -34,7 +41,7 @@ function NewClaim() {
 
 
   //------------------------------------------------------------//
-  // Получение необходимых данных из sessionStorage                                  
+  // Извлечение нужных данных из sessionStorage.                                  
   //------------------------------------------------------------// 
   const types = useMemo(() => {
     return JSON.parse(sessionStorage.getItem('types')); 
@@ -52,7 +59,7 @@ function NewClaim() {
   // Данный блок предназначен для хранения input элементов DOM  
   // дерева, которые будут задействованы при использовании      
   // функции element.focus() для реализации перемещения фокуса  
-  // при нажатии клавиши Enter                                  
+  // при нажатии клавиши Enter.                                  
   //------------------------------------------------------------//
   let [titleElement, setTitleElement] = useState();
   let [typeElement, setTypeElement] = useState();
@@ -61,29 +68,56 @@ function NewClaim() {
 
 
   //------------------------------------------------------------//
-  // Состояния input элементов                                
+  // Создание локальных состояний input элементов.                               
   //------------------------------------------------------------//
   const [title, setTitle] = useState({
     content: '', 
-    error: errors.titleErrors.noTitle,
+    error: '',
     focused: true,
     status: false, 
     touched: false, 
   });
   const [description, setDescription] = useState({
     content: '', 
-    error: errors.descriptionError.noDescription,
+    error: '',
     focused: false,
     status: false, 
     touched: false, 
   });
   const [type, setType] = useState({
     content: '', 
-    error: errors.typeError.noType,
+    error: '',
     focused: false,
     status: false, 
     touched: false, 
   });
+
+
+
+  //------------------------------------------------------------//
+  // Группа переменных, содержащих результат валидации 
+  // содержания input элементов по наступлению события onChange.  
+  // Нужна для того, чтобы определять отображать ли кнопку submit 
+  // действующей или нет.                             
+  //------------------------------------------------------------// 
+  let isTitleOk = useMemo (() => !(
+    title.content.length === 0 ||
+    title.content.length > rules.titleLengthMax
+    ), [title]);
+  
+  let isDescriptionOk = useMemo (() => !(
+    description.content.length === 0
+    ), [description]);
+  
+  let isTypeOk = useMemo (() => !(
+    type.content.length === 0
+    ), [type]);
+  
+  let isFormOk = useMemo (() => (
+    isTitleOk &&
+    isDescriptionOk && 
+    isTypeOk
+    ), [title, description, type]);
 
 
 
@@ -102,7 +136,7 @@ function NewClaim() {
 
   //------------------------------------------------------------//
   // Группа функций-обработчиков события onChange соотвествующих
-  // input элементов                              
+  // input элементов.                              
   //------------------------------------------------------------//
   function onTitleInput(e) {
     setTitle(state => ({ ...state, content: e.target.value }));
@@ -115,28 +149,29 @@ function NewClaim() {
   }
 
   
+
   //------------------------------------------------------------//
   // Функция, устанавливающая все состояния input элементов
-  // в изначальное положение                                 
+  // в изначальное положение.                                 
   //------------------------------------------------------------//
   function setAllStatesDefault() {
     setTitle({
       content: '', 
-      error: errors.titleErrors.noTitle,
+      error: '',
       focused: true,
       status: false, 
       touched: false, 
     });
     setDescription({
       content: '', 
-      error: errors.descriptionError.noDescription,
+      error: '',
       focused: false,
       status: false, 
       touched: false, 
     });
     setType({
       content: '', 
-      error: errors.typeError.noType,
+      error: '',
       focused: false,
       status: false, 
       touched: false, 
@@ -146,8 +181,9 @@ function NewClaim() {
 
 
   //------------------------------------------------------------//
-  // Функция формирует содержание body-компонента AJAX запроса                              
-  //------------------------------------------------------------//  
+  // Функция, формирующая содержание body-компонента AJAX 
+  // запроса.                              
+  //------------------------------------------------------------//   
   function createBody() {
     return JSON.stringify({
       title: title.content,
@@ -201,7 +237,9 @@ function NewClaim() {
 
 
   //------------------------------------------------------------//
-  // Обработчик события onFocus input элемента                            
+  // Обработчик события onFocus input элемента, к которму этот 
+  // обработчик будет приставлен. Setter - setter локального
+  // состояния.                            
   //------------------------------------------------------------// 
   function onFocus(setter) {
     setter(state=>({ ...state, focused: true }));
@@ -210,7 +248,10 @@ function NewClaim() {
 
 
   //------------------------------------------------------------//
-  // Обработчик события onBlur input элемента                            
+  // Обработчик события onBlur input элемента, к которму этот 
+  // обработчик будет приставлен. Setter - setter локального
+  // состояния, checker - функция, валидирующая локальное 
+  // состояние.                         
   //------------------------------------------------------------// 
   function onBlur(setter, checker) {
     setter(state=>({ ...state, touched: true, focused: false }));
@@ -231,7 +272,7 @@ function NewClaim() {
 
   //------------------------------------------------------------//
   // Функция, устанавливающая фокус на нужный input элемент
-  // после сокрытия модального окна
+  // после сокрытия модального окна.
   //------------------------------------------------------------//
   function setFocus() {
     titleElement.focus();
@@ -265,35 +306,9 @@ function NewClaim() {
 
 
   //------------------------------------------------------------//
-  // Группа переменных, содержащих результат валидации 
-  // содержания input элементов по наступлению события onChange.  
-  // Нужна для того, чтобы определять отображать ли кнопку submit 
-  // действующей или нет.                             
-  //------------------------------------------------------------// 
-  let isTitleOk = useMemo (() => !(
-    title.content.length === 0 ||
-    title.content.length > rules.titleLengthMax
-    ), [title]);
-  
-  let isDescriptionOk = useMemo (() => !(
-    description.content.length === 0
-    ), [description]);
-  
-  let isTypeOk = useMemo (() => !(
-    type.content.length === 0
-    ), [type]);
-  
-  let isFormOk = useMemo (() => (
-    isTitleOk &&
-    isDescriptionOk && 
-    isTypeOk
-    ), [title, description, type]);
-
-
-
-  //------------------------------------------------------------//
-  // Хук, ищущий только после первого рендера нужные элемены 
-  // DOM дерева и сохраняющий их в своответствующем состоянии                                 
+  // Хук, реагирующий на монтирование. Ищет нежные элементы 
+  // DOM дерева и сохраняющий их в своответствующем локальном 
+  // состоянии.                                 
   //------------------------------------------------------------//  
     useEffect(() => {
       setTitleElement(document.getElementById(elements[0].id));
