@@ -124,6 +124,7 @@ export const fetchClaims = createAsyncThunk('claims/fetchClaims', async ({ token
   });
 
 
+  
   //------------------------------------------------------------//
   // Если ответ не объект или объект без свойства status или 
   // свойство status не содержат значение truthy, или свойство 

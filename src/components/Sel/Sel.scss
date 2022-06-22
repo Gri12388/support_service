@@ -16,11 +16,16 @@
   border: solid 1px v.$color18;
 }
 
+.Sel__focused {
+  border: solid 1px v.$color1;
+}
+
 .Sel__base {
   @extend %base;
   position: relative;
   z-index: 1;
   justify-content: space-between;
+  outline: none;
 }
 
 .Sel__side-area {
@@ -79,10 +84,15 @@
 
 .Sel__item {
   @extend %base;
+  padding: 10px 5px;
   border-radius: 0;
   border: solid 1px v.$color5;
   border-top: none;
-  &:hover {
-    background-color: v.$color15;
-  }
+  // &:hover {
+  //   background-color: v.$color15;
+  // }
+}
+
+.Sel__item-pointed {
+  background-color: v.$color15;
 }

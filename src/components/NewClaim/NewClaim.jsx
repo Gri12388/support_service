@@ -180,7 +180,7 @@ function NewClaim() {
         !res.status || 
         isNaN(+res.status)
       ) throw new Error(messages.wrongData);
-      
+
       switch (res.status) {
         case 200: dispatch(configSettings({ status: 'ok' }));
                   sessionStorage.setItem('offset', 'last');
@@ -256,7 +256,6 @@ function NewClaim() {
     setTitle(state => ({ ...state, status: true, error: '' }));
   }
   function checkDescription() {
-    if (description.content.length === 0) return setDescription(state=>({...state, status: false, error: errors.descriptionError.noDescription}));
     setDescription(state=>({...state, status: true, error: ''}));
   }
   function checkType () {
