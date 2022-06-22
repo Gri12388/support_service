@@ -21,6 +21,13 @@ import {
 import '../../assets/styles/common.scss';
 import './OldClaim.scss';
 
+
+
+//------------------------------------------------------------//
+// Компонент отвечает за отображение и функционирование
+// уникальной части страницы, расположенной по адресу:
+// '/base/claim'.                             
+//------------------------------------------------------------//
 function OldClaim() {
   
   //------------------------------------------------------------//
@@ -34,7 +41,7 @@ function OldClaim() {
 
 
   //------------------------------------------------------------//
-  // Получение необходимых данных из sessionStorage                                  
+  // Извлечение нужных данных из sessionStorage.                                  
   //------------------------------------------------------------// 
   const types = useMemo(() => {
     return JSON.parse(sessionStorage.getItem('types')); 
@@ -48,20 +55,15 @@ function OldClaim() {
 
 
 
-  let typeID = useMemo(() => {
+  //------------------------------------------------------------//
+  // Устанавливаем ID типа, полученного в location.state. 
+  // Нужен для установки изначального локального состояния type.                                   
+  //------------------------------------------------------------// 
+  const typeID = useMemo(() => {
     let temp = types.find(item => item.slug === location.state.typeSlug).id;
     let other = types.find(item => item.type === 'Other').id;
     return temp === other ? '' : temp.toString();
   }, []);
-
-  // let doneSlug = useMemo(() => {
-  //   return statuses.find(item => item.status === 'DONE').slug 
-  // }, []);
-
-  // let declineSlug = useMemo(() => {
-  //   return statuses.find(item => item.status === 'DECLINED').slug 
-  // }, []);
-
 
 
 
@@ -69,7 +71,7 @@ function OldClaim() {
   // Данный блок предназначен для хранения input элементов DOM  
   // дерева, которые будут задействованы при использовании      
   // функции element.focus() для реализации перемещения фокуса  
-  // при нажатии клавиши Enter                                  
+  // при нажатии клавиши Enter.                                  
   //------------------------------------------------------------//
   let [titleElement, setTitleElement] = useState();
   let [typeElement, setTypeElement] = useState();
@@ -78,7 +80,7 @@ function OldClaim() {
 
 
   //------------------------------------------------------------//
-  // Состояния input элементов                                
+  // Создание локальных состояний input элементов.                                
   //------------------------------------------------------------//
   const [title, setTitle] = useState({
     content: location.state.title, 
@@ -118,8 +120,35 @@ function OldClaim() {
 
 
   //------------------------------------------------------------//
+  // Группа переменных, содержащих результат валидации 
+  // содержания input элементов по наступлению события onChange.  
+  // Нужна для того, чтобы определять отображать ли кнопку submit 
+  // действующей или нет.                             
+  //------------------------------------------------------------// 
+  const isTitleOk = useMemo (() => !(
+    title.content.length === 0 ||
+    title.content.length > rules.titleLengthMax
+    ), [title]);
+  
+  const isDescriptionOk = useMemo (() => !(
+    description.content.length === 0
+    ), [description]);
+  
+  const isTypeOk = useMemo (() => !(
+    type.content.length === 0
+    ), [type]);
+  
+  const isFormOk = useMemo (() => (
+    isTitleOk &&
+    isDescriptionOk && 
+    isTypeOk
+    ), [title, description, type]);
+
+
+
+  //------------------------------------------------------------//
   // Группа функций-обработчиков события onChange соотвествующих
-  // input элементов                              
+  // input элементов.                              
   //------------------------------------------------------------//
   function onTitleInput(e) {
     setTitle(state => ({ ...state, content: e.target.value }));
@@ -132,9 +161,10 @@ function OldClaim() {
   }
 
   
+
   //------------------------------------------------------------//
   // Функция, устанавливающая все состояния input элементов
-  // в изначальное положение                                 
+  // в изначальное положение.                                 
   //------------------------------------------------------------//
   function setAllStatesDefault() {
     setTitle({
@@ -163,7 +193,8 @@ function OldClaim() {
 
 
   //------------------------------------------------------------//
-  // Функция формирует содержание body-компонента AJAX запроса                              
+  // Функция, формирующая содержание body-компонента AJAX 
+  // запроса.                              
   //------------------------------------------------------------//  
   function createBody(act) {
     return JSON.stringify({
@@ -186,7 +217,9 @@ function OldClaim() {
     let method = methods.put;
     let bodyJSON = createBody(act);
 
-    setAllStatesDefault()
+    setAllStatesDefault();
+
+    dispatch(configSettings({ status: claimsStatuses.loading }));
 
     sendRequestBodyfull(publicPath, method, bodyJSON, token)
     .then(res => {
@@ -209,14 +242,14 @@ function OldClaim() {
     .catch(err => {
       dispatch(configSettings({ status: claimsStatuses.error, message: err.message }));
     });
-
-    dispatch(configSettings({ status: claimsStatuses.loading }));
   }
 
 
 
   //------------------------------------------------------------//
-  // Обработчик события onFocus input элемента                            
+  // Обработчик события onFocus input элемента, к которму этот 
+  // обработчик будет приставлен. Setter - setter локального
+  // состояния.                            
   //------------------------------------------------------------// 
   function onFocus(setter) {
     setter(state=>({ ...state, focused: true }));
@@ -225,7 +258,10 @@ function OldClaim() {
 
 
   //------------------------------------------------------------//
-  // Обработчик события onBlur input элемента                            
+  // Обработчик события onBlur input элемента, к которму этот 
+  // обработчик будет приставлен. Setter - setter локального
+  // состояния, checker - функция, валидирующая локальное 
+  // состояние.                         
   //------------------------------------------------------------// 
   function onBlur(setter, checker) {
     setter(state=>({ ...state, touched: true, focused: false }));
@@ -256,7 +292,7 @@ function OldClaim() {
 
   //------------------------------------------------------------//
   // Функция, устанавливающая фокус на нужный input элемент
-  // после сокрытия модального окна
+  // после сокрытия модального окна.
   //------------------------------------------------------------//
   function setFocus() {
     titleElement.focus();
@@ -290,41 +326,15 @@ function OldClaim() {
 
 
   //------------------------------------------------------------//
-  // Группа переменных, содержащих результат валидации 
-  // содержания input элементов по наступлению события onChange.  
-  // Нужна для того, чтобы определять отображать ли кнопку submit 
-  // действующей или нет.                             
-  //------------------------------------------------------------// 
-  let isTitleOk = useMemo (() => !(
-    title.content.length === 0 ||
-    title.content.length > rules.titleLengthMax
-    ), [title]);
-  
-  let isDescriptionOk = useMemo (() => !(
-    description.content.length === 0
-    ), [description]);
-  
-  let isTypeOk = useMemo (() => !(
-    type.content.length === 0
-    ), [type]);
-  
-  let isFormOk = useMemo (() => (
-    isTitleOk &&
-    isDescriptionOk && 
-    isTypeOk
-    ), [title, description, type]);
-
-
-
-  //------------------------------------------------------------//
-  // Хук, ищущий только после первого рендера нужные элемены 
-  // DOM дерева и сохраняющий их в своответствующем состоянии                                 
+  // Хук, реагирующий на монтирование. Ищет нежные элементы 
+  // DOM дерева и сохраняющий их в своответствующем локальном 
+  // состоянии.                                 
   //------------------------------------------------------------//  
-    useEffect(() => {
-      setTitleElement(document.getElementById(elements[0].id));
-      setTypeElement(document.getElementById(elements[1].id));
-      setDescriptionElement(document.getElementById(elements[2].id));
-    }, []);
+  useEffect(() => {
+    setTitleElement(document.getElementById(elements[0].id));
+    setTypeElement(document.getElementById(elements[1].id));
+    setDescriptionElement(document.getElementById(elements[2].id));
+  }, []);
 
 
 
@@ -394,72 +404,3 @@ function OldClaim() {
 }
 
 export default OldClaim;
-
-
-
-//------------------------------------------------------
-
-
-  
-  
-  
-
-
-  //location.state && Object.values(JSON.parse(sessionStorage.getItem('types'))).find(item => item.slug === location.slug).id;
-  
-
-  // const states = [
-  //   {state: title, setState: setTitle},
-  //   {state: description, setState: setDescription},
-  //   {state: type, setState: setType},
-  // ];
-
-      // switch (claimStatus) {
-    //   case 'NEW': method = methods.post;
-    //               publicPath = publicPaths.claim;
-    //               break;
-    //   case 'DONE':
-    //   case 'DECLINED':  method = methods.put;
-    //                     publicPath = publicPaths.claim;
-    //                     break;
-    //   default: return;
-    // }
-    
-    // if (location.state) publicPath += `/${location.state.id}`;
-
-  // const checkForm = () => {
-  //   let isValid = states.every(item => item.state.status);
-  //   if (!isValid) {
-  //     states.forEach(item => {
-  //       if (!item.state.status) item.setState(state=>({...state, touched: true}));
-  //     });
-  //     return false;
-  //   }
-  //   return true;
-  // }
-
-  // async function sendRequest(publicPath, method, token, body) {
-
-  //   let promise = await fetch(hosts.local + publicPath, {
-  //     method: method,
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //       'Authorization': `Bearer ${token}`
-  //     },
-  //     body: body,
-  //   });
-    
-  //   switch (promise.status) {
-  //     case 200: dispatch(configSettings({status: 'ok'}));
-  //               if (!location.state) sessionStorage.setItem('offset', 'last');
-  //               navigate('/base/claims');
-  //               break;
-  //     default:  throw Error(messages.default);
-  //   }
-  // }
-
-
-
-
-
-
