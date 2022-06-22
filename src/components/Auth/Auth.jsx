@@ -13,7 +13,6 @@ import mainLogo from '../../assets/images/logo.svg';
 import footerLogo from '../../assets/images/logo-invert.svg';
 import poster from '../../assets/images/poster.png';
 
-
 import '../../assets/styles/common.scss';
 import './Auth.scss';
 
@@ -47,7 +46,7 @@ function Auth() {
 
 
   //------------------------------------------------------------//
-  // Функция, показывающая модальное окно
+  // Функция, показывающая модальное окно.
   //------------------------------------------------------------// 
   function showModal() {
     dispatch(configSettings({ mode: claimsModes.modal }));
@@ -57,7 +56,7 @@ function Auth() {
 
   //------------------------------------------------------------//
   // Функция, скрывающая модальное окно и отсылающая сигнал
-  // в Login компонент
+  // в Login компонент.
   //------------------------------------------------------------// 
   function hideModal(e) {
     if (claimStatus !== claimsStatuses.loading && (e.target.id === 'Auth__modal-area' || e.target.id === 'Reg__button')) {

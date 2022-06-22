@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from 'react';
-// import { useSelector, useDispatch } from 'react-redux';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-
-// import { selectStatus, configSettings } from '../../store/slices/claimsSlice.js';
 
 import Search from '../Search/Search.jsx';
 import Slider from '../Slider/Slider.jsx';
@@ -10,68 +7,94 @@ import Slider from '../Slider/Slider.jsx';
 import '../../assets/styles/common.scss';
 import './Base.scss';
 
-
 import baseUser from '../../assets/images/user.png';
-//import loadingImage from '../../assets/images/loading.png';
 
 import baseLogo from '../../assets/images/logo-invert.svg';
 import baseSprite from '../../assets/images/sprite.svg';
 
+
+
+//------------------------------------------------------------//
+// Компонент отвечает за отображение и функционирование
+// страницы, служащей основой для компонентов Claims, 
+// NewClaim и OldClaim.                            
+//------------------------------------------------------------//
 function Base() {
 
-  // let status = useSelector(selectStatus);
-  // let error = useSelector(selectError);
-  
-  // const dispatch = useDispatch();
+  //------------------------------------------------------------//
+  // Подготовка инструментов для взаимодействия с другими
+  // страницами, файлами, компонентами и т.д.                                   
+  //------------------------------------------------------------//
   const location = useLocation();
   const navigate = useNavigate();
 
-  // let [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
-  let [sliderConfig, setSliderConfig] = useState({ isVisible: false });
 
-  // function onBaseWindowWidthResize () {
-  //   setWindowWidth(window.innerWidth);
-  // }
+  //------------------------------------------------------------//
+  // Создание локального состояния sliderConfig, регулирующего
+  // отображение компонента Slider.                                  
+  //------------------------------------------------------------//
+  const [sliderConfig, setSliderConfig] = useState({ isVisible: false });
 
-  // useEffect(()=> {
-  //   window.addEventListener('resize', onBaseWindowWidthResize);
-  //   return () => window.removeEventListener('resize', onBaseWindowWidthResize);
-  // }, []);
 
+
+  //------------------------------------------------------------//
+  // Массив объектов, состоящих из id и названия. Используется
+  // при создании набора иконок, отображаемых на боковой панели.                                  
+  //------------------------------------------------------------//
+  const baseIconsData = [
+    { id: 0, name: 'home' },
+    { id: 1, name: 'globe' },
+    { id: 2, name: 'archive' },
+    { id: 3, name: 'piechart' },
+    { id: 4, name: 'dollar' },
+    { id: 5, name: 'database' },
+    { id: 6, name: 'location' },
+  ];
+
+
+
+  //------------------------------------------------------------//
+  // Функция, отображающая слайдер.                                  
+  //------------------------------------------------------------//
   function showSlider() {
     setSliderConfig(state => ({ ...state, isVisible: true }));
   }
 
+
+
+  //------------------------------------------------------------//
+  // Функция, скрывающая слайдер.                                  
+  //------------------------------------------------------------//
   function hideSlider() {
     setSliderConfig(state => ({ ...state, isVisible: false }));
   }
 
+
+
+  //------------------------------------------------------------//
+  // Обработчик иконки выхода. Переносит пользователя на
+  // страницу '/'.                                  
+  //------------------------------------------------------------//
   function quitSession() {
     navigate('/', {replace: true});
   }
 
+
+
+  //------------------------------------------------------------//
+  // Обработчик иконки бургера. Скрывает/показывает слайдер.                                  
+  //------------------------------------------------------------//
   function burgerHandler() {
     if (sliderConfig.isVisible) hideSlider();
     else showSlider();
   }
 
 
-  // const hideModal = e => {
-  //   if (e.target.dataset.groupid !== 'Base__message') dispatch(configSettings({error: false, errorMessage: ''}));
-  // }
 
-
-  const baseIconsData = [
-    {id: 0, name: 'home'},
-    {id: 1, name: 'globe'},
-    {id: 2, name: 'archive'},
-    {id: 3, name: 'piechart'},
-    {id: 4, name: 'dollar'},
-    {id: 5, name: 'database'},
-    {id: 6, name: 'location'},
-  ];
-
+  //------------------------------------------------------------//
+  // Иконка боковой панели.                                  
+  //------------------------------------------------------------//
   const baseIcons = baseIconsData.map(item => (
     <svg className='Base__aside_svg' key={item.id}>
       <use href={ baseSprite + `#${ item.name }` }></use>
@@ -100,7 +123,7 @@ function Base() {
             <svg className='Base__bell-off_svg'>
               <use href={ baseSprite + `#bellOff` }></use>
             </svg>
-            <img src={baseUser} alt='user' className='Base__user'/>
+            <img src={ baseUser } alt='user' className='Base__user'/>
             <span className={sessionStorage.key(0) ? 'Base__full-name' : 'Base__full-name_unauthenticated'} >
               { sessionStorage.key(0) ? sessionStorage.getItem('fullName') : 'Not authenticated'}
             </span>
@@ -121,21 +144,3 @@ function Base() {
 }
 
 export default Base;
-
-//-------------------------------------------------
-
-// {status === 'loading' && (
-//   <div className='modal-area'>
-//     <div className='modal-message'>
-//       <img src={loadingImage} alt='loading' className='loading' />
-//     </div>
-//   </div>
-// )}
-// {error.error && (
-//   <div className='modal-area' onClick={hideModal}>
-//     <div className='modal-message' datagroupid='Base__message'>
-//       <p className='text3' datagroupid='Base__message'>{error.errorMessage}</p>
-//       <div className='button2 close-button'>╳</div>
-//     </div>
-//   </div>
-// )}
