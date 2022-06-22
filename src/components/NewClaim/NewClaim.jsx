@@ -61,9 +61,9 @@ function NewClaim() {
   // функции element.focus() для реализации перемещения фокуса  
   // при нажатии клавиши Enter.                                  
   //------------------------------------------------------------//
-  let [titleElement, setTitleElement] = useState();
-  let [typeElement, setTypeElement] = useState();
-  let [descriptionElement, setDescriptionElement] = useState();
+  const [titleElement, setTitleElement] = useState();
+  const [typeElement, setTypeElement] = useState();
+  const [descriptionElement, setDescriptionElement] = useState();
 
 
 
@@ -100,20 +100,20 @@ function NewClaim() {
   // Нужна для того, чтобы определять отображать ли кнопку submit 
   // действующей или нет.                             
   //------------------------------------------------------------// 
-  let isTitleOk = useMemo (() => !(
+  const isTitleOk = useMemo (() => !(
     title.content.length === 0 ||
     title.content.length > rules.titleLengthMax
     ), [title]);
   
-  let isDescriptionOk = useMemo (() => !(
+  const isDescriptionOk = useMemo (() => !(
     description.content.length === 0
     ), [description]);
   
-  let isTypeOk = useMemo (() => !(
+  const isTypeOk = useMemo (() => !(
     type.content.length === 0
     ), [type]);
   
-  let isFormOk = useMemo (() => (
+  const isFormOk = useMemo (() => (
     isTitleOk &&
     isDescriptionOk && 
     isTypeOk
@@ -202,9 +202,9 @@ function NewClaim() {
   function onSubmit(e) {
     e.preventDefault();
 
-    let publicPath = publicPaths.claim;
-    let method = methods.post;;
-    let bodyJSON = createBody();
+    const publicPath = publicPaths.claim;
+    const method = methods.post;;
+    const bodyJSON = createBody();
 
     setAllStatesDefault()
 
