@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { fetchClaims } from '../../store/slices/claimsSlice.js';
@@ -11,23 +11,62 @@ import './Search.scss';
 
 import sprite from '../../assets/images/sprite.svg';
 
+//------------------------------------------------------------//
+// Компонент отвечает за отображение и функционирование
+// поисковика на странице, расположенной по адресу: 
+// '/base/claims'                              
+//------------------------------------------------------------//
 function Search() {
 
+  //------------------------------------------------------------//
+  // Подготовка инструментов для взаимодействия с другими
+  // страницами, файлами, компонентами и т.д.                                   
+  //------------------------------------------------------------//
   const dispatch = useDispatch();
-  let commonSearch = useSelector(selectCommonState).search;
-  let { sort, column } = useSelector(selectCommonState);
+  const { column, search: commonSearch, sort } = useSelector(selectCommonState);
   
-  let [search, setSearch] = useState('') 
-  
-  let token = sessionStorage.getItem('token');
 
 
+  //------------------------------------------------------------//
+  // Создание локального состояния search.                                  
+  //------------------------------------------------------------//
+  const [search, setSearch] = useState('') 
+  
+
+
+  //------------------------------------------------------------//
+  // Извлечение нужных данных из sessionStorage.                                  
+  //------------------------------------------------------------//
+  const token = useMemo(() => {
+    return sessionStorage.getItem('token');
+  }, []);
+
+
+
+  //------------------------------------------------------------//
+  // Обработчик события onChange input элемента поиска.                                  
+  //------------------------------------------------------------//
   function onChange(e) {
     setSearch(e.target.value);
   }
+
+
+
+  //------------------------------------------------------------//
+  // Обработчик иконки крестика. Стирает содержимое поиска из
+  // локального состояния search.                                  
+  //------------------------------------------------------------//
   function onCross() {
     setSearch('');
   }
+
+
+
+  //------------------------------------------------------------//
+  // Обработчик иконки лупы. Сохраняет содержание поисковика в 
+  // общем состоянии search и отправляет запрос с искомым 
+  // на сервер.                                   
+  //------------------------------------------------------------//  
   function onLoupe() {
     dispatch(setCommonState({ search: search }));
     dispatch(fetchClaims({
@@ -40,6 +79,28 @@ function Search() {
     }));
   }
 
+
+
+  //------------------------------------------------------------//
+  // Обработчик кнопки Enter. Если она нажата, и локальное 
+  // состояние search не является пустой строкой, вызывается
+  // функция onLoupe.                                
+  //------------------------------------------------------------// 
+  function onKeyDown(e) {
+    if (search && (e.code === 'Enter' || e.key === 'Enter')) {
+      onLoupe();
+    }
+  }
+
+
+
+  //------------------------------------------------------------//
+  // Хук, реагирующий на изменение локального состояния search.
+  // Если search становится пустой строкой, а общее состояние
+  // search не является пустой строкой, то общее стстояние 
+  // search заменяется на пустую строку, и направляется запрос
+  // на сервер для предоставления имеющихся там сообщений.                                  
+  //------------------------------------------------------------// 
   useEffect(() => {
     if (search === '' && search !== commonSearch) {
       dispatch(setCommonState({search: ''}));
@@ -53,6 +114,10 @@ function Search() {
       }));
     }
   }, [search]);
+
+
+
+  //--------------------------------------------------------------------
 
   return (
     <div className='input_wrapper Search__input_wrapper'>
@@ -70,6 +135,7 @@ function Search() {
         placeholder='Search'
         value={ search }
         onChange={ onChange }
+        onKeyDown={ onKeyDown }
       />
       <div className='image_wrapper' onClick={ onLoupe }>
         <svg className='Search__loupe_svg'>
