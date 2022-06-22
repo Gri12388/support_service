@@ -235,7 +235,7 @@ function NewClaim() {
   //------------------------------------------------------------//
   function setFocus() {
     titleElement.focus();
-    setEmail(state => ({ ...state, touched: false }));
+    setTitleElement(state => ({ ...state, touched: false }));
   }
 
 
