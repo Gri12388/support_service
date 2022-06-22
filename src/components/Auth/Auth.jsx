@@ -17,24 +17,32 @@ import poster from '../../assets/images/poster.png';
 import '../../assets/styles/common.scss';
 import './Auth.scss';
 
+
+
+//------------------------------------------------------------//
+// Компонент отвечает за отображение и функционирование
+// страницы, служащей основой для компонентов регистрации и
+// аунтификации.                            
+//------------------------------------------------------------//
 function Auth() {
 
   //------------------------------------------------------------//
   // Подготовка инструментов для взаимодействия с другими
   // страницами, файлами, компонентами и т.д.                                   
   //------------------------------------------------------------//
-  let claimMode = useSelector(selectModes);
-  let claimStatus = useSelector(selectStatus);
+  const claimMode = useSelector(selectModes);
+  const claimStatus = useSelector(selectStatus);
   const dispatch = useDispatch();
   
 
 
   //------------------------------------------------------------//
-  // Данное состояние передается в Login компонент для того,
-  // чтобы после сокрытия модального окна Reg компонента фокус 
-  // был выставлен на нужный input Login компонента
+  // Установка локального состояния, которое передается в Login 
+  // компонент для того, чтобы после сокрытия модального окна Reg  
+  // компонента фокус был выставлен на нужный input элемент
+  //  Login компонента.
   //------------------------------------------------------------// 
-  let [signal, setSignal] = useState(false)
+  const [signal, setSignal] = useState(false)
 
 
 
@@ -61,9 +69,9 @@ function Auth() {
 
 
   //------------------------------------------------------------//
-  // Хук, очищающий sessionStorage, чтобы при каждом выходе
-  // пользователя на данную страницу его сессия с сервером
-  // прекращалась
+  // Хук, реагирующий на монтирование. Очищает sessionStorage, 
+  // чтобы при каждом выходе пользователя на данную страницу 
+  // его сессия с сервером прекращалась.
   //------------------------------------------------------------// 
   useEffect(() => {
     if (sessionStorage.key(0)) {
@@ -112,37 +120,3 @@ function Auth() {
 }
 
 export default Auth;
-
-// {loading.isLoading && (
-//   <div className='Auth__modal-area' id='Auth__modal-area1' onClick={hideLoading}>
-//     <section className='Auth__message'>
-//       {!loading.message && (
-//         <img src={loadingImage} alt='loading' className='loading' />
-//       )}
-//       {loading.message && (
-//         <>
-//           <p className='text3'>{loading.message}</p> 
-//           <div className='button2 close-button' id='Auth__close-button'>╳</div>
-//         </>
-//       )}
-
-//     </section>
-//   </div>
-// )}
-
-//--------------------------------------------------------
-
-  // const state = useSelector(selectPagerState);
-
-  // let isModalBlocked = false;
-  // const setIsModalBlocked = () => isModalBlocked = !isModalBlocked;
-
-  // const [loading, setLoading] = useState({isLoading: false, isBlocked: false, message: ''});
-
-  // const hideLoading = e => {
-  //   if (!loading.isBlocked && (e.target.id === 'Auth__modal-area1' || e.target.id === 'Auth__close-button')) {
-  //     setLoading({isLoading: false, isBlocked: false, message: ''});
-  //     setEmail({content: '', status: false, touched: false, error: errors.emailErrors.noEmail});
-  //     setPassword({content: '', status: false, touched: false, error: errors.passwordErrors.noPassword});
-  //   }
-  // } 
