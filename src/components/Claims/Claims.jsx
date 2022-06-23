@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState  } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { decode } from 'jsonwebtoken';
 
 import ClaimRow from '../ClaimRow/ClaimRow.jsx';
 import ClaimTile from '../ClaimTile/ClaimTile.jsx';
@@ -55,6 +56,7 @@ function Claims() {
   }, []);
   
 
+  console.log (decode(token));
 
   //------------------------------------------------------------//
   // Создание локального состояния windowWidth. Отвечает за 

@@ -2,6 +2,7 @@ const path = require('path');
 const htmlWebpackPlugin = require('html-webpack-plugin');
 const miniCssExtractPlugin = require('mini-css-extract-plugin');
 const copyPlugin = require('copy-webpack-plugin');
+const webpack = require('webpack');
 
 const ISDEV = process.env.NODE_ENV === 'development' ? true : false;
 
@@ -37,7 +38,10 @@ module.exports = {
           to: './dist/static'
         }
       ]
-    })
+    }),
+    new webpack.ProvidePlugin({
+      process: 'process/browser',
+}),
   ],
   module: {
     rules: [
@@ -100,6 +104,23 @@ module.exports = {
         },
       },
     },
+  },
+  resolve: {
+    alias: {
+      process: "process/browser"
+   },
+    fallback: {
+      'buffer': require.resolve('buffer/'),
+      'crypto': require.resolve('crypto-browserify'),
+      'util': require.resolve('util/'),
+      'stream': require.resolve('stream-browserify'),
+      'process': require.resolve('process'),
+      // 'buffer': false,
+      // 'crypto': false,
+      // 'util': false,
+      // 'stream': false,
+      // 'process': false
+    }
   },
   mode: process.env.NODE_ENV,
   devtool: ISDEV ? 'eval-source-map' : false,
