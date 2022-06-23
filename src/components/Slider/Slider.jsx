@@ -6,15 +6,16 @@ import './Slider.scss';
 import sliderSprite from '../../assets/images/sprite.svg';
 
 
-
+//------------------------------------------------------------//
+// Компонент отвечает за отображение и функционирование
+// слайдера.                            
+//------------------------------------------------------------//
 function Slider({ sliderConfig, functions }) {
 
-  function hideSlider(e) {
-    let temp = { ...sliderConfig };
-    if (e.target.id === 'Slider__modal-area') temp.isVisible = false;
-    functions.setSliderConfig(temp);
-  }
-
+  //------------------------------------------------------------//
+  // Массив объектов, необходимый для воздания группы иконок
+  // слайдера.                           
+  //------------------------------------------------------------//
   const sliderItemsData = [
     {id: 0, name: 'home', content: 'Home'},
     {id: 1, name: 'globe', content: 'Services'},
@@ -25,6 +26,21 @@ function Slider({ sliderConfig, functions }) {
     {id: 6, name: 'location', content: 'Locations'},
   ];
 
+
+
+  //------------------------------------------------------------//
+  // Функция, скрывающая слайдер.                            
+  //------------------------------------------------------------//
+  function hideSlider(e) {
+    let temp = { ...sliderConfig };
+    if (e.target.id === 'Slider__modal-area') temp.isVisible = false;
+    functions.setSliderConfig(temp);
+  }
+
+
+  //------------------------------------------------------------//
+  // Иконки слайдера.                             
+  //------------------------------------------------------------//
   const sliderItems = sliderItemsData.map(item => (
     <div className='Slider__item' key={ item.id }>
       <svg className='Slider__svg'>
@@ -33,6 +49,10 @@ function Slider({ sliderConfig, functions }) {
       <p className='text10 interactiv Slider__text'>{ item.content }</p>
     </div>
   ));
+
+
+  
+  //--------------------------------------------------------------------
 
   return (
     <section  className='modal-area1' 
