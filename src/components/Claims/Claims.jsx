@@ -1,4 +1,4 @@
-import React, { useEffect, useState  } from 'react';
+import React, { useEffect, useMemo, useState  } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -9,8 +9,6 @@ import Pager from '../Pager/Pager.jsx';
 
 import { fetchClaims, selectClaims } from '../../store/slices/claimsSlice.js';
 import { selectCommonState, setCommonState } from '../../store/slices/commonSlice.js';
-// import { selectTypes } from '../../store/slices/typesSlice.js';
-// import { selectStatuses } from '../../store/slices/statusesSlice.js';
 
 import { columnOptions, pager, sortOptions } from '../../data/data.js';
 
@@ -18,25 +16,136 @@ import '../../assets/styles/common.scss';
 import './Claims.scss';
 
 
+
+
+//------------------------------------------------------------//
+// Компонент отвечает за отображение и функционирование
+// уникальной части страницы, расположенной по адресу:
+// '/base/claims'.                             
+//------------------------------------------------------------//
 function Claims() {
   
+  //------------------------------------------------------------//
+  // Подготовка инструментов для взаимодействия с другими
+  // страницами, файлами, компонентами и т.д.                                   
+  //------------------------------------------------------------//
   const dispatch = useDispatch();
   const claims = useSelector(selectClaims);
-  let { search, sort, column } = useSelector(selectCommonState);
+  const { search, sort, column } = useSelector(selectCommonState);
   
-  let [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+
+  //------------------------------------------------------------//
+  // Извлечение нужных данных из sessionStorage.                                  
+  //------------------------------------------------------------//
+  const token = useMemo(() => {
+    return sessionStorage.getItem('token');
+  }, []);
   
-  let token = sessionStorage.getItem('token');
-  let offset = +sessionStorage.getItem('offset');
+  const offset = useMemo(() => {
+    return +sessionStorage.getItem('offset');
+  }, []);
+
+  const types = useMemo(() => {
+    return Object.values(JSON.parse(sessionStorage.getItem('types')));
+  }, []);
+  
+  const statuses = useMemo(() => {
+    return Object.values(JSON.parse(sessionStorage.getItem('statuses')));
+  }, []);
+  
 
 
-  const types = Object.values(JSON.parse(sessionStorage.getItem('types')));
-  const statuses =  Object.values(JSON.parse(sessionStorage.getItem('statuses')));
+  //------------------------------------------------------------//
+  // Создание локального состояния windowWidth. Отвечает за 
+  // вычисление размера окна устройства, необходимого для 
+  // отображения заголовка и некоторого другого контента 
+  // страницы.                                 
+  //------------------------------------------------------------//
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  
+ 
 
+  //------------------------------------------------------------//
+  // Функция, устанавливающая в локальное состояние windowWidth
+  // действующий размер окна. Прикрепляется к элементу document
+  // в качестве eventListener.                                 
+  //------------------------------------------------------------//
+  function onClaimsWindowWidthResize() {
+    setWindowWidth(window.innerWidth);
+  }
+
+
+
+  //------------------------------------------------------------//
+  // Обработчик радиокнопок. Сохраняет содержание радиокнопок в 
+  // общем состоянии sort и отправляет запрос с требуемой  
+  // сортировкой на сервер.                               
+  //------------------------------------------------------------//
+  function onSortRadioButton(e) {
+    dispatch(setCommonState({ sort: e.target.value }));
+    dispatch(fetchClaims({ 
+      token: token, 
+      offset: offset, 
+      limit: pager.base, 
+      search: search, 
+      column: column, 
+      sort: e.target.value 
+    }));
+  }
+
+
+
+  //------------------------------------------------------------//
+  // Обработчик заголовков таблицы. Определяет и сохраняет  
+  // колонку сортировки в общем состоянии column и отправляет   
+  // запрос с требуемой сортировкой на сервер.                               
+  //------------------------------------------------------------//
+  function onColumn(e) {
+    let temp;
+    // не сортировать по title
+    if (e.target.id === 'Claims__title' && column === columnOptions.title) temp = '';
+    
+    // сортировать по title
+    else if (e.target.id === 'Claims__title' && column !== columnOptions.title) temp = columnOptions.title;
+    
+    // не сортировать по type
+    else if (e.target.id === 'Claims__type' && column === columnOptions.type) temp = '';
+    
+    // сортировать по type
+    else if (e.target.id === 'Claims__type' && column !== columnOptions.type) temp = columnOptions.type;
+    
+    // не сортировать по status
+    else if (e.target.id === 'Claims__status' && column === columnOptions.status) temp = '';
+    
+    // сортировать по status
+    else if (e.target.id === 'Claims__status' && column !== columnOptions.status) temp = columnOptions.status;
+    else return;
+    dispatch(setCommonState({ column: temp }));
+    dispatch(fetchClaims({
+      token: token, 
+      offset: offset, 
+      limit: pager.base, 
+      search: search, 
+      column: temp, 
+      sort: sort
+    }));
+  }
+
+
+
+
+
+  //------------------------------------------------------------//
+  // Строки таблицы. Находим в массиве type элемент, указанный 
+  // в массиве claims. То же самое делаем со status. Если 
+  // claims не содержит ни типа, ни статуса, выбираем значения
+  // по умолчанию. С учетом этого формируем строку.                             
+  //------------------------------------------------------------//
   const rows = claims.map((item) => {
     let type, status;
 
-    if (!item.type || !item.type.name) type = types[4];
+    if (!item.type || !item.type.name) type = types[types.length - 1];
     else {
       type = types.find(elem => {
         let el = elem.type.toLowerCase();
@@ -47,7 +156,7 @@ function Claims() {
       });
     }
 
-    if (!item.status || !item.status.name) status = statuses[4];
+    if (!item.status || !item.status.name) status = statuses[statuses.length - 1];
     else {
       status = statuses.find(elem => {
         let el = elem.status.toLowerCase();
@@ -65,10 +174,18 @@ function Claims() {
     );
   });
 
+
+
+  //------------------------------------------------------------//
+  // Плитка. Находим в массиве type элемент, указанный 
+  // в массиве claims. То же самое делаем со status. Если 
+  // claims не содержит ни типа, ни статуса, выбираем значения
+  // по умолчанию. С учетом этого формируем плитку.                             
+  //------------------------------------------------------------//
   const tiles = claims.map((item) => {
     let type, status;
 
-    if (!item.type || !item.type.name) type = types[4];
+    if (!item.type || !item.type.name) type = types[types.length - 1];
     else {
       type = types.find(elem => {
         let el = elem.type.toLowerCase();
@@ -79,7 +196,7 @@ function Claims() {
       });
     }
 
-    if (!item.status || !item.status.name) status = statuses[4];
+    if (!item.status || !item.status.name) status = statuses[statuses.length - 1];
     else {
       status = statuses.find(elem => {
         let el = elem.status.toLowerCase();
@@ -95,40 +212,12 @@ function Claims() {
     );
   });
 
-  function onClaimsWindowWidthResize() {
-    setWindowWidth(window.innerWidth);
-  }
-  function onSortRadioButton(e) {
-    dispatch(setCommonState({ sort: e.target.value }));
-    dispatch(fetchClaims({ 
-      token: token, 
-      offset: offset, 
-      limit: pager.base, 
-      search: search, 
-      column: column, 
-      sort: e.target.value 
-    }));
-  }
-  function onColumn(e) {
-    let temp;
-    if (e.target.id === 'Claims__title' && column === columnOptions.title) temp = '';
-    else if (e.target.id === 'Claims__title' && column !== columnOptions.title) temp = columnOptions.title;
-    else if (e.target.id === 'Claims__type' && column === columnOptions.type) temp = '';
-    else if (e.target.id === 'Claims__type' && column !== columnOptions.type) temp = columnOptions.type;
-    else if (e.target.id === 'Claims__status' && column === columnOptions.status) temp = '';
-    else if (e.target.id === 'Claims__status' && column !== columnOptions.status) temp = columnOptions.status;
-    else return;
-    dispatch(setCommonState({ column: temp }));
-    dispatch(fetchClaims({
-      token: token, 
-      offset: offset, 
-      limit: pager.base, 
-      search: search, 
-      column: temp, 
-      sort: sort
-    }));
-  }
 
+
+  //------------------------------------------------------------//
+  // Хук, реагирующий на монтирование. Устанавливает функцию
+  // onClaimsWindowWidthResize в качестве eventListener.                      
+  //------------------------------------------------------------//
   useEffect(()=> {
     window.addEventListener('resize', onClaimsWindowWidthResize);
     return () => {
@@ -136,6 +225,12 @@ function Claims() {
     }
   }, []);
   
+
+
+  //------------------------------------------------------------//
+  // Хук, реагирующий на монтирование. Загружает данные с 
+  // сервера.                       
+  //------------------------------------------------------------//
   useEffect(()=>{
     dispatch(fetchClaims({
       token: token, 

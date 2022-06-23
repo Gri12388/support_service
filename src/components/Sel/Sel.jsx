@@ -36,7 +36,7 @@ function Sel({ id, label, value, groupId, state, callbacks, placeholder }) {
   //------------------------------------------------------------//
   const typesLength = useMemo(() => {
     return Object.values(types).length;
-  },[]);
+  }, []);
 
   
 
@@ -154,7 +154,7 @@ function Sel({ id, label, value, groupId, state, callbacks, placeholder }) {
     setPointed(temp);
   } 
 
-  
+
 
 //------------------------------------------------------------//
   // Функция, определяющая вид 'Sel' компонента в зависимости от
