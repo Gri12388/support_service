@@ -8,43 +8,77 @@ import { selectCommonState } from '../../store/slices/commonSlice.js';
 
 import './Pager.scss';
 
+
+
+//------------------------------------------------------------//
+// Компонент отвечает за отображение и функционирование
+// указателя страниц на странице, расположенной по адресу:
+// '/base/claims'.                         
+//------------------------------------------------------------//
 function Pager() {
 
-  let pagerState = useSelector(selectPagerState);
-  let { search, sort, column } = useSelector(selectCommonState);
+  //------------------------------------------------------------//
+  // Подготовка инструментов для взаимодействия с другими
+  // страницами, файлами, компонентами и т.д.                                   
+  //------------------------------------------------------------//
   const dispatch = useDispatch();
   const dispatchPagerState = useDispatch();
-  
-  let token = sessionStorage.getItem('token');
+  const pagerState = useSelector(selectPagerState);
+  const { search, sort, column } = useSelector(selectCommonState);
+  const pageNumber = Math.ceil(useSelector(selectTotalClaimsNumber) / pager.base);
 
-  let pageNumber = Math.ceil(useSelector(selectTotalClaimsNumber) / pager.base);
+
+  //------------------------------------------------------------//
+  // Извлечение нужных данных из sessionStorage.                                  
+  //------------------------------------------------------------//
+  let token = useMemo(() => {
+    return sessionStorage.getItem('token');
+  }, []);
   
+
+
+  //------------------------------------------------------------//
+  // Переменная, изменение значения которой влияет на один из 
+  // хуков useEffect данного компонента.                                  
+  //------------------------------------------------------------//
   let offset = null;
 
+
+
+  //------------------------------------------------------------//
+  // Создание локального состояния windowWidth. Отвечает за 
+  // вычисление размера окна устройства, необходимого для 
+  // отображения компонента 'Pager'.                                  
+  //------------------------------------------------------------//
   let [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
-  const getWindowWidth = () => setWindowWidth(window.innerWidth);
 
-  useEffect(() => {
-    window.addEventListener('resize', getWindowWidth);
-    return () => window.removeEventListener('resize', getWindowWidth);
-  }, []);
 
+  //------------------------------------------------------------//
+  // Функция, возвращающая размер окна. Прикрепляется к элементу 
+  // document в качестве eventListener. 
+  //------------------------------------------------------------//
+  function getWindowWidth() {
+    return setWindowWidth(window.innerWidth);
+  }
+
+
+
+  //------------------------------------------------------------//
+  // Условие, влияющее на значение переменной offset в 
+  // зависимости от размера страницы.                       
+  //------------------------------------------------------------// 
   if (windowWidth < 500 && pagerState.offset !== pager.offsetMin) offset = pager.offsetMin;
   else if (windowWidth >= 500 && pagerState.offset !== pager.offsetMax) offset = pager.offsetMax;
 
-  useEffect(() => {
-    let temp = {};
 
-    temp.last = pageNumber;
-    temp.offset = windowWidth < 500 ? pager.offsetMin : pager.offsetMax;
-    temp.pointer = (+sessionStorage.getItem('offset')) / pager.base + 1;
-    
-    temp = computePagerState(temp);
-    
-    dispatchPagerState(setPagerState(temp));
-  }, [offset, pageNumber]);
 
+
+
+  //------------------------------------------------------------//
+  // Функция, определяющая вид Pager, исходя из текущего 
+  // значения pointer, содержащего истребуемый оффсет сервера.                      
+  //------------------------------------------------------------// 
   function computePagerState({ last, offset, pointer }) {
     let temp = {
       last: last,
@@ -89,10 +123,16 @@ function Pager() {
         else temp.displayLeft = false;
       }
     }
-
     return temp;
   }
 
+
+
+  //------------------------------------------------------------//
+  // Обработчик клика по стрелочке вправо. Загружает набор 
+  // заявок с сервера в соответствии с номером текущего оффсета
+  // сервера, увеличенного на еденицу.                     
+  //------------------------------------------------------------// 
   function incrementPointer() {
     let temp = { ...pagerState };
     if (temp.pointer < temp.last) temp.pointer++;
@@ -108,6 +148,13 @@ function Pager() {
     }));
   }
 
+
+
+  //------------------------------------------------------------//
+  // Обработчик клика по стрелочке влево. Загружает набор 
+  // заявок с сервера в соответствии с номером текущего оффсета
+  // сервера, уменьшенного на еденицу.                     
+  //------------------------------------------------------------// 
   function decrementPointer() {
     let temp = { ...pagerState };
     if (temp.pointer > 1) temp.pointer--;
@@ -123,6 +170,12 @@ function Pager() {
     }));
   }
 
+
+
+  //------------------------------------------------------------//
+  // Обработчик клика по номеру оффсета. Загружает набор 
+  // заявок с сервера в соответствии с номером оффсета сервера.                     
+  //------------------------------------------------------------//  
   function choosePage(e) {
     let temp = { ...pagerState };
     temp.pointer = +e.target.id;
@@ -138,6 +191,40 @@ function Pager() {
     }));
   } 
 
+
+
+  //------------------------------------------------------------//
+  // Хук, реагирующий на значение переменных offset и pageNumber. 
+  // Запускает функцию computePagerState.                      
+  //------------------------------------------------------------//
+  useEffect(() => {
+    let temp = {};
+
+    temp.last = pageNumber;
+    temp.offset = windowWidth < 500 ? pager.offsetMin : pager.offsetMax;
+    temp.pointer = (+sessionStorage.getItem('offset')) / pager.base + 1;
+    
+    temp = computePagerState(temp);
+    
+    dispatchPagerState(setPagerState(temp));
+  }, [offset, pageNumber]);
+
+
+
+  //------------------------------------------------------------//
+  // Хук, реагирующий на монтирование. Устанавливает функцию
+  // getWindowWidth в качестве eventListener.                      
+  //------------------------------------------------------------//
+  useEffect(() => {
+    window.addEventListener('resize', getWindowWidth);
+    return () => window.removeEventListener('resize', getWindowWidth);
+  }, []);
+
+
+
+  //------------------------------------------------------------//
+  // Набор номеров оффсетов сервера. Счет начинается с единицы.                     
+  //------------------------------------------------------------//
   const pages = [];
   for (let i = pagerState.start; i <= pagerState.stop; i++) {
     pages.push(
