@@ -23,8 +23,13 @@ import loadingImage from '../../assets/images/loading.png';
 
 
 
-
+//------------------------------------------------------------//
+// Компонент отвечает за отображение и функционирование
+// группы элементов, находящихся на странице, расположенной по
+// адресу: '/' и отвечающих за регистрацию пользователя.                              
+//------------------------------------------------------------//
 function Reg() {
+  
   //------------------------------------------------------------//
   // Подготовка инструментов для взаимодействия с claimsSlice.js                                  
   //------------------------------------------------------------//
@@ -50,7 +55,7 @@ function Reg() {
 
 
   //------------------------------------------------------------//
-  // Состояния input элементов                                
+  // Локальные состояния input элементов                                
   //------------------------------------------------------------//
   let [name, setName] = useState({
     content: '',
@@ -59,6 +64,7 @@ function Reg() {
     status: false, 
     touched: false, 
   });
+
   let [surname, setSurname] = useState({
     content: '', 
     error: errors.surnameErrors.noSurname,
@@ -66,6 +72,7 @@ function Reg() {
     status: false, 
     touched: false, 
   });
+
   let [email, setEmail] = useState({
     content: '', 
     error: errors.emailErrors.noEmail,
@@ -73,6 +80,7 @@ function Reg() {
     status: false, 
     touched: false, 
   });
+
   let [password, setPassword] = useState({
     content: '', 
     error: errors.passwordErrors.noPassword,
@@ -80,6 +88,7 @@ function Reg() {
     status: false, 
     touched: false, 
   });
+
   let [passwordCopy, setPasswordCopy] = useState({
     content: '', 
     error: errors.passwordErrors.noPassword,
@@ -274,6 +283,7 @@ function Reg() {
     }
     setName(state => ({ ...state, status: true, error: '' }));
   }
+
   function checkSurname() {
     if (surname.content.length === 0) {
       return setSurname( state=> ({
@@ -298,6 +308,7 @@ function Reg() {
     }
     setSurname(state => ({ ...state, status: true, error: '' }));
   }
+
   function checkEmail() {
     if (email.content.length === 0) {
       return setEmail(state => ({
@@ -315,6 +326,7 @@ function Reg() {
     }
     setEmail(state => ({ ...state, status: true, error: '' }));
   }
+
   function checkPassword() {
     if (password.content.length === 0) {
       return setPassword(state => ({
@@ -339,6 +351,7 @@ function Reg() {
     }
     setPassword(state => ({ ...state, status: true, error: '' }));
   }
+
   function checkPasswordCopy() {
     if (passwordCopy.content.length === 0) {
       return setPasswordCopy(state => ({
@@ -522,25 +535,3 @@ function Reg() {
 }
 
 export default Reg;
-
-//---------------------------------------------------
-// if (!checkForm(states)) {
-//   states.forEach(item => {
-//     if (!item.state.status) item.setState(state=>({...state, touched: true}));
-//   });
-//   return;
-// }
-
-//---------------------------------------------------
-
-  //------------------------------------------------------------//
-  // Объединение состояний input элементов в массив для их 
-  // более удобного обхода в некторых функциях                               
-  //------------------------------------------------------------//
-  // const states = {
-  //   0:  {id: 'fromReg__name', state: name, setState: setName, pos: 0},
-  //   1:  {id: 'fromReg__surname', state: surname, setState: setSurname, pos: 1},
-  //   2:  {id: 'fromReg__email', state: email, setState: setEmail, pos: 2},
-  //   3:  {id: 'fromReg__password', state: password, setState: setPassword, pos: 3},
-  //   4:  {id: 'fromReg__password-copy', state: passwordCopy, setState: setPasswordCopy, pos: 4},
-  // };

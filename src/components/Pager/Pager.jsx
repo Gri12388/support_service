@@ -232,6 +232,10 @@ function Pager() {
     );
   }
 
+
+
+  //--------------------------------------------------------------------
+  
   if (pageNumber === 0 || pageNumber === 1) return;
   else return (
     <section className='Pager__bar_wrapper' >
