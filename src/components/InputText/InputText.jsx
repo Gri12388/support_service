@@ -5,15 +5,24 @@ import inputTextSprite from '../../assets/images/sprite.svg';
 import '../../assets/styles/common.scss';
 import './InputText.scss';
 
+
+
+//------------------------------------------------------------//
+// Компонент отвечает за отображение и функционирование
+// группы элементов, обслуживающих элемент 'Input'.                          
+//------------------------------------------------------------//
 function InputText({ id, img, type, label, value, state, callbacks, placeholder }) {
+  
   //------------------------------------------------------------//
-  // Данный массив нужен для валидации поступившего типа
+  // Массив, предназначенный для валидации поступившего типа
   // input элемента (аргумента type)                              
   //------------------------------------------------------------//
-  let types = [ 'password', 'email' ];
+  const types = [ 'password', 'email' ];
+
+
 
   //------------------------------------------------------------//
-  // Данная функция анализирует конфигурацию состояния state, 
+  // Функция, анализирующая конфигурацию состояния state, 
   // относящегося к данному input и определяет как отображать
   // компонент                            
   //------------------------------------------------------------//
@@ -60,6 +69,10 @@ function InputText({ id, img, type, label, value, state, callbacks, placeholder 
     };
   }
 
+
+
+  //--------------------------------------------------------------------
+
   return (
     <>
       { label && <label htmlFor={id} className='text1 InputText__label'>{label}</label> }
@@ -72,6 +85,7 @@ function InputText({ id, img, type, label, value, state, callbacks, placeholder 
           placeholder={ placeholder ?? '' }
           value={ value }
           style={{ width: img ? '87%' : '100%' }}
+          autoComplete='off'
           autoFocus={ state && state.focused }
           onChange={ callbacks && callbacks.onChange }
           onFocus={ callbacks && callbacks.onFocus }
@@ -92,4 +106,3 @@ function InputText({ id, img, type, label, value, state, callbacks, placeholder 
 }
 
 export default InputText;
-
