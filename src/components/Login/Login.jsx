@@ -1,11 +1,11 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import Modal from '../Modal/Modal.jsx';
 import InputText from '../InputText/InputText.jsx';
 
-import { configSettings, selectModes, selectStatus, selectMessage } from '../../store/slices/claimsSlice.js';
+import { configSettings } from '../../store/slices/claimsSlice.js';
 import { 
   claimsStatuses,
   errors, 
@@ -23,6 +23,13 @@ import {
 import '../../assets/styles/common.scss';
 import './Login.scss';
 
+
+
+//------------------------------------------------------------//
+// Компонент отвечает за отображение и функционирование
+// группы элементов, находящихся на странице, расположенной по
+// адресу: '/' и отвечающих за аутентификацию пользователя.                              
+//------------------------------------------------------------//
 function Login({ signal }) {
 
 
@@ -40,10 +47,10 @@ function Login({ signal }) {
   // Данный блок предназначен для хранения input элементов DOM  
   // дерева, которые будут задействованы при использовании      
   // функции element.focus() для реализации перемещения фокуса  
-  // при нажатии клавиши Enter                                  
+  // при нажатии клавиши Enter.                                  
   //------------------------------------------------------------//
-  let [emailElement, setEmailElement] = useState();
-  let [passwordElement, setPasswordElement] = useState();
+  const [emailElement, setEmailElement] = useState();
+  const [passwordElement, setPasswordElement] = useState();
 
   
 
@@ -79,6 +86,30 @@ function Login({ signal }) {
 
   
   
+  //------------------------------------------------------------//
+  // Группа переменных, содержащих результат валидации 
+  // содержания input элементов по наступлению события onChange.  
+  // Нужна для того, чтобы определять отображать ли кнопку submit 
+  // действующей или нет.                             
+  //------------------------------------------------------------// 
+  const isEmailOk = useMemo (() => !(
+    email.content.length === 0 ||
+    !rules.emailRegExp.test(email.content)
+    ), [email]);
+  
+  const isPasswordOk = useMemo (() => !(
+    password.content.length === 0 ||
+    password.content.length < rules.passwordLengthMin ||
+    password.content.length > rules.passwordLengthMax
+    ), [password]);
+
+  const isFormOk = useMemo (() => (
+      isEmailOk &&
+      isPasswordOk
+      ), [email, password]);
+
+
+
   //------------------------------------------------------------//
   // Группа функций-обработчиков события onChange соотвествующих
   // input элементов                              
@@ -150,7 +181,7 @@ function Login({ signal }) {
       default: return '';
     }
 
-    let tempArr = arr.map((item, index) => ({
+    const tempArr = arr.map((item, index) => ({
       id: index,
       [name]: item.name,
       slug: item.slug,
@@ -159,7 +190,7 @@ function Login({ signal }) {
 
     tempArr.push(obj);
 
-    let tempObj = {};
+    const tempObj = {};
 
     tempArr.forEach(item => tempObj[item.id] = item);
 
@@ -175,9 +206,9 @@ function Login({ signal }) {
   function onSubmit(e) {
     e.preventDefault();
 
-    let publicPath = publicPaths.auth;
-    let method = methods.post;
-    let bodyJSON = createBody();
+    const publicPath = publicPaths.auth;
+    const method = methods.post;
+    const bodyJSON = createBody();
     
     setAllStatesDefault();
 
@@ -209,9 +240,9 @@ function Login({ signal }) {
       sessionStorage.setItem('offset', 0);
       sessionStorage.setItem('fullName', res.fullName ? res.fullName : 'Unknown');
 
-      let publicPath = publicPaths.types;
-      let method = methods.get;
-      let token = sessionStorage.getItem('token');
+      const publicPath = publicPaths.types;
+      const method = methods.get;
+      const token = sessionStorage.getItem('token');
       
       return sendRequestBodyless(publicPath, method, token);
     })
@@ -234,9 +265,9 @@ function Login({ signal }) {
   
       sessionStorage.setItem('types', handleData(res, 'type'));
 
-      let publicPath = publicPaths.status;
-      let method = methods.get;
-      let token = sessionStorage.getItem('token');
+      const publicPath = publicPaths.status;
+      const method = methods.get;
+      const token = sessionStorage.getItem('token');
 
       return sendRequestBodyless(publicPath, method, token);
     })
@@ -289,6 +320,7 @@ function Login({ signal }) {
   }
 
 
+
   //------------------------------------------------------------//
   // Функция, устанавливающая фокус на нужный input элемент
   // после сокрытия модального окна
@@ -336,32 +368,8 @@ function Login({ signal }) {
 
 
   //------------------------------------------------------------//
-  // Группа переменных, содержащих результат валидации 
-  // содержания input элементов по наступлению события onChange.  
-  // Нужна для того, чтобы определять отображать ли кнопку submit 
-  // действующей или нет.                             
-  //------------------------------------------------------------// 
-  let isEmailOk = useMemo (() => !(
-    email.content.length === 0 ||
-    !rules.emailRegExp.test(email.content)
-    ), [email]);
-  
-  let isPasswordOk = useMemo (() => !(
-    password.content.length === 0 ||
-    password.content.length < rules.passwordLengthMin ||
-    password.content.length > rules.passwordLengthMax
-    ), [password]);
-
-    let isFormOk = useMemo (() => (
-      isEmailOk &&
-      isPasswordOk
-      ), [email, password]);
-
-
-
-  //------------------------------------------------------------//
-  // Хук, ищущий только после первого рендера нужные элемены 
-  // DOM дерева и сохраняющий их в своответствующем состоянии                                 
+  // Хук, реагирующий на монтирование. Ищет нужные элементы
+  // DOM дерева и сохраняет их в своответствующем состоянии.                                 
   //------------------------------------------------------------//
   useEffect(() => {
     setEmailElement(document.getElementById(elements[0].id));
@@ -371,8 +379,9 @@ function Login({ signal }) {
 
 
   //------------------------------------------------------------//
-  // Хук, устанавливающий фокус на нужный input элемент по
-  // получению сигнала                                
+  // Хук, реагирующий на изменение локального состояния signal.
+  // Устанавливает фокус на нужный input элемент по получению
+  // сигнала.                                
   //------------------------------------------------------------//
   useEffect(() => {
     if (emailElement) {
@@ -439,80 +448,3 @@ function Login({ signal }) {
 }
 
 export default Login;
-
-//----------------------------------------------------
-    // let isValid = states.every(item => item.state.status);
-    // if (!isValid) {
-    //   states.forEach(item => {
-    //     if (!item.state.status) item.setState(state=>({...state, touched: true}));
-    //   });
-    //   return;
-    // }
-
-//------------------------------------------------------
-
-// let typesArray = res.map((item, index) => ({
-//   id: index,
-//   type: item.name,
-//   slug: item.slug,
-//   color: typeColors[index % typeColors.length] 
-// }));
-
-// typesArray.push({ id: typeColors.length, type: 'Other', color: '#ADADAD' });
-
-// let typesObject = {};
-
-// typesArray.forEach(item => typesObject[item.id] = item);
-
-//---------------------------------------------------------------
-
-// let statusesArray = res.map((item, index) => ({
-//   id: index,
-//   status: (item.name).toUpperCase(),
-//   slug: item.slug,
-//   color: statusColors[index % statusColors.length] 
-// }));
-
-// statusesArray.push({id: statusColors.length, status: 'UNDEFINED', color: '#ADADAD'});
-
-// let statusesObject = {};
-// statusesArray.forEach(item => statusesObject[item.id] = item);
-
-//---------------------------------------------------------------
-
-// if (password.content.length === 0) {
-//   return setPassword(state => ({
-//     ...state, 
-//     status: false, 
-//     error: errors.passwordErrors.noPassword
-//   }));
-// }
-
-//----------------------------------------------------------------
-
-// if (email.content.length === 0) {
-//   return setEmail(state => ({
-//     ...state, 
-//     status: false, 
-//     error: errors.emailErrors.noEmail
-//   }));
-// }
-
-//------------------------------------------------------------
-
-// const onKeyDown = e => {
-//   if (e.code === 'Enter' || e.key === 'Enter') {
-//     e.preventDefault();
-//   }
-// }
-
-//------------------------------------------------------------
-
-//------------------------------------------------------------//
-  // Объединение состояний input элементов в массив для их 
-  // более удобного обхода в некторых функциях                               
-  //------------------------------------------------------------//
-  // const states = [
-  //   {state: email, setState: setEmail},
-  //   {state: password, setState: setPassword},
-  // ];
