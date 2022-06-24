@@ -1,7 +1,6 @@
 const path = require('path');
 const htmlWebpackPlugin = require('html-webpack-plugin');
 const miniCssExtractPlugin = require('mini-css-extract-plugin');
-const copyPlugin = require('copy-webpack-plugin');
 const webpack = require('webpack');
 
 const ISDEV = process.env.NODE_ENV === 'development' ? true : false;
@@ -30,14 +29,6 @@ module.exports = {
     }),
     new miniCssExtractPlugin({
       filename: ISDEV ? '[name].css' : '[name].[contenthash].css',
-    }),
-    new copyPlugin({
-      patterns: [
-        {
-          from: './src/static',
-          to: './dist/static'
-        }
-      ]
     }),
     new webpack.ProvidePlugin({
       process: 'process/browser',
