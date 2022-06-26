@@ -250,3 +250,162 @@ export const statusColors = [
       }
     });
   }
+
+
+  
+  //------------------------------------------------------------//
+  // Функция, нормализующая данные, полученные с сервера                                  
+  //------------------------------------------------------------//
+  function handleData(arr, str) {
+    let name;
+    let database;
+    let length;
+    let obj;
+
+    switch(str) {
+      case 'type':    name = 'type';
+                      database = typeColors;
+                      length = typeColors.length;
+                      obj = { id: length, type: 'Other', color: '#ADADAD' };
+                      break;
+      case 'status':  name = 'status';
+                      database = statusColors;
+                      length = statusColors.length;
+                      obj = {id: length, status: 'UNDEFINED', color: '#ADADAD'}
+                      break;
+      default: return '';
+    }
+
+    const tempArr = arr.map((item, index) => ({
+      id: index,
+      [name]: item.name,
+      slug: item.slug,
+      color: database[index % length] 
+    }));
+
+    tempArr.push(obj);
+
+    const tempObj = {};
+
+    tempArr.forEach(item => tempObj[item.id] = item);
+
+    return JSON.stringify(tempArr);
+  }
+
+
+
+  //------------------------------------------------------------//
+  // Функция формирует содержание body-компонента AJAX запроса                              
+  //------------------------------------------------------------//  
+  function createBody(email, pass) {
+    return JSON.stringify({
+      email: email,
+      password: pass
+    });
+  }
+
+
+
+  //------------------------------------------------------------//
+  // Функция, обновляющая типы.                                  
+  //------------------------------------------------------------//
+  export async function getTypes(token) {
+    
+    const publicPath = publicPaths.types;
+    const method = methods.get;
+    
+    let res = await sendRequestBodyless(publicPath, method, token);
+
+    if (
+      !res || 
+      typeof res !== 'object' || 
+      !res.status || 
+      isNaN(+res.status)
+    ) throw new Error(messages.wrongData);
+
+    switch (res.status) {
+      case 200: res = await res.json(); break;
+      case 404: throw new Error(messages.noFound);
+      default:  throw new Error(messages.default);
+    }
+
+    if (!Array.isArray(res)) throw new Error(messages.wrongData);
+    sessionStorage.setItem('types', handleData(res, 'type'));
+  }
+
+
+
+  //------------------------------------------------------------//
+  // Функция, обновляющая статусы.                                  
+  //------------------------------------------------------------//
+  export async function getStatuses(token) {
+    const publicPath = publicPaths.status;
+    const method = methods.get;
+    
+    let res = await sendRequestBodyless(publicPath, method, token);
+    
+    if (
+      !res || 
+      typeof res !== 'object' || 
+      !res.status || 
+      isNaN(+res.status)
+    ) throw new Error(messages.wrongData);
+    
+    switch (res.status) {
+      case 200: res = await res.json(); break;
+      case 404: throw new Error(messages.noFound);
+      default:  throw new Error(messages.default);
+    }
+
+    if (!Array.isArray(res)) throw new Error(messages.wrongData);
+    sessionStorage.setItem('statuses', handleData(res, 'status'));
+  }
+
+
+
+  //------------------------------------------------------------//
+  // Функция, обновляющая token.                                  
+  //------------------------------------------------------------//
+  export async function getToken(email, pass) {
+    
+    const publicPath = publicPaths.auth;
+    const method = methods.post;
+    const bodyJSON = createBody(email, pass);
+
+    let res = await sendRequestBodyfull(publicPath, method, bodyJSON)
+
+    if (
+      !res || 
+      typeof res !== 'object' || 
+      !res.status || 
+      isNaN(+res.status)
+    ) throw new Error(messages.wrongData);
+
+    switch (res.status) {
+      case 200: res = await res.json(); break;
+      case 401: throw new Error(messages.noAuth);
+      case 404: throw new Error(messages.noFound);
+      default:  throw new Error(messages.default); 
+    }
+
+    if (!res || typeof res !== 'object') throw new Error(messages.noData);
+
+    if (!res.token) throw new Error(messages.noToken);
+    else {
+      sessionStorage.setItem('token', res.token);
+      return res.token;
+    }
+  }
+
+
+  //------------------------------------------------------------//
+  // Функция, обновляющая сессию.                                  
+  //------------------------------------------------------------//
+  export async function reconnect(email, pass) {
+
+    const token = await getToken(email, pass);
+    await getTypes(token);
+    await getStatuses(token);
+
+    return { newToken: token } 
+  }

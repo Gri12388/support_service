@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import * as crypto from 'crypto';
 
 import Modal from '../Modal/Modal.jsx';
 import InputText from '../InputText/InputText.jsx';
@@ -71,6 +72,9 @@ function Login({ signal }) {
     status: false, 
     touched: false, 
   });
+  const [keepLogged, setKeepLogged] = useState({
+    content: false
+  })
 
 
 
@@ -115,10 +119,13 @@ function Login({ signal }) {
   // input элементов                              
   //------------------------------------------------------------//
   function onEmailInput(e) {
-    setEmail(state=>({...state, content: e.target.value}));
+    setEmail(state => ({ ...state, content: e.target.value }));
   }
   function onPasswordInput(e) {
-    setPassword(state=>({...state, content: e.target.value}));
+    setPassword(state => ({ ...state, content: e.target.value }));
+  }
+  function onKeepLogged() {
+    setKeepLogged(state => ({ ...state, content: !state.content }));
   }
 
 
@@ -230,7 +237,7 @@ function Login({ signal }) {
     })
     .then(res => {
       if (!res || typeof res !== 'object') throw new Error(messages.noData);
-      
+
       if (!res.token) throw new Error(messages.noToken);
       else sessionStorage.setItem('token', res.token);  
 
@@ -239,6 +246,12 @@ function Login({ signal }) {
       
       sessionStorage.setItem('offset', 0);
       sessionStorage.setItem('fullName', res.fullName ? res.fullName : 'Unknown');
+      sessionStorage.setItem('keepLogged', keepLogged.content);
+
+      if (keepLogged.content) {
+        sessionStorage.setItem('email', email.content);
+        sessionStorage.setItem('password', password.content);
+      }
 
       const publicPath = publicPaths.types;
       const method = methods.get;
@@ -436,6 +449,7 @@ function Login({ signal }) {
                 id='Login__checkbox' 
                 name='Login__checkbox' 
                 className='Login__checkbox' 
+                onChange={ onKeepLogged }
         />
         <label htmlFor='' className='text2'>Keep me logged in</label>
       </div>

@@ -1,20 +1,21 @@
 import React, { useEffect, useMemo, useState  } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-//import { decode } from 'jsonwebtoken';
+import { decode } from 'jsonwebtoken';
 
 import ClaimRow from '../ClaimRow/ClaimRow.jsx';
 import ClaimTile from '../ClaimTile/ClaimTile.jsx';
 import Modal from '../Modal/Modal.jsx';
 import Pager from '../Pager/Pager.jsx';
 
-import { fetchClaims, selectClaims } from '../../store/slices/claimsSlice.js';
+import { configSettings, fetchClaims, selectClaims } from '../../store/slices/claimsSlice.js';
 import { selectCommonState, setCommonState } from '../../store/slices/commonSlice.js';
 
-import { columnOptions, pager, sortOptions } from '../../data/data.js';
+import { columnOptions, claimsStatuses, pager, reconnect, sortOptions } from '../../data/data.js';
 
 import '../../assets/styles/common.scss';
 import './Claims.scss';
+
 
 
 
@@ -25,24 +26,107 @@ import './Claims.scss';
 // '/base/claims'.                             
 //------------------------------------------------------------//
 function Claims() {
-  
-  //------------------------------------------------------------//
-  // Подготовка инструментов для взаимодействия с другими
-  // страницами, файлами, компонентами и т.д.                                   
-  //------------------------------------------------------------//
-  const dispatch = useDispatch();
-  const claims = useSelector(selectClaims);
-  const { search, sort, column } = useSelector(selectCommonState);
-  
-
 
   //------------------------------------------------------------//
   // Извлечение нужных данных из sessionStorage.                                  
   //------------------------------------------------------------//
   const token = useMemo(() => {
-    return sessionStorage.getItem('token');
+    const x = sessionStorage.getItem('token');
+    if (!x) return null;
+    const temp = sessionStorage.getItem('token');
+    if (Date.now() >= decode(temp).exp * 1000) return null;
+    else return temp;
   }, []);
+
+  const keepLogged = useMemo(() => {
+    return sessionStorage.getItem('keepLogged') === 'true';
+  }, []);
+
+  const email = useMemo(() => {
+    if (!token && keepLogged) return sessionStorage.getItem('email');
+    else return null;
+  }, [token, keepLogged]);
+
+  const password = useMemo(() => {
+    if (!token && keepLogged) return sessionStorage.getItem('password');
+    else return null;
+  }, [token, keepLogged]);
   
+
+  //------------------------------------------------------------//
+  // Проверяем, не просрочен ли token. Если просрочен, 
+  // проверяем, нужно ли автоматически получить новый token.
+  // Если не нужно, переходим на страницу ввода пароля и выходим
+  // из функции.                                   
+  //------------------------------------------------------------//
+  useEffect(() => {
+    if (!token && !keepLogged) {
+      navigate('/');
+    }
+    else if (!token && keepLogged) {
+      debugger
+      reconnect(email, password)
+      .then(res => {
+        dispatch(fetchClaims({
+          token: res.newToken, 
+          offset: offset, 
+          limit: 10, 
+          search: search, 
+          column: column, 
+          sort: sort
+        }));
+      })
+      .catch(err => {
+        dispatch(configSettings({ status: claimsStatuses.error, message: err.message }));
+      });
+    }
+    else {
+      dispatch(fetchClaims({
+        token: token, 
+        offset: offset, 
+        limit: 10, 
+        search: search, 
+        column: column, 
+        sort: sort
+      }));
+    }
+  }, [token, keepLogged]);
+
+
+
+
+  if (!token && !keepLogged) return;
+  
+
+
+  // //------------------------------------------------------------//
+  // // Хук, реагирующий на монтирование. Загружает данные с 
+  // // сервера.                       
+  // //------------------------------------------------------------//
+  // useEffect(()=>{
+ 
+  //   dispatch(fetchClaims({
+  //     token: token, 
+  //     offset: offset, 
+  //     limit: 10, 
+  //     search: search, 
+  //     column: column, 
+  //     sort: sort
+  //   }));
+  // }, [])
+
+
+
+
+
+
+
+
+  
+
+  //------------------------------------------------------------//
+  // Продолжаем извлечение нужных данных из sessionStorage.                                  
+  //------------------------------------------------------------//
   const offset = useMemo(() => {
     return +sessionStorage.getItem('offset');
   }, []);
@@ -54,13 +138,18 @@ function Claims() {
   const statuses = useMemo(() => {
     return Object.values(JSON.parse(sessionStorage.getItem('statuses')));
   }, []);
-  
 
-  // console.log (token);
-  // console.log (decode(token).exp);
-  // let now = Date.now();
-  // console.log (now > decode(token).exp)
-  // console.log (new Date(decode(token).exp))
+
+
+  //------------------------------------------------------------//
+  // Подготовка инструментов для взаимодействия с другими
+  // страницами, файлами, компонентами и т.д.                                   
+  //------------------------------------------------------------//
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const claims = useSelector(selectClaims);
+  const { search, sort, column } = useSelector(selectCommonState);
+  
 
 
   //------------------------------------------------------------//
@@ -234,20 +323,7 @@ function Claims() {
   
 
 
-  //------------------------------------------------------------//
-  // Хук, реагирующий на монтирование. Загружает данные с 
-  // сервера.                       
-  //------------------------------------------------------------//
-  useEffect(()=>{
-    dispatch(fetchClaims({
-      token: token, 
-      offset: offset, 
-      limit: 10, 
-      search: search, 
-      column: column, 
-      sort: sort
-    }));
-  }, [])
+
 
 
 
