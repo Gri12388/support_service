@@ -256,7 +256,7 @@ export const statusColors = [
   //------------------------------------------------------------//
   // Функция, нормализующая данные, полученные с сервера                                  
   //------------------------------------------------------------//
-  function handleData(arr, str) {
+  export function handleData(arr, str) {
     let name;
     let database;
     let length;
@@ -297,7 +297,7 @@ export const statusColors = [
   //------------------------------------------------------------//
   // Функция формирует содержание body-компонента AJAX запроса                              
   //------------------------------------------------------------//  
-  function createBody(email, pass) {
+  export function createBody(email, pass) {
     return JSON.stringify({
       email: email,
       password: pass
@@ -398,6 +398,7 @@ export const statusColors = [
   }
 
 
+  
   //------------------------------------------------------------//
   // Функция, обновляющая сессию.                                  
   //------------------------------------------------------------//

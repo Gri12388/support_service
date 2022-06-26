@@ -6,6 +6,8 @@ import * as crypto from 'crypto';
 import Modal from '../Modal/Modal.jsx';
 import InputText from '../InputText/InputText.jsx';
 
+import { createBody, getStatuses, getTypes } from '../../data/data.js';
+
 import { configSettings } from '../../store/slices/claimsSlice.js';
 import { 
   claimsStatuses,
@@ -16,9 +18,6 @@ import {
   publicPaths,
   rules, 
   sendRequestBodyfull,
-  sendRequestBodyless,
-  statusColors, 
-  typeColors, 
 } from '../../data/data.js';
 
 import '../../assets/styles/common.scss';
@@ -154,96 +153,48 @@ function Login({ signal }) {
 
 
   //------------------------------------------------------------//
-  // Функция формирует содержание body-компонента AJAX запроса                              
-  //------------------------------------------------------------//  
-  function createBody() {
-    return JSON.stringify({
-      email: email.content,
-      password: password.content
-    });
-  }
-
-
-
-  //------------------------------------------------------------//
-  // Функция, нормализующая данные, полученные с сервера                                  
-  //------------------------------------------------------------//
-  function handleData(arr, str) {
-    let name;
-    let database;
-    let length;
-    let obj;
-
-    switch(str) {
-      case 'type':    name = 'type';
-                      database = typeColors;
-                      length = typeColors.length;
-                      obj = { id: length, type: 'Other', color: '#ADADAD' };
-                      break;
-      case 'status':  name = 'status';
-                      database = statusColors;
-                      length = statusColors.length;
-                      obj = {id: length, status: 'UNDEFINED', color: '#ADADAD'}
-                      break;
-      default: return '';
-    }
-
-    const tempArr = arr.map((item, index) => ({
-      id: index,
-      [name]: item.name,
-      slug: item.slug,
-      color: database[index % length] 
-    }));
-
-    tempArr.push(obj);
-
-    const tempObj = {};
-
-    tempArr.forEach(item => tempObj[item.id] = item);
-
-    return JSON.stringify(tempArr);
-  }
-
-
-
-  //------------------------------------------------------------//
   // Функция-организатор: собирает и/или проверяет необходимые
   // компоненты для AJAX-запроса и отправляет его.                             
   //------------------------------------------------------------// 
-  function onSubmit(e) {
+  async function onSubmit(e) {
     e.preventDefault();
+    dispatch(configSettings({ status: claimsStatuses.loading }));
 
-    const publicPath = publicPaths.auth;
-    const method = methods.post;
-    const bodyJSON = createBody();
-    
-    setAllStatesDefault();
+    try {
+      const publicPath = publicPaths.auth;
+      const method = methods.post;
+      const bodyJSON = createBody(email.content, password.content);
+      let token;
+      
+      setAllStatesDefault();
 
-    sendRequestBodyfull(publicPath, method, bodyJSON)
-    .then(res => {
+      let res = await sendRequestBodyfull(publicPath, method, bodyJSON);
+
       if (
         !res || 
         typeof res !== 'object' || 
         !res.status || 
         isNaN(+res.status)
       ) throw new Error(messages.wrongData);
-      
+
       switch (res.status) {
-        case 200: return res.json();
+        case 200: res = await res.json(); break;
         case 401: throw new Error(messages.noAuth);
         case 404: throw new Error(messages.noFound);
         default:  throw new Error(messages.default); 
       }
-    })
-    .then(res => {
+
       if (!res || typeof res !== 'object') throw new Error(messages.noData);
 
       if (!res.token) throw new Error(messages.noToken);
-      else sessionStorage.setItem('token', res.token);  
+      else {
+        sessionStorage.setItem('token', res.token);
+        token = res.token;
+      }  
 
       if (!res.role.name) throw new Error(messages.noRole);
       else sessionStorage.setItem('role', res.role.name);
-      
+
       sessionStorage.setItem('offset', 0);
       sessionStorage.setItem('fullName', res.fullName ? res.fullName : 'Unknown');
       sessionStorage.setItem('keepLogged', keepLogged.content);
@@ -253,64 +204,15 @@ function Login({ signal }) {
         sessionStorage.setItem('password', password.content);
       }
 
-      const publicPath = publicPaths.types;
-      const method = methods.get;
-      const token = sessionStorage.getItem('token');
-      
-      return sendRequestBodyless(publicPath, method, token);
-    })
-    .then(res => {
-      if (
-        !res || 
-        typeof res !== 'object' || 
-        !res.status || 
-        isNaN(+res.status)
-      ) throw new Error(messages.wrongData);
-
-      switch (res.status) {
-        case 200: return res.json();
-        case 404: throw new Error(messages.noFound);
-        default:  throw new Error(messages.default);
-      }
-    }) 
-    .then(res => {
-      if (!Array.isArray(res)) throw new Error(messages.wrongData);
-  
-      sessionStorage.setItem('types', handleData(res, 'type'));
-
-      const publicPath = publicPaths.status;
-      const method = methods.get;
-      const token = sessionStorage.getItem('token');
-
-      return sendRequestBodyless(publicPath, method, token);
-    })
-    .then(res => {
-      if (
-        !res || 
-        typeof res !== 'object' || 
-        !res.status || 
-        isNaN(+res.status)
-      ) throw new Error(messages.wrongData);
-
-      switch (res.status) {
-        case 200: return res.json();
-        case 404: throw new Error(messages.noFound);
-        default:  throw new Error(messages.default);
-      }
-    })
-    .then(res => {
-      if (!Array.isArray(res)) throw new Error(messages.wrongData);
-
-      sessionStorage.setItem('statuses', handleData(res, 'status'));
+      await getTypes(token);
+      await getStatuses(token);
 
       dispatch(configSettings({ status: claimsStatuses.ok }));
       navigate('/base/claims');
-    })
-    .catch(err => {
+    }
+    catch (err) {
       dispatch(configSettings({ status: claimsStatuses.error, message: err.message }));
-    });
-    
-    dispatch(configSettings({ status: claimsStatuses.loading }));
+    }
   }
 
   
