@@ -1,3 +1,6 @@
+import * as crypto from 'crypto';
+
+
 //------------------------------------------------------------//
 // Возможные хосты.                           
 //------------------------------------------------------------//
@@ -222,6 +225,37 @@ export const statusColors = [
 
 
 
+  const key = crypto.randomBytes(16).toString('hex');
+  const algorithm = 'aes256';
+
+  export function encrypt(string) {
+    const iv =  crypto.randomBytes(8).toString('hex');
+    const cipher = crypto.createCipheriv(algorithm, key, iv);
+
+    let encrypted = cipher.update(string, 'utf8', 'hex');
+    encrypted += cipher.final('hex');
+
+    return `${encrypted}:${iv}:${key}`;
+  }
+
+
+
+  export function decrypt(string) {
+    const [encryptedString, iv, key] = string.split(':');
+    const decipher = crypto.createDecipheriv(algorithm, key, iv);
+
+    let decrypted = decipher.update(encryptedString, 'hex', 'utf8');
+    decrypted += decipher.final('utf8');
+
+    return decrypted; 
+  }
+
+
+
+
+
+
+
   //------------------------------------------------------------//
   // Функция, направляющая запрос на сервер с телом.                                  
   //------------------------------------------------------------//
@@ -367,7 +401,7 @@ export const statusColors = [
   // Функция, обновляющая token.                                  
   //------------------------------------------------------------//
   export async function getToken(email, pass) {
-    
+
     const publicPath = publicPaths.auth;
     const method = methods.post;
     const bodyJSON = createBody(email, pass);
@@ -398,13 +432,16 @@ export const statusColors = [
   }
 
 
-  
+
   //------------------------------------------------------------//
   // Функция, обновляющая сессию.                                  
   //------------------------------------------------------------//
   export async function reconnect(email, pass) {
 
-    const token = await getToken(email, pass);
+    const decryptedEmail = decrypt(email);
+    const decryptedPass = decrypt(pass);
+
+    const token = await getToken(decryptedEmail, decryptedPass);
     await getTypes(token);
     await getStatuses(token);
 

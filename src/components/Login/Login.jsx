@@ -1,12 +1,11 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import * as crypto from 'crypto';
 
 import Modal from '../Modal/Modal.jsx';
 import InputText from '../InputText/InputText.jsx';
 
-import { createBody, getStatuses, getTypes } from '../../data/data.js';
+import { createBody, getStatuses, getTypes, encrypt, decrypt } from '../../data/data.js';
 
 import { configSettings } from '../../store/slices/claimsSlice.js';
 import { 
@@ -32,7 +31,7 @@ import './Login.scss';
 //------------------------------------------------------------//
 function Login({ signal }) {
 
-
+  
 
   //------------------------------------------------------------//
   // Подготовка инструментов для взаимодействия с другими
@@ -200,8 +199,12 @@ function Login({ signal }) {
       sessionStorage.setItem('keepLogged', keepLogged.content);
 
       if (keepLogged.content) {
-        sessionStorage.setItem('email', email.content);
-        sessionStorage.setItem('password', password.content);
+        
+        const encryptedEmail = encrypt(email.content);
+        const encryptedPassword = encrypt(password.content); 
+
+        sessionStorage.setItem('email', encryptedEmail);
+        sessionStorage.setItem('password', encryptedPassword);
       }
 
       await getTypes(token);
