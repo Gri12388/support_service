@@ -402,9 +402,12 @@ export const statusColors = [
   //------------------------------------------------------------//
   export async function getToken(email, pass) {
 
+    const decryptedEmail = decrypt(email);
+    const decryptedPass = decrypt(pass);
+
     const publicPath = publicPaths.auth;
     const method = methods.post;
-    const bodyJSON = createBody(email, pass);
+    const bodyJSON = createBody(decryptedEmail, decryptedPass);
 
     let res = await sendRequestBodyfull(publicPath, method, bodyJSON)
 
@@ -438,10 +441,7 @@ export const statusColors = [
   //------------------------------------------------------------//
   export async function reconnect(email, pass) {
 
-    const decryptedEmail = decrypt(email);
-    const decryptedPass = decrypt(pass);
-
-    const token = await getToken(decryptedEmail, decryptedPass);
+    const token = await getToken(email, pass);
     await getTypes(token);
     await getStatuses(token);
 

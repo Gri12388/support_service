@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 import { fetchClaims } from '../../store/slices/claimsSlice.js';
 import { selectCommonState, setCommonState } from '../../store/slices/commonSlice.js';
@@ -21,6 +22,14 @@ import sprite from '../../assets/images/sprite.svg';
 function Search() {
 
   //------------------------------------------------------------//
+  // Подготовка нужных инструментов для взаимодействия с другими
+  // страницами, файлами, компонентами и т.д.                                   
+  //------------------------------------------------------------//
+  const navigate = useNavigate();
+
+
+
+  //------------------------------------------------------------//
   // Подготовка инструментов для взаимодействия с другими
   // страницами, файлами, компонентами и т.д.                                   
   //------------------------------------------------------------//
@@ -37,10 +46,15 @@ function Search() {
 
 
   //------------------------------------------------------------//
-  // Извлечение нужных данных из sessionStorage.                                  
+  // Извлечение нужных данных из sessionStorage. При извлечении
+  // token из sessionStorage хук useMemo не используется так как
+  // значение token всегда должно быть актуальным, в том числе
+  // после получения нового token.                                  
   //------------------------------------------------------------//
-  const token = useMemo(() => {
-    return sessionStorage.getItem('token');
+  const token = sessionStorage.getItem('token');
+  
+  const keepLogged = useMemo(() => {
+    return sessionStorage.getItem('keepLogged') === 'true';
   }, []);
 
 
@@ -70,6 +84,10 @@ function Search() {
   // на сервер.                                   
   //------------------------------------------------------------//  
   function onLoupe() {
+    if (!token && !keepLogged) {
+      navigate('/');
+      return;
+    }
     dispatch(setCommonState({ search: search }));
     dispatch(fetchClaims({
       token: token, 
@@ -105,6 +123,10 @@ function Search() {
   //------------------------------------------------------------// 
   useEffect(() => {
     if (search === '' && search !== commonSearch) {
+      if (!token && !keepLogged) {
+        navigate('/');
+        return;
+      }
       dispatch(setCommonState({search: ''}));
       dispatch(fetchClaims({
         token: token, 

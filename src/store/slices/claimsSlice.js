@@ -7,7 +7,8 @@ import {
   messages, 
   methods, 
   pager, 
-  publicPaths 
+  publicPaths,
+  reconnect 
 } from '../../data/data.js';
 
 const initialState = {
@@ -19,9 +20,27 @@ const initialState = {
 }
 
 export const fetchClaims = createAsyncThunk('claims/fetchClaims', async ({ token, offset, limit, search, column, sort }) => {
+
+  //------------------------------------------------------------//
+  // Если token просрочен, извлекаем из sessionStorage email и
+  // password, затем, чтобы обновить token, вызываем функцию 
+  // reconnect, передавая ей в качестве аргументов email и 
+  // password.                                   
+  //------------------------------------------------------------//
+  if(!token) {
+    const email = sessionStorage.getItem('email');
+    const password = sessionStorage.getItem('password');
+    token = (await reconnect(email, password)).newToken;
+  }
+  
+
+  
   //------------------------------------------------------------//
   // Готовим пробный запрос на сервер, чтобы узнать общее 
-  // количество элементов на момент запроса (totalItems)                                 
+  // количество элементов на момент запроса (totalItems). Если
+  // мы что-то ищем, то указываем то, что ищем, чтобы узнать
+  // общее количество элементов, удовлетворяющих критерию 
+  // запроса.                                   
   //------------------------------------------------------------//
   let urlTest = new URL(publicPaths.claim, hosts.local);
   urlTest.searchParams.append('offset', 0);
@@ -31,7 +50,7 @@ export const fetchClaims = createAsyncThunk('claims/fetchClaims', async ({ token
 
 
   //------------------------------------------------------------//
-  // Отправляем запрос и ждем ответа                                
+  // Отправляем запрос и ждем ответа.                                
   //------------------------------------------------------------//
   let promise = await fetch (urlTest, {
       method: methods.get,
@@ -44,8 +63,9 @@ export const fetchClaims = createAsyncThunk('claims/fetchClaims', async ({ token
   //------------------------------------------------------------//
   // Если ответ не объект или объект без свойства status или 
   // свойство status не содержат значение truthy, или свойство 
-  // status не может быть преобразовано в число, генерируем 
-  // ошибку. Иначе запрашиваем json                              
+  // status не может быть преобразовано в число, или это число 
+  // не равно 200 (неудачный запрос), то генерируем ошибку.  
+  // Иначе запрашиваем json.                              
   //------------------------------------------------------------//
   if (
     !promise || 

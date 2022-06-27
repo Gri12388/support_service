@@ -9,7 +9,8 @@ import Sel from '../Sel/Sel.jsx';
 import { configSettings } from '../../store/slices/claimsSlice.js';
 import { 
   claims,
-  errors, 
+  errors,
+  getToken, 
   messages, 
   methods, 
   onPressedEnter,
@@ -30,6 +31,71 @@ import './NewClaim.scss';
 //------------------------------------------------------------//
 function NewClaim() {
   
+    //------------------------------------------------------------//
+  // Извлечение нужных данных из sessionStorage.                                  
+  //------------------------------------------------------------// 
+  const token = useMemo(() => {
+    const temp = sessionStorage.getItem('token');
+    if (Date.now() >= decode(temp).exp * 1000) return null;
+    else return temp;
+  }, []);
+
+  const keepLogged = useMemo(() => {
+    return sessionStorage.getItem('keepLogged') === 'true';
+  }, []);
+
+  const email = useMemo(() => {
+    if (!token && keepLogged) return sessionStorage.getItem('email');
+    else return null;
+  }, [token, keepLogged]);
+
+  const password = useMemo(() => {
+    if (!token && keepLogged) return sessionStorage.getItem('password');
+    else return null;
+  }, [token, keepLogged]);
+
+
+
+  //------------------------------------------------------------//
+  // Проверяем, не просрочен ли token. Если просрочен, 
+  // проверяем, нужно ли автоматически получить новый token,
+  // если не нужно, переходим на страницу, расположенную по 
+  // адресу '/', прекращая сессию. Если token просрочен, но
+  // нужно автоматически получить новый token, запрашиваем новый
+  // token. Если token не просрочен, продолжаем выполнение
+  // функции.                                       
+  //------------------------------------------------------------//
+  useEffect(() => {
+    if (!token && !keepLogged) {
+      navigate('/');
+    }
+    else if (!token && keepLogged) {
+      getToken(email, password)
+      .catch(err => {
+        dispatch(configSettings({ status: claimsStatuses.error, message: err.message }));
+      });
+    }
+  }, [token, keepLogged]);
+
+
+
+  //------------------------------------------------------------//
+  // Если token просрочен выходим из функции.                                   
+  //------------------------------------------------------------//
+  if (!token) return;
+
+
+
+  const types = useMemo(() => {
+    return JSON.parse(sessionStorage.getItem('types')); 
+  }, []);
+  const statuses = useMemo(() => {
+    return JSON.parse(sessionStorage.getItem('statuses'));
+  }, []);
+
+
+
+
   //------------------------------------------------------------//
   // Подготовка инструментов для взаимодействия с другими
   // страницами, файлами, компонентами и т.д.                                   
@@ -37,21 +103,6 @@ function NewClaim() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-
-
-
-  //------------------------------------------------------------//
-  // Извлечение нужных данных из sessionStorage.                                  
-  //------------------------------------------------------------// 
-  const types = useMemo(() => {
-    return JSON.parse(sessionStorage.getItem('types')); 
-  }, []);
-  const statuses = useMemo(() => {
-    return JSON.parse(sessionStorage.getItem('statuses'));
-  }, []);
-  const token = useMemo(() => {
-    return sessionStorage.getItem('token');
-  }, []);
 
 
 

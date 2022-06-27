@@ -28,85 +28,26 @@ import './Claims.scss';
 function Claims() {
 
   //------------------------------------------------------------//
-  // Извлечение нужных данных из sessionStorage.                                  
+  // Подготовка нужных инструментов для взаимодействия с другими
+  // страницами, файлами, компонентами и т.д.                                   
   //------------------------------------------------------------//
-  const token = useMemo(() => {
-    const x = sessionStorage.getItem('token');
-    if (!x) return null;
-    const temp = sessionStorage.getItem('token');
-    if (Date.now() >= decode(temp).exp * 1000) return null;
-    else return temp;
-  }, []);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+
+
+  //------------------------------------------------------------//
+  // Извлечение нужных данных из sessionStorage. При извлечении
+  // token из sessionStorage хук useMemo не используется так как
+  // значение token всегда должно быть актуальным, в том числе
+  // после получения нового token.                                  
+  //------------------------------------------------------------//
+  const token = setToken();
 
   const keepLogged = useMemo(() => {
     return sessionStorage.getItem('keepLogged') === 'true';
   }, []);
-
-  const email = useMemo(() => {
-    if (!token && keepLogged) return sessionStorage.getItem('email');
-    else return null;
-  }, [token, keepLogged]);
-
-  const password = useMemo(() => {
-    if (!token && keepLogged) return sessionStorage.getItem('password');
-    else return null;
-  }, [token, keepLogged]);
   
-
-
-  //------------------------------------------------------------//
-  // Проверяем, не просрочен ли token. Если просрочен, 
-  // проверяем, нужно ли автоматически получить новый token,
-  // если не нужно, переходим на страницу, расположенную по 
-  // адресу '/', прекращая сессию. Если token просрочен, но
-  // нужно автоматически получить новый token, запрашиваем новый
-  // token и после его получения загружаем данные. Если token
-  // не просрочен, загружаем данные.                                    
-  //------------------------------------------------------------//
-  useEffect(() => {
-    if (!token && !keepLogged) {
-      navigate('/');
-    }
-    else if (!token && keepLogged) {
-      reconnect(email, password)
-      .then(res => {
-        dispatch(fetchClaims({
-          token: res.newToken, 
-          offset: offset, 
-          limit: 10, 
-          search: search, 
-          column: column, 
-          sort: sort
-        }));
-      })
-      .catch(err => {
-        dispatch(configSettings({ status: claimsStatuses.error, message: err.message }));
-      });
-    }
-    else {
-      dispatch(fetchClaims({
-        token: token, 
-        offset: offset, 
-        limit: 10, 
-        search: search, 
-        column: column, 
-        sort: sort
-      }));
-    }
-  }, [token, keepLogged]);
-
-
-  //------------------------------------------------------------//
-  // Если token просрочен и нет нужды автоматически получать
-  // новый token выходим из функции.                                   
-  //------------------------------------------------------------//
-  if (!token && !keepLogged) return;
-  
-
-
-  //------------------------------------------------------------//
-  // Продолжаем извлечение нужных данных из sessionStorage.                                  
-  //------------------------------------------------------------//
   const offset = useMemo(() => {
     return +sessionStorage.getItem('offset');
   }, []);
@@ -119,14 +60,12 @@ function Claims() {
     return Object.values(JSON.parse(sessionStorage.getItem('statuses')));
   }, []);
 
-
+  
 
   //------------------------------------------------------------//
-  // Подготовка инструментов для взаимодействия с другими
-  // страницами, файлами, компонентами и т.д.                                   
+  // Продолжаем подготовка инструментов для взаимодействия с 
+  // другими страницами, файлами, компонентами и т.д.                                   
   //------------------------------------------------------------//
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
   const claims = useSelector(selectClaims);
   const { search, sort, column } = useSelector(selectCommonState);
   
@@ -141,6 +80,21 @@ function Claims() {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   
  
+  //------------------------------------------------------------//
+  // Функция, устанавливающая значение token. Извлекает 
+  // token из sessionStorage и проверяет его актуальность. 
+  // Если token просрочен - возвращает null, иначе возвращает
+  // значение token.                                 
+  //------------------------------------------------------------//
+  function setToken() {
+    const x = sessionStorage.getItem('token');
+    if (!x) return null;
+    const temp = sessionStorage.getItem('token');
+    if (Date.now() >= decode(temp).exp * 1000) return null;
+    else return temp;
+  }
+
+
 
   //------------------------------------------------------------//
   // Функция, устанавливающая в локальное состояние windowWidth
@@ -303,7 +257,27 @@ function Claims() {
   
 
 
-
+  //------------------------------------------------------------//
+  // Проверяем, не просрочен ли token. Если просрочен, проверяем,
+  // нужно ли автоматически получить новый token. Если не нужно,
+  // переходим на страницу, расположенную по адресу '/', 
+  // прекращая сессию. В ином случае выполняем запрос.                                   
+  //------------------------------------------------------------//
+  useEffect(() => {
+    if (!token && !keepLogged) {
+      navigate('/');
+    }
+    else {
+      dispatch(fetchClaims({
+        token: token, 
+        offset: offset, 
+        limit: 10, 
+        search: search, 
+        column: column, 
+        sort: sort
+      }));
+    }
+  }, [token, keepLogged]);
 
 
 
