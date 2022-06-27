@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useState  } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { decode } from 'jsonwebtoken';
 
 import ClaimRow from '../ClaimRow/ClaimRow.jsx';
 import ClaimTile from '../ClaimTile/ClaimTile.jsx';
@@ -11,7 +10,7 @@ import Pager from '../Pager/Pager.jsx';
 import { configSettings, fetchClaims, selectClaims } from '../../store/slices/claimsSlice.js';
 import { selectCommonState, setCommonState } from '../../store/slices/commonSlice.js';
 
-import { columnOptions, claimsStatuses, pager, reconnect, sortOptions } from '../../data/data.js';
+import { columnOptions, pager, setToken, sortOptions } from '../../data/data.js';
 
 import '../../assets/styles/common.scss';
 import './Claims.scss';
@@ -54,11 +53,11 @@ function Claims() {
 
   const types = useMemo(() => {
     return Object.values(JSON.parse(sessionStorage.getItem('types')));
-  }, []);
+  }, [token]);
   
   const statuses = useMemo(() => {
     return Object.values(JSON.parse(sessionStorage.getItem('statuses')));
-  }, []);
+  }, [token]);
 
   
 
@@ -78,21 +77,6 @@ function Claims() {
   // страницы.                                 
   //------------------------------------------------------------//
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  
- 
-  //------------------------------------------------------------//
-  // Функция, устанавливающая значение token. Извлекает 
-  // token из sessionStorage и проверяет его актуальность. 
-  // Если token просрочен - возвращает null, иначе возвращает
-  // значение token.                                 
-  //------------------------------------------------------------//
-  function setToken() {
-    const x = sessionStorage.getItem('token');
-    if (!x) return null;
-    const temp = sessionStorage.getItem('token');
-    if (Date.now() >= decode(temp).exp * 1000) return null;
-    else return temp;
-  }
 
 
 

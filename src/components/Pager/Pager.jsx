@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector  } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-import { pager } from '../../data/data.js';
+import { pager, setToken } from '../../data/data.js';
 import { selectTotalClaimsNumber, fetchClaims } from '../../store/slices/claimsSlice.js';
 import { selectPagerState, setPagerState } from '../../store/slices/pagerSlice.js';
 import { selectCommonState } from '../../store/slices/commonSlice.js';
@@ -43,7 +43,7 @@ function Pager() {
   // значение token всегда должно быть актуальным, в том числе
   // после получения нового token.                                  
   //------------------------------------------------------------//
-  const token = sessionStorage.getItem('token');
+  const token = setToken();
   
   const keepLogged = useMemo(() => {
     return sessionStorage.getItem('keepLogged') === 'true';

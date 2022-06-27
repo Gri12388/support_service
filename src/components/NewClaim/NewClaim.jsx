@@ -9,14 +9,16 @@ import Sel from '../Sel/Sel.jsx';
 import { configSettings } from '../../store/slices/claimsSlice.js';
 import { 
   claims,
+  claimsStatuses,
   errors,
-  getToken, 
   messages, 
   methods, 
   onPressedEnter,
   publicPaths, 
+  reconnect,
   rules, 
-  sendRequestBodyfull
+  sendRequestBodyfull,
+  setToken
 } from '../../data/data.js';
 
 import '../../assets/styles/common.scss';
@@ -30,15 +32,26 @@ import './NewClaim.scss';
 // '/base/new'.                             
 //------------------------------------------------------------//
 function NewClaim() {
-  
-    //------------------------------------------------------------//
-  // Извлечение нужных данных из sessionStorage.                                  
-  //------------------------------------------------------------// 
-  const token = useMemo(() => {
-    const temp = sessionStorage.getItem('token');
-    if (Date.now() >= decode(temp).exp * 1000) return null;
-    else return temp;
-  }, []);
+
+  //------------------------------------------------------------//
+  // Подготовка инструментов для взаимодействия с другими
+  // страницами, файлами, компонентами и т.д.                                   
+  //------------------------------------------------------------//
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+
+
+  //------------------------------------------------------------//
+  // Извлечение нужных данных из sessionStorage. При извлечении
+  // token из sessionStorage хук useMemo не используется так как
+  // значение token всегда должно быть актуальным, в том числе
+  // после получения нового token. Значение token по ходу 
+  // исполнения функции может поменяться, потому используется 
+  // let.                                 
+  //------------------------------------------------------------//
+  let token = setToken();
 
   const keepLogged = useMemo(() => {
     return sessionStorage.getItem('keepLogged') === 'true';
@@ -54,55 +67,12 @@ function NewClaim() {
     else return null;
   }, [token, keepLogged]);
 
-
-
-  //------------------------------------------------------------//
-  // Проверяем, не просрочен ли token. Если просрочен, 
-  // проверяем, нужно ли автоматически получить новый token,
-  // если не нужно, переходим на страницу, расположенную по 
-  // адресу '/', прекращая сессию. Если token просрочен, но
-  // нужно автоматически получить новый token, запрашиваем новый
-  // token. Если token не просрочен, продолжаем выполнение
-  // функции.                                       
-  //------------------------------------------------------------//
-  useEffect(() => {
-    if (!token && !keepLogged) {
-      navigate('/');
-    }
-    else if (!token && keepLogged) {
-      getToken(email, password)
-      .catch(err => {
-        dispatch(configSettings({ status: claimsStatuses.error, message: err.message }));
-      });
-    }
-  }, [token, keepLogged]);
-
-
-
-  //------------------------------------------------------------//
-  // Если token просрочен выходим из функции.                                   
-  //------------------------------------------------------------//
-  if (!token) return;
-
-
-
   const types = useMemo(() => {
     return JSON.parse(sessionStorage.getItem('types')); 
-  }, []);
+  }, [token]);
   const statuses = useMemo(() => {
     return JSON.parse(sessionStorage.getItem('statuses'));
-  }, []);
-
-
-
-
-  //------------------------------------------------------------//
-  // Подготовка инструментов для взаимодействия с другими
-  // страницами, файлами, компонентами и т.д.                                   
-  //------------------------------------------------------------//
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const location = useLocation();
+  }, [token]);
 
 
 
@@ -250,24 +220,36 @@ function NewClaim() {
   // Функция-организатор: собирает и/или проверяет необходимые
   // компоненты для AJAX-запроса и отправляет его.                             
   //------------------------------------------------------------// 
-  function onSubmit(e) {
-    e.preventDefault();
+  async function onSubmit(e) {
+    e.preventDefault(); 
 
-    const publicPath = publicPaths.claim;
-    const method = methods.post;;
-    const bodyJSON = createBody();
+    if (!token && !keepLogged) {
+      navigate('/');
+      return;
+    }
 
-    setAllStatesDefault()
+    dispatch(configSettings({ status: claimsStatuses.loading }));
 
-    sendRequestBodyfull(publicPath, method, bodyJSON, token)
-    .then(res => {
+    try {
+      if (!token) {
+        token = (await reconnect(email, password)).newToken;
+      }
+  
+      const publicPath = publicPaths.claim;
+      const method = methods.post;;
+      const bodyJSON = createBody();
+  
+      setAllStatesDefault()
+  
+      let res = await sendRequestBodyfull(publicPath, method, bodyJSON, token);
+  
       if (
         !res || 
         typeof res !== 'object' || 
         !res.status || 
         isNaN(+res.status)
       ) throw new Error(messages.wrongData);
-
+  
       switch (res.status) {
         case 200: dispatch(configSettings({ status: 'ok' }));
                   sessionStorage.setItem('offset', 'last');
@@ -277,12 +259,10 @@ function NewClaim() {
         case 404: throw new Error(messages.noFound);
         default:  throw new Error(messages.default); 
       }
-    })
-    .catch(err => {
+    }
+    catch(err) {
       dispatch(configSettings({ status: claimsStatuses.error, message: err.message }));
-    });
-
-    dispatch(configSettings({ status: claimsStatuses.loading }));
+    }  
   }
 
 

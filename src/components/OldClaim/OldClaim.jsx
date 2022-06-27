@@ -14,8 +14,10 @@ import {
   methods, 
   onPressedEnter,
   publicPaths, 
+  reconnect,
   rules, 
-  sendRequestBodyfull
+  sendRequestBodyfull,
+  setToken
 } from '../../data/data.js';
 
 import '../../assets/styles/common.scss';
@@ -41,17 +43,36 @@ function OldClaim() {
 
 
   //------------------------------------------------------------//
-  // Извлечение нужных данных из sessionStorage.                                  
-  //------------------------------------------------------------// 
+  // Извлечение нужных данных из sessionStorage. При извлечении
+  // token из sessionStorage хук useMemo не используется так как
+  // значение token всегда должно быть актуальным, в том числе
+  // после получения нового token. Значение token по ходу 
+  // исполнения функции может поменяться, потому используется 
+  // let.                                 
+  //------------------------------------------------------------//
+  let token = setToken();
+
+  const keepLogged = useMemo(() => {
+    return sessionStorage.getItem('keepLogged') === 'true';
+  }, []);
+
+  const email = useMemo(() => {
+    if (!token && keepLogged) return sessionStorage.getItem('email');
+    else return null;
+  }, [token, keepLogged]);
+
+  const password = useMemo(() => {
+    if (!token && keepLogged) return sessionStorage.getItem('password');
+    else return null;
+  }, [token, keepLogged]);
+
   const types = useMemo(() => {
     return JSON.parse(sessionStorage.getItem('types')); 
-  }, []);
+  }, [token]);
+
   const statuses = useMemo(() => {
     return JSON.parse(sessionStorage.getItem('statuses'));
-  }, []);
-  const token = useMemo(() => {
-    return sessionStorage.getItem('token');
-  }, []);
+  }, [token]);
 
 
 
@@ -211,18 +232,28 @@ function OldClaim() {
   // Функция-организатор: собирает и/или проверяет необходимые
   // компоненты для AJAX-запроса и отправляет его.                             
   //------------------------------------------------------------// 
-  function submit(act) {
-
-    let publicPath = publicPaths.claim + `/${location.state.id}`;
-    let method = methods.put;
-    let bodyJSON = createBody(act);
-
-    setAllStatesDefault();
-
+  async function submit(act) {
+    
+    if (!token && !keepLogged) {
+      navigate('/');
+      return;
+    }
+    
     dispatch(configSettings({ status: claimsStatuses.loading }));
 
-    sendRequestBodyfull(publicPath, method, bodyJSON, token)
-    .then(res => {
+    try {
+      if (!token) {
+        token = (await reconnect(email, password)).newToken;
+      }
+      
+      let publicPath = publicPaths.claim + `/${location.state.id}`;
+      let method = methods.put;
+      let bodyJSON = createBody(act);
+  
+      setAllStatesDefault();
+
+      let res = await sendRequestBodyfull(publicPath, method, bodyJSON, token);
+
       if (
         !res || 
         typeof res !== 'object' || 
@@ -238,10 +269,10 @@ function OldClaim() {
         case 404: throw new Error(messages.noFound);
         default:  throw new Error(messages.default); 
       }
-    })
-    .catch(err => {
+    }
+    catch(err) {
       dispatch(configSettings({ status: claimsStatuses.error, message: err.message }));
-    });
+    }
   }
 
 

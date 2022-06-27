@@ -1,4 +1,14 @@
+import { decode } from 'jsonwebtoken';
 import * as crypto from 'crypto';
+
+
+
+//------------------------------------------------------------//
+// Константы, необходимые для функций шифрования/дешифрования.                           
+//------------------------------------------------------------//
+const key = crypto.randomBytes(16).toString('hex');
+const algorithm = 'aes256';
+
 
 
 //------------------------------------------------------------//
@@ -225,9 +235,25 @@ export const statusColors = [
 
 
 
-  const key = crypto.randomBytes(16).toString('hex');
-  const algorithm = 'aes256';
+  //------------------------------------------------------------//
+  // Функция, устанавливающая значение token. Извлекает 
+  // token из sessionStorage и проверяет его актуальность. 
+  // Если token просрочен - возвращает null, иначе возвращает
+  // значение token.                                 
+  //------------------------------------------------------------//
+  export function setToken() {
+    const x = sessionStorage.getItem('token');
+    if (!x) return null;
+    const temp = sessionStorage.getItem('token');
+    if (Date.now() >= decode(temp).exp * 1000) return null;
+    else return temp;
+  }
 
+
+
+  //------------------------------------------------------------//
+  // Функция, шифрующая строку.                                 
+  //------------------------------------------------------------//
   export function encrypt(string) {
     const iv =  crypto.randomBytes(8).toString('hex');
     const cipher = crypto.createCipheriv(algorithm, key, iv);
@@ -240,6 +266,9 @@ export const statusColors = [
 
 
 
+  //------------------------------------------------------------//
+  // Функция, расшифровывающая строку.                                 
+  //------------------------------------------------------------//
   export function decrypt(string) {
     const [encryptedString, iv, key] = string.split(':');
     const decipher = crypto.createDecipheriv(algorithm, key, iv);
@@ -249,10 +278,6 @@ export const statusColors = [
 
     return decrypted; 
   }
-
-
-
-
 
 
 

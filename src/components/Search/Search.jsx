@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { fetchClaims } from '../../store/slices/claimsSlice.js';
 import { selectCommonState, setCommonState } from '../../store/slices/commonSlice.js';
 
-import { pager } from '../../data/data.js';
+import { pager, setToken } from '../../data/data.js';
 
 import '../../assets/styles/common.scss';
 import './Search.scss';
@@ -51,7 +51,7 @@ function Search() {
   // значение token всегда должно быть актуальным, в том числе
   // после получения нового token.                                  
   //------------------------------------------------------------//
-  const token = sessionStorage.getItem('token');
+  const token = setToken();
   
   const keepLogged = useMemo(() => {
     return sessionStorage.getItem('keepLogged') === 'true';
