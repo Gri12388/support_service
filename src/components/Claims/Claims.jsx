@@ -10,7 +10,7 @@ import Pager from '../Pager/Pager.jsx';
 import { configSettings, fetchClaims, selectClaims } from '../../store/slices/claimsSlice.js';
 import { selectCommonState, setCommonState } from '../../store/slices/commonSlice.js';
 
-import { columnOptions, pager, setToken, sortOptions } from '../../data/data.js';
+import { columnOptions, decrypt, pager, setToken, sortOptions } from '../../data/data.js';
 
 import '../../assets/styles/common.scss';
 import './Claims.scss';
@@ -36,12 +36,18 @@ function Claims() {
 
 
   //------------------------------------------------------------//
-  // Извлечение нужных данных из sessionStorage. При извлечении
-  // token из sessionStorage хук useMemo не используется так как
-  // значение token всегда должно быть актуальным, в том числе
-  // после получения нового token.                                  
+  // Извлечение нужных данных из sessionStorage. Извлечение
+  // token из sessionStorage проходит в два этапа: сначала 
+  // извлекается закодированный token, потом он раскодируется. 
+  // Хук useMemo не используется так как значение  
+  // закодированного token всегда должно быть актуальным, в том 
+  // числе после получения нового token.                                
   //------------------------------------------------------------//
-  const token = setToken();
+  const encryptedToken = sessionStorage.getItem('token');
+
+  const token = useMemo(() => {
+    return setToken(encryptedToken);
+  }, [encryptedToken]);
 
   const keepLogged = useMemo(() => {
     return sessionStorage.getItem('keepLogged') === 'true';

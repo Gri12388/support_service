@@ -187,7 +187,8 @@ function Login({ signal }) {
 
       if (!res.token) throw new Error(messages.noToken);
       else {
-        sessionStorage.setItem('token', res.token);
+        const encryptedToken = encrypt(res.token);
+        sessionStorage.setItem('token', encryptedToken);
         token = res.token;
       }  
 

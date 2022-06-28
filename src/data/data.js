@@ -241,10 +241,10 @@ export const statusColors = [
   // Если token просрочен - возвращает null, иначе возвращает
   // значение token.                                 
   //------------------------------------------------------------//
-  export function setToken() {
-    const x = sessionStorage.getItem('token');
-    if (!x) return null;
-    const temp = sessionStorage.getItem('token');
+  export function setToken(encryptedToken) {
+
+    if (!encryptedToken) return null;
+    const temp = decrypt(encryptedToken);
     if (Date.now() >= decode(temp).exp * 1000) return null;
     else return temp;
   }
@@ -454,7 +454,8 @@ export const statusColors = [
 
     if (!res.token) throw new Error(messages.noToken);
     else {
-      sessionStorage.setItem('token', res.token);
+      const encryptedToken = encrypt(res.token);
+      sessionStorage.setItem('token', encryptedToken);
       return res.token;
     }
   }
