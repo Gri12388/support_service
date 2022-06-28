@@ -60,7 +60,7 @@ function Pager() {
   // Переменная, изменение значения которой влияет на один из 
   // хуков useEffect данного компонента.                                  
   //------------------------------------------------------------//
-  let offset = null;
+  let offset;
 
 
 
@@ -69,7 +69,7 @@ function Pager() {
   // вычисление размера окна устройства, необходимого для 
   // отображения компонента 'Pager'.                                  
   //------------------------------------------------------------//
-  let [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
 
 
