@@ -2,17 +2,7 @@
 @use './mixins' as m;
 @import url('./fonts.scss');
 @import url('./normalize.scss');
-@import url('./animation.scss');
 
-
-@keyframes loadingAnimation {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
 
 
 .text1 {
@@ -266,9 +256,9 @@
 }
 
 .loading {
+  composes: loadingAnimation from './animation.scss';  
   width: 50px;
   height: 50px;
-  animation-name: loadingAnimation;
   animation-duration: 2s;
   animation-timing-function: linear;
   animation-direction: normal;
