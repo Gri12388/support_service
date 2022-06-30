@@ -34,7 +34,7 @@ function Claims() {
   const navigate = useNavigate();
 
 
-
+  debugger
   //------------------------------------------------------------//
   // Извлечение нужных данных из sessionStorage. Извлечение
   // token из sessionStorage проходит в два этапа: сначала 

@@ -87,9 +87,9 @@ function OldClaim() {
   // Нужен для установки изначального локального состояния type.                                   
   //------------------------------------------------------------// 
   const typeID = useMemo(() => {
-    let temp = types.find(item => item.slug === location.state.typeSlug).id;
-    let other = types.find(item => item.type === 'Other').id;
-    return temp === other ? '' : temp.toString();
+    let temp;
+    if(location.state.typeSlug) temp = types.find(item => item.slug === location.state.typeSlug).id;
+    return temp ? temp.toString() : '';
   }, []);
 
 

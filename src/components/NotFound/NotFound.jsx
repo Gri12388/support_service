@@ -1,9 +1,10 @@
 import React from 'react';
-import './NotFound.scss';
+
+import c from '../../assets/styles/common.scss';
 
 function NotFound() {
   return (
-    <p className='NotFound__txt'>There's nothing here!</p>
+    <p className={ c.text3 }>There's nothing here!</p>
   );
 }
 

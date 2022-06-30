@@ -29,6 +29,7 @@ function Auth() {
   // Подготовка инструментов для взаимодействия с другими
   // страницами, файлами, компонентами и т.д.                                   
   //------------------------------------------------------------//
+
   const claimMode = useSelector(selectModes);
   const claimStatus = useSelector(selectStatus);
   const dispatch = useDispatch();

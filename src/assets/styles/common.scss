@@ -5,6 +5,15 @@
 @import url('./animation.scss');
 
 
+@keyframes loadingAnimation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 
 .text1 {
   @include m.text(v.$font3, 12px, 15px, v.$color5, 2px);
@@ -259,7 +268,7 @@
 .loading {
   width: 50px;
   height: 50px;
-  animation-name: loading-animation;
+  animation-name: loadingAnimation;
   animation-duration: 2s;
   animation-timing-function: linear;
   animation-direction: normal;

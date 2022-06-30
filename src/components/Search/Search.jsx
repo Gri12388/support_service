@@ -151,7 +151,7 @@ function Search() {
 
   return (
     <div className={ `${c.inputWrapper} ${s.inputWrapper}` }>
-      <div  className={ s.imageWrapper } 
+      <div  className={ c.imageWrapper } 
             style={{ display: search ? 'flex' : 'none' }}
             onClick={ onCross }
       >
