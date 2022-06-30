@@ -43,7 +43,7 @@ function ClaimRow({ item, type, status }) {
         id: item._id, 
         title: item.title, 
         description: item.description, 
-        typeSlug: item.type ? item.type.slug : null
+        typeSlug: item.type && item.type.slug ? item.type.slug : null
       }
     });
   }

@@ -75,6 +75,7 @@ function Auth() {
   //------------------------------------------------------------// 
   useEffect(() => {
     if (sessionStorage.key(0)) {
+      //sessionStorage.setItem('token', '0');
       sessionStorage.clear();
       dispatch(reset());
       dispatch(resetPagerState());

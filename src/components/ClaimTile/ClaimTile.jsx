@@ -44,7 +44,7 @@ function ClaimTile({ item, type, status }) {
         id: item._id, 
         title: item.title, 
         description: item.description, 
-        typeSlug: item.type.slug
+        typeSlug: item.type && item.type.slug ? item.type.slug : null
       }
     });
   }

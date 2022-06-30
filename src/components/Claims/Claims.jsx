@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState  } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import ClaimRow from '../ClaimRow/ClaimRow.jsx';
@@ -31,10 +31,11 @@ function Claims() {
   // страницами, файлами, компонентами и т.д.                                   
   //------------------------------------------------------------//
   const dispatch = useDispatch();
+  const location = useLocation();
   const navigate = useNavigate();
 
 
-  debugger
+  
   //------------------------------------------------------------//
   // Извлечение нужных данных из sessionStorage. Извлечение
   // token из sessionStorage проходит в два этапа: сначала 

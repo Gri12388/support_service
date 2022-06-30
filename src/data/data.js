@@ -242,7 +242,6 @@ export const statusColors = [
   // значение token.                                 
   //------------------------------------------------------------//
   export function setToken(encryptedToken) {
-
     if (!encryptedToken) return null;
     const temp = decrypt(encryptedToken);
     if (Date.now() >= decode(temp).exp * 1000) return null;
@@ -270,6 +269,7 @@ export const statusColors = [
   // Функция, расшифровывающая строку.                                 
   //------------------------------------------------------------//
   export function decrypt(string) {
+    
     const [encryptedString, iv, key] = string.split(':');
     const decipher = crypto.createDecipheriv(algorithm, key, iv);
 

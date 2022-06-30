@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import React, { useState, useMemo, useEffect } from 'react';
+import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 import Search from '../Search/Search.jsx';
 import Slider from '../Slider/Slider.jsx';
@@ -21,8 +21,6 @@ import baseSprite from '../../assets/images/sprite.svg';
 //------------------------------------------------------------//
 function Base() {
 
-   
-
   //------------------------------------------------------------//
   // Подготовка инструментов для взаимодействия с другими
   // страницами, файлами, компонентами и т.д.                                   
@@ -31,7 +29,18 @@ function Base() {
   const navigate = useNavigate();
 
 
-  
+
+  //------------------------------------------------------------//
+  // Проверка того, имеется ли в sessionStorage что-либо. От 
+  // наличия или отсутствия в sessionStorage данных будет 
+  // зависеть дальнейшее развитие событий: рендеринг или 
+  // переход на обусловленную страницу.                                  
+  //------------------------------------------------------------//
+  const isSessionBad = useMemo(() => {
+    return !sessionStorage.key(0);
+  }, []);
+
+
   //------------------------------------------------------------//
   // Создание локального состояния sliderConfig, регулирующего
   // отображение компонента Slider.                                  
@@ -79,7 +88,6 @@ function Base() {
   // страницу '/'.                                  
   //------------------------------------------------------------//
   function quitSession() {
-    //navigate('/', {replace: true});
     navigate('/');
   }
 
@@ -106,6 +114,23 @@ function Base() {
 
 
 
+  //------------------------------------------------------------//
+  // Хук, реагирующий на монтирование. Если sessionStorage пуст
+  // то происходит переход на страницу, расположенную по 
+  // адресу '/'.                                 
+  //------------------------------------------------------------//
+  useEffect(() => {
+    if (isSessionBad) navigate('/');
+  }, []);
+
+
+
+  //------------------------------------------------------------//
+  // Условие, при котором ничего не надо рендерить, так как 
+  // вслед за ним произойдет переход на другую страницу.                                
+  //------------------------------------------------------------//
+  if (isSessionBad) return;
+
   //--------------------------------------------------------------------
 
   return (
@@ -130,9 +155,11 @@ function Base() {
             <span className={ sessionStorage.key(0) ? s.fullName : s.fullNameUnauthenticated }>
               { sessionStorage.key(0) ? sessionStorage.getItem('fullName') : 'Not authenticated'}
             </span>
-            <svg className={ s.quitSvg } onClick={ quitSession }>
-              <use href={ baseSprite + `#quit` }></use>
-            </svg>
+            <Link to='/'>
+              <svg className={ s.quitSvg }>
+                <use href={ baseSprite + `#quit` }></use>
+              </svg>
+            </Link>
           </header>
         </div>
         <main className={ s.main }>
