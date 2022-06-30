@@ -1,13 +1,13 @@
 @use '../../assets/styles/variables.scss' as v;
 @import url('../../assets/styles/normalize.scss');
 
-.Claims__header {
+.header {
   height: 48px + 48px;
   margin: 0 0 0 8px;
 
 }
 
-.Claims__button {
+.button {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -15,37 +15,37 @@
   height: 48px;
 }
 
-.Claims__banner, .Claims__radio {
+.banner, .radio {
   height: 48px;
 }
 
-.Claims__banner {
+.banner {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.Claims__radio {
+.radio {
   display: flex;
   justify-content: space-around;
   align-items: center;
 }
 
-.Claims__radiobutton {
+.radiobutton {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 6px;
 }
 
-.Claims__table {
+.table {
   width: 100%;
   max-width: 1710px;
   height: 536px;
   margin-bottom: 56px;
 }
 
-.Claims__table-head {
+.tableHead {
   display: flex;
   justify-content: end;
   align-items: center;
@@ -54,7 +54,7 @@
   background-color: v.$color17;
 }
 
-.Claims__row {
+.row {
   display: flex;
   justify-content: end;
   align-items: center;
@@ -68,7 +68,7 @@
   }
 }
 
-.Claims__tiles {
+.tiles {
   display: none;
   justify-content: center;
   align-content: space-between;
@@ -79,23 +79,23 @@
 }
 
 @media (max-width: 799px) {
-  .Claims__header {
+  .header {
     height: 48px + 24px;
   }
   
-  .Claims__radio {
+  .radio {
     display: none;
   }
   
-  .Claims__table {
+  .table {
     display: none;
   }
 
-  .Claims__tiles {
+  .tiles {
     display: flex;
   }
 
-  .Claims__button {
+  .button {
     width: 48px;
   }
 }

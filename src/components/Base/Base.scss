@@ -15,12 +15,12 @@
   stroke: v.$color8;
 }
 
-.Base__container {
+.container {
   display: flex;
   border: solid 1px v.$color16;
 }
 
-.Base__aside {
+.aside {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -30,19 +30,19 @@
   background: linear-gradient(180deg, v.$color14 0%, v.$color1 43.23%);
 }
 
-.Base__logo {
+.logo {
   width: 72.82px;
   height: 71.08px;
   margin-bottom: 47.92px;
 }
 
-.Base__section {
+.section {
   width: 100%;
   height: 100%;
   background-color: v.$color3;
 }
 
-.Base__header_wrapper {
+.headerWrapper {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -51,11 +51,11 @@
   background-color: v.$color3;
 }
 
-.Base__burger {
+.burger {
   display: none;
 }
 
-.Base__header {
+.header {
   display: flex;
   justify-content: end;
   align-items: center;
@@ -64,7 +64,7 @@
   background-color: v.$color0;
 }
 
-.Base__aside_svg {
+.asideSvg {
   @extend %svg;
   margin-right: 20px;
   margin-bottom: 24px;
@@ -75,30 +75,30 @@
   }
 }
 
-.Base__bell-off_svg {
+.bellOffSvg {
   @extend %svg;
   margin-right: 20px;
   stroke: v.$color16;
 }
 
-.Base__user {
+.user {
   width: 50px;
   height: 50px;
   margin-right: 20px;
   border-radius: 50%;
 }
 
-.Base__full-name {
+.fullName {
   @include m.text(v.$font1, 14px, 32px, v.$color16);
   margin-right: 23px;
 }
 
-.Base__full-name_unauthenticated {
-  @extend .Base__full-name;
+.fullNameUnauthenticated {
+  @extend .fullName;
   color: v.$color8;
 }
 
-.Base__quit_svg {
+.quitSvg {
   @extend %svg;
   margin-right: 24px;
   cursor: pointer;
@@ -108,17 +108,17 @@
   }
 }
 
-.Base__button {
+.button {
   margin-top: 16px;
 }
 
 
 @media (max-width: 799px) {
-  .Base__aside, .Base__full-name, .Base__quit_svg {
+  .aside, .fullName, .quitSvg {
     display: none;
   }
 
-  .Base__header_wrapper {
+  .headerWrapper {
     position: fixed;
     left: 0;
     top: 0;
@@ -129,7 +129,7 @@
     background-color: v.$color1;
   }
 
-  .Base__burger {
+  .burger {
     position: relative;
     display: block;
     width: 24px;
@@ -155,46 +155,46 @@
     }
   }
   
-  .Base__burger-line1 {
+  .burgerLine1 {
     @extend %burger-line;
     top: 0;
-    &_cross {
-      @extend .Base__burger-line1;
+    &Cross {
+      @extend .burgerLine1;
       @extend %burger-line_cross;
       transform: rotate(45deg);
     }
   }
   
-  .Base__burger-line2 {
+  .burgerLine2 {
     @extend %burger-line;
     top: 50%;
     transform: translateY(-50%);
-    &_cross {
+    &Cross {
       display: none;
     }
   }
   
-  .Base__burger-line3 {
+  .burgerLine3 {
     @extend %burger-line;
     bottom: 0;
-    &_cross {
-      @extend .Base__burger-line3;
+    &Cross {
+      @extend .burgerLine3;
       @extend %burger-line_cross;
       transform: rotate(-45deg);
     }
   }
 
-  .Base__main {
+  .main {
     padding-top: 64px;
   }
 
-  .Base__user {
+  .user {
     width: 48px;
     height: 48px;
     margin-right: 6px;
   }
 
-  .Base__bell-off_svg {
+  .bellOffSvg {
     margin-right: 24px;
     stroke: v.$color3;
   }

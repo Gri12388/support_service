@@ -7,8 +7,8 @@ import { selectCommonState, setCommonState } from '../../store/slices/commonSlic
 
 import { pager, setToken } from '../../data/data.js';
 
-import '../../assets/styles/common.scss';
-import './Search.scss';
+import c from '../../assets/styles/common.scss';
+import s from './Search.scss';
 
 import sprite from '../../assets/images/sprite.svg';
 
@@ -150,25 +150,25 @@ function Search() {
   //--------------------------------------------------------------------
 
   return (
-    <div className='input_wrapper Search__input_wrapper'>
-      <div  className='image_wrapper' 
+    <div className={ `${c.inputWrapper} ${s.inputWrapper}` }>
+      <div  className={ s.imageWrapper } 
             style={{ display: search ? 'flex' : 'none' }}
             onClick={ onCross }
       >
-        <svg className='Search__cross_svg'>
+        <svg className={ s.crossSvg }>
           <use href={ sprite + '#cross' }></use>
         </svg>
       </div>
       <input 
         type='text'
-        className='input Search__input'
+        className={ `${c.input} ${s.input}` }
         placeholder='Search'
         value={ search }
         onChange={ onChange }
         onKeyDown={ onKeyDown }
       />
-      <div className='image_wrapper' onClick={ onLoupe }>
-        <svg className='Search__loupe_svg'>
+      <div className={ c.imageWrapper } onClick={ onLoupe }>
+        <svg className={ s.loupeSvg }>
           <use href={ sprite + '#loupe' }></use>
         </svg>
       </div>

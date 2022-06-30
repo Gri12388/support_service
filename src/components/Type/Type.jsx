@@ -1,7 +1,7 @@
 import React from 'react';
 
-import '../../assets/styles/common.scss';
-import './Type.scss';
+import c from '../../assets/styles/common.scss';
+import s from './Type.scss';
 
 
 
@@ -19,9 +19,9 @@ function Type({ typeId }) {
   //--------------------------------------------------------------------
   
   return (
-    <div className='Type__wrapper'>
-      <div className='Type__mark' style={{ backgroundColor: types[typeId].color }}></div>
-      <p className='text5'>{ types[typeId].type }</p>
+    <div className={ s.wrapper }>
+      <div className={ s.mark } style={{ backgroundColor: types[typeId].color }}></div>
+      <p className={ c.text5 }>{ types[typeId].type }</p>
     </div>
   );
 }

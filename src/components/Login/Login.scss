@@ -1,27 +1,23 @@
 @use '../../assets/styles/variables.scss' as v;
 @import url('../../assets/styles/normalize.scss');
 
-.Login__form {
+.form {
   width: 466px;
   height: fit-content;
 }
 
-.Login__InputText1_wrapper {
+.inputText1Wrapper {
   height: 103px;
 }
 
-// .Login__InputText2_wrapper {
-//   height: 103px;
-// }
-
-.Login__checkbox_wrapper {
+.checkboxWrapper {
   display: flex;
   align-items: center;
   height: 20px;
   margin-bottom: 35px;
 }
 
-.Login__checkbox {
+.checkbox {
   width: 19px;
   height: 20px;
   margin-left: 11px;
@@ -29,7 +25,7 @@
 }
 
 @media (max-width: 498px) {
-  .Login__form {
+  .form {
     width: 100%;
     padding: 0 16px;
   }

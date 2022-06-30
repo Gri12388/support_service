@@ -16,8 +16,8 @@ import {
   sendRequestBodyfull
 } from '../../data/data.js';
 
-import '../../assets/styles/common.scss';
-import './Reg.scss';
+import c from '../../assets/styles/common.scss';
+import s from './Reg.scss';
 
 import loadingImage from '../../assets/images/loading.png';
 
@@ -432,10 +432,10 @@ function Reg() {
   //--------------------------------------------------------------------
 
   return (
-    <div className='container3'>
+    <div className={ c.container3 }>
       { claimMode === claimsModes.modal && claimStatus === claimsStatuses.ok && (
-        <form className='Reg__modal'>
-          <section className='Reg__section'>
+        <form className={ s.modal }>
+          <section className={ s.section }>
           <InputText 
             id='fromReg__name'
             label='NAME'
@@ -449,7 +449,7 @@ function Reg() {
             }}
           />
           </section>
-          <section className='Reg__section'>
+          <section className={ s.section }>
           <InputText 
             id='fromReg__surname'
             label='SURNAME'
@@ -463,7 +463,7 @@ function Reg() {
             }}
           />
           </section>
-          <section className='Reg__section'>
+          <section className={ s.section }>
           <InputText 
             type='email'
             id='fromReg__email'
@@ -478,7 +478,7 @@ function Reg() {
             }}
           />
           </section>
-          <section className='Reg__section'>
+          <section className={ s.section }>
           <InputText 
             type='password'
             id='fromReg__password'
@@ -493,7 +493,7 @@ function Reg() {
             }}
           />
           </section>
-          <section className='Reg__section'>
+          <section className={ s.section }>
           <InputText 
             type='password'
             id='fromReg__password-copy'
@@ -509,24 +509,24 @@ function Reg() {
           />
           </section>
           
-          { isFormOk ? (<button className='button2 xbutton1' onClick={ onSubmit }>Register</button>) : (<button className='button-inactiv xbutton1'>Register</button>)}
+          { isFormOk ? (<button className={ `${c.button2} ${c.xbutton1}` } onClick={ onSubmit }>Register</button>) : (<button className={ `${c.buttonInactiv} ${c.xbutton1}` }>Register</button>)}
         
-          <div className='button2 close-button' id='Reg__button'>╳</div>
+          <div className={ `${c.button2} ${c.closeButton}` } id='Reg__button'>╳</div>
         </form>
       )}
       { claimMode === claimsModes.modal && claimStatus === claimsStatuses.loading && (
-        <div className='Reg__modal1'>
-          <img src={ loadingImage } alt='loading' className='loading' />
-          <p className='text3'>Loading...</p>
+        <div className={ s.modal1 }>
+          <img src={ loadingImage } alt='loading' className={ c.loading } />
+          <p className={ c.text3 }>Loading...</p>
         </div>  
       )}
       { claimMode === claimsModes.modal && (claimStatus === claimsStatuses.message || claimStatus === claimsStatuses.error) && (
-        <div className='Reg__modal2'>
-          <p className='text3'>{ claimMessage }</p>
+        <div className={ s.modal2 }>
+          <p className={ c.text3 }>{ claimMessage }</p>
           { claimStatus === claimsStatuses.error && (
-            <button className='button4' onClick={ onTryAgainButton }>Try again?</button>
+            <button className={ c.button4 } onClick={ onTryAgainButton }>Try again?</button>
           )}
-          <div className='button2 close-button' id='Reg__button'>╳</div>
+          <div className={ `${c.button2} ${c.closeButton}` } id='Reg__button'>╳</div>
         </div>
       )}
 

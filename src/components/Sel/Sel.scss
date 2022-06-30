@@ -8,19 +8,24 @@
   height: 48px;
 }
 
-.Sel__input_wrapper {
+.inputWrapper {
   margin-bottom: 0px;
 }
 
-.Sel__error {
+.error {
   border: solid 1px v.$color18;
 }
 
-.Sel__focused {
+.focused {
   border: solid 1px v.$color1;
 }
 
-.Sel__base {
+.label {
+  display: inline-block;
+  margin-bottom: 8px;
+}
+
+.base {
   @extend %base;
   position: relative;
   z-index: 1;
@@ -28,7 +33,7 @@
   outline: none;
 }
 
-.Sel__side-area {
+.sideArea {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -36,19 +41,19 @@
   height: 100%;
 }
 
-.Sel__mark-area {
-  @extend .Sel__side-area;
+.markArea {
+  @extend .sideArea;
   width: 16px;
   margin-right: 16px;
 }
 
-.Sel__mark {
+.mark {
   width: 16px;
   height: 16px;
   border-radius: 50%;
 }
 
-.Sel__select {
+.select {
   display: flex;
   align-items: center;
   width: 86%;
@@ -58,42 +63,39 @@
   background-color: transparent;
 }
 
-.Sel__icon_svg {
+.iconSvg {
   width: 40px;
   height: 40px;
   fill: v.$color0;
   stroke: v.$color5;
 }
 
-.Sel__icon-rotated_svg {
-  @extend .Sel__icon_svg;
+.iconRotatedSvg {
+  @extend .iconSvg;
   transform: rotate(180deg);
 }
 
-.Sel__drop {
+.drop {
   position: absolute;
   top: 100%;
   left: 30px;
   width: 90%;
   height: fit-content;
   background-color: v.$color4;
-  & .Sel__item:first-child {
+  & .item:first-child {
     border-top: solid 1px v.$color5;
   }
 }
 
-.Sel__item {
+.item {
   @extend %base;
   position: relative;
   border-radius: 0;
   border: solid 1px v.$color5;
   border-top: none;
-  // &:hover {
-  //   background-color: v.$color15;
-  // }
 }
 
-.Sel__shell {
+.shell {
   position: absolute;
   top: 0;
   left: 0;
@@ -102,6 +104,6 @@
   background-color: v.$color0;
 }
 
-.Sel__item-pointed {
+.itemPointed {
   background-color: v.$color15;
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 
-import '../../assets/styles/common.scss';
-import './Status.scss';
+import c from '../../assets/styles/common.scss';
+import s from './Status.scss';
 
 
 
@@ -19,8 +19,8 @@ function Status({ statusId }) {
   //--------------------------------------------------------------------
   
   return (
-    <div className='Status__badge' style={{ backgroundColor: statuses[statusId].color }}>
-      <p className='Status__text'>{ statuses[statusId].status }</p>
+    <div className={ s.badge } style={{ backgroundColor: statuses[statusId].color }}>
+      <p className={ s.text }>{ statuses[statusId].status }</p>
     </div>
   );
 }

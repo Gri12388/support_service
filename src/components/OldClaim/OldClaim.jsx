@@ -20,8 +20,8 @@ import {
   setToken
 } from '../../data/data.js';
 
-import '../../assets/styles/common.scss';
-import './OldClaim.scss';
+import c from '../../assets/styles/common.scss';
+import s from './OldClaim.scss';
 
 
 
@@ -379,10 +379,10 @@ function OldClaim() {
 
   return(
     <>
-      <form className='container2'>
-        <div className='subcontainer'>
-          <p className='text4 OldClaim__title'>Incoming claim</p>
-          <section className='OldClaim__input'>
+      <form className={ c.container2 }>
+        <div className={ c.subcontainer }>
+          <p className={ `${c.text4} ${s.title}` }>Incoming claim</p>
+          <section className={ s.input }>
             <InputText 
               id={ elements[0].id }
               label='TITLE'
@@ -397,7 +397,7 @@ function OldClaim() {
               }}
             />
           </section>
-          <section className='OldClaim__input'>
+          <section className={ s.input }>
             <Sel 
               id={ elements[1].id }
               label='TYPE'
@@ -413,7 +413,7 @@ function OldClaim() {
               }}
             />
           </section>
-          <section className='OldClaim__input'>
+          <section className={ s.input }>
             <InputText 
               id={ elements[2].id }
               label='DESCRIPTION'
@@ -428,10 +428,10 @@ function OldClaim() {
               }}
             />
           </section>
-          <section className='OldClaim__buttons'>
-            <button className='button3 OldClaim__button' onClick={ onCancel }>Cancel</button>
-            { isFormOk ? (<button className='button2 xbutton1 OldClaim__button' onClick={ onDone }>Done</button>) : (<button className='button-inactiv xbutton1 OldClaim__button'>Done</button>) }
-            { isFormOk ? (<button className='button1 xbutton1 OldClaim__button' onClick={ onDecline }>Decline</button>) : (<button className='button-inactiv xbutton1 OldClaim__button'>Decline</button>) }
+          <section className={ s.buttons }>
+            <button className={ `${c.button3} ${s.button}` } onClick={ onCancel }>Cancel</button>
+            { isFormOk ? (<button className={ `${c.button2} ${c.xbutton1} ${s.button}` } onClick={ onDone }>Done</button>) : (<button className={ `${c.buttonInactiv} ${c.xbutton1} ${s.button}` }>Done</button>) }
+            { isFormOk ? (<button className={ `${c.button1} ${c.xbutton1} ${s.button}` } onClick={ onDecline }>Decline</button>) : (<button className={ `${c.buttonInactiv} ${c.xbutton1} ${s.button}` }>Decline</button>) }
           </section>
         </div>
       </form>

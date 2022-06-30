@@ -2,30 +2,30 @@
 @use '../../assets/styles/mixins.scss' as m;
 @import url('../../assets/styles/normalize.scss');
 
-.NewClaim__title {
+.title {
   margin-bottom: 48px;
 }
 
-.NewClaim__input {
+.input {
   max-width: 589px;
   height: 105px;
   margin-bottom: 8px;
 }
 
-.NewClaim__buttons {
+.buttons {
   display: flex;
   gap: 24px;
   width: fit-content;
 }
 
-.NewClaim__button {
+.button {
   width: 82px;
   height: 48px;
 }
 
 
 @media (max-width: 799px) {
-  .NewClaim__title {
+  .title {
     @include m.text(v.$font2, 24px, 29.05px, v.$color16);
     cursor: default;
   }

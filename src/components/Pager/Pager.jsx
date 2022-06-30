@@ -7,7 +7,7 @@ import { selectTotalClaimsNumber, fetchClaims } from '../../store/slices/claimsS
 import { selectPagerState, setPagerState } from '../../store/slices/pagerSlice.js';
 import { selectCommonState } from '../../store/slices/commonSlice.js';
 
-import './Pager.scss';
+import s from './Pager.scss';
 
 
 
@@ -272,7 +272,7 @@ function Pager() {
   const pages = [];
   for (let i = pagerState.start; i <= pagerState.stop; i++) {
     pages.push(
-      <div key={ i } id={ i } className={ pagerState.pointer === i ? 'Pager__item Pager__pointer' : 'Pager__item' } onClick={ choosePage }>{ i }</div>
+      <div key={ i } id={ i } className={ pagerState.pointer === i ? `${s.item} ${s.pointer}` : s.item } onClick={ choosePage }>{ i }</div>
     );
   }
 
@@ -282,24 +282,24 @@ function Pager() {
   
   if (pageNumber === 0 || pageNumber === 1) return;
   else return (
-    <section className='Pager__bar_wrapper' >
-      <div className='Pager__bar'>
-        <div  className='Pager__item' 
+    <section className={ s.barWrapper } >
+      <div className={ s.bar }>
+        <div  className={ s.item } 
               onClick={decrementPointer}
               style={{ visibility: pagerState.pointer !== 1 ? 'visible' : 'hidden' }}
         >&lt;</div>
         <div  id={ 1 } 
-              className={ pagerState.pointer === 1 ? 'Pager__item Pager__pointer' : 'Pager__item' } 
+              className={ pagerState.pointer === 1 ? `${s.item} ${s.pointer}` : s.item } 
               onClick={ choosePage }
         >{ 1 }</div>
-        { pagerState.displayLeft && <div className='Pager__item1'>...</div> }
+        { pagerState.displayLeft && <div className={ s.item1 }>...</div> }
         { pages }
-        { pagerState.displayRight && <div className='Pager__item1'>...</div> }
+        { pagerState.displayRight && <div className={ s.item1 }>...</div> }
         <div  id={ pagerState.last } 
-              className={ pagerState.pointer === pagerState.last ? 'Pager__item Pager__pointer' : 'Pager__item' } 
+              className={ pagerState.pointer === pagerState.last ? `${s.item} ${s.pointer}` : s.item } 
               onClick={ choosePage }
         >{ pagerState.last }</div>
-        <div  className='Pager__item' 
+        <div  className={ s.item } 
               onClick={ incrementPointer }
               style={{ visibility: pagerState.pointer !== pagerState.last ? 'visible' : 'hidden' }}
         >&gt;</div>

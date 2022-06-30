@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 
-import '../../assets/styles/common.scss';
-import './Sel.scss';
+import c from '../../assets/styles/common.scss';
+import s from './Sel.scss';
 
 import sprite from '../../assets/images/sprite.svg';
 
@@ -164,42 +164,42 @@ function Sel({ id, label, value, groupId, state, callbacks, placeholder }) {
     if (state && !state.focused && !state.touched) {
       return { 
         isWarningShown: false, 
-        className: 'input_wrapper Sel__base Sel__input_wrapper' 
+        className: `${c.inputWrapper} ${s.base} ${s.inputWrapper}` 
       };
     };
     if (state && !state.focused && state.touched && state.status) {
       return { 
         isWarningShown: false, 
-        className: 'input_wrapper Sel__base Sel__input_wrapper' 
+        className: `${c.inputWrapper} ${s.base} ${s.inputWrapper}` 
       };
     };
     if (state && !state.focused && state.touched && !state.status) {
       return { 
         isWarningShown: true, 
-        className: 'input_wrapper Sel__base Sel__input_wrapper Sel__error' 
+        className: `${c.inputWrapper} ${s.base} ${s.inputWrapper} ${s.error}` 
       };
     };
     if (state && state.focused && !state.touched) {
       return { 
         isWarningShown: false, 
-        className: 'input_wrapper Sel__base Sel__input_wrapper Sel__focused' 
+        className: `${c.inputWrapper} ${s.base} ${s.inputWrapper} ${s.focused}`
       };
     };
     if (state && state.focused && state.touched && state.status) {
       return { 
         isWarningShown: false, 
-        className: 'input_wrapper Sel__base Sel__input_wrapper Sel__focused' 
+        className: `${c.inputWrapper} ${s.base} ${s.inputWrapper} ${s.focused}` 
       };
     };
     if (state && state.focused && state.touched && !state.status) {
       return { 
         isWarningShown: true, 
-        className: 'input_wrapper Sel__base Sel__input_wrapper Sel__focused' 
+        className: `${c.inputWrapper} ${s.base} ${s.inputWrapper} ${s.focused}` 
       };
     }
     else return { 
       isWarningShown: false, 
-      className: 'input_wrapper Sel__base Sel__input_wrapper' 
+      className: `${c.inputWrapper} ${s.base} ${s.inputWrapper}` 
     };
   }
 
@@ -210,8 +210,8 @@ function Sel({ id, label, value, groupId, state, callbacks, placeholder }) {
   // в зависимости от значения локального состояния pointed.
   //------------------------------------------------------------//
   function configureItemView(id) {
-    if (pointed === id) return 'input_wrapper Sel__item Sel__item-pointed';
-    else return 'input_wrapper Sel__item';
+    if (pointed === id) return `${c.inputWrapper} ${s.item} ${s.itemPointed}`;
+    else return `${c.inputWrapper} ${s.item}`;
   }
 
 
@@ -259,25 +259,25 @@ function Sel({ id, label, value, groupId, state, callbacks, placeholder }) {
             className={ configureItemView(item.id) } 
             data-group={ groupId }
       >
-        <div  className='Sel__shell'
+        <div  className={ s.shell }
               onClick={ chooseItem } 
               onPointerEnter={ onPointerEnter }
               data-id={ item.id } 
               data-group={ groupId }
         />
-        <div  className='Sel__select' 
+        <div  className={ s.select }
               data-group={ groupId }
         >
-          <div  className='Sel__mark-area' 
+          <div  className={ s.markArea } 
                 data-group={ groupId }
           >
-            <div  className='Sel__mark' 
+            <div  className={ s.mark } 
                   style={{ backgroundColor: item.color }} 
                   data-group={ groupId }
             />
             
           </div>
-          <p  className='text3' 
+          <p  className={ c.text3 } 
               data-group={ groupId }
           >
             { item.type }
@@ -293,43 +293,37 @@ function Sel({ id, label, value, groupId, state, callbacks, placeholder }) {
 
   return(
     <>
-      {label && <label htmlFor={ id } className='text1 InputText__label'>{ label }</label>}
+      {label && <label htmlFor={ id } className={ `${c.text1} ${s.label}` }>{ label }</label>}
       <button  className={ configInputWrapperView().className } 
             id={ id }
             onClick={ onButtonClick } 
             onFocus={ callbacks && callbacks.onFocus }
             onBlur={ callbacks.onBlur }
             onKeyDown={ onKeyDown }
-            //onClick={ toggleVisibility }
             data-group={groupId}
       >
-        <div className='Sel__select'
-                // id={ id } 
-                // onClick={ onButtonClick } 
-                // onFocus={ callbacks && callbacks.onFocus }
-                // onBlur={ callbacks.onBlur }
-                // onKeyDown={ onKeyDown }
-                data-group={ groupId }
+        <div  className={ s.select }
+              data-group={ groupId }
         >
-          <div  className='Sel__mark-area' 
+          <div  className={ s.markArea } 
                 style={{ display: value ? 'flex' : 'none' }} 
                 data-group={ groupId }
           >
-            <div  className='Sel__mark' 
+            <div  className={ s.mark } 
                   style={{ backgroundColor: value ? color : 'transparent' }} 
                   data-group={ groupId }
             ></div>
           </div>
-          <p  className='text3' 
+          <p  className={ c.text3 } 
               data-group={ groupId }
           >
             { value ? content : placeholder ?? `Select ${(label ?? 'item').toLowerCase()}` }
           </p>
         </div>
-        <div  className='Sel__side-area' 
+        <div  className={ s.sideArea } 
               data-group={ groupId }
         >
-          <svg  className={ isVisible ? 'Sel__icon-rotated_svg' : 'Sel__icon_svg' } 
+          <svg  className={ isVisible ? s.iconRotatedSvg : s.iconSvg } 
                 data-group={ groupId }
           >
             <use  href={ sprite + '#chevron' } 
@@ -338,14 +332,14 @@ function Sel({ id, label, value, groupId, state, callbacks, placeholder }) {
           </svg>
           
         </div>
-        <div  className='Sel__drop' 
+        <div  className={ s.drop } 
               style={{ display: isVisible ? 'block' : 'none' }} 
               data-group={ groupId }
         >
           {options}
         </div>
       </button>
-      <p className='text8'>{ configInputWrapperView().isWarningShown && state.error }</p>
+      <p className={ c.text8 }>{ configInputWrapperView().isWarningShown && state.error }</p>
     </>
   );
 }

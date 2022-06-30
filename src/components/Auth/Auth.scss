@@ -1,13 +1,13 @@
 @use '../../assets/styles/variables.scss' as v;
 @import url('../../assets/styles/normalize.scss');
 
-.Auth__main {
+.main {
   display: flex;
   height: 90.1%;
   background-color: v.$color3;
 }
 
-.Auth__img-section {
+.imgSection {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -17,14 +17,12 @@
   background-color: v.$color2;
 }
 
-.Auth__poster {
+.poster {
   width: 699px;
   height: 678px;
-  // width: 73%;
-  // height: 77%;
 }
 
-.Auth__auth-section {
+.authSection {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -33,33 +31,33 @@
   padding-top: 7.3%;
 }
 
-.Auth__main-logo {
+.mainLogo {
   width: 165px;
   height: 161px;
   margin-bottom: 10%;
 }
 
-.Auth__text {
+.text {
   text-align: center;
 }
 
-.Auth__text-marked {
+.textMarked {
   color: v.$color6;
 }
 
-.Auth__footer {
+.footer {
   height: 9.9%;
   background-color: v.$color1;
 }
 
-.Auth__footer-logo {
+.footerLogo {
   width: 59px;
   height: 58px;
   margin-left: 30px;
   margin-top: 16px;
 }
 
-.Auth__modal-area {
+.modalArea {
   position: fixed;
   display: flex;
   justify-content: center;
@@ -73,13 +71,13 @@
   z-index: 1;
   background-color: rgba($color: v.$color5, $alpha: .7);
   &_hidden {
-    @extend .Auth__modal-area;
+    @extend .modalArea;
     visibility: hidden;
     opacity: 0;
   }
 }
 
-.Auth__message {
+.message {
   position: relative;
   width: fit-content;
   max-width: 498px;
@@ -91,27 +89,27 @@
 }
 
 @media (max-width: 949px) {
-  .Auth__container {
+  .container {
     height: 100vh;
     min-height: 620px;
   }
   
-  .Auth__img-section {
+  .imgSection {
     display: none;
   }
 
-  .Auth__main-logo {
+  .mainLogo {
     width: 96px;
     height: 93px;
     margin-bottom: 72px;
   }
 
-  .Auth__auth-section {
+  .authSection {
     width: 100%;
     padding-top: 48px;
   }
 
-  .Auth__footer-logo {
+  .footerLogo {
     display: none;
   }
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 
-import '../../assets/styles/common.scss';
-import './Slider.scss';
+import c from '../../assets/styles/common.scss';
+import s from './Slider.scss';
 
 import sliderSprite from '../../assets/images/sprite.svg';
 
@@ -42,11 +42,11 @@ function Slider({ sliderConfig, functions }) {
   // Иконки слайдера.                             
   //------------------------------------------------------------//
   const sliderItems = sliderItemsData.map(item => (
-    <div className='Slider__item' key={ item.id }>
-      <svg className='Slider__svg'>
+    <div className={ s.item } key={ item.id }>
+      <svg className={ s.svg }>
         <use href={ sliderSprite + `#${ item.name }` }></use>
       </svg>
-      <p className='text10 interactiv Slider__text'>{ item.content }</p>
+      <p className={ `${c.text10} ${c.interactiv} ${s.text}` }>{ item.content }</p>
     </div>
   ));
 
@@ -55,12 +55,12 @@ function Slider({ sliderConfig, functions }) {
   //--------------------------------------------------------------------
 
   return (
-    <section  className='modal-area1' 
+    <section  className={ c.modalArea1 } 
               id='Slider__modal-area'
               style={{ visibility: sliderConfig.isVisible ? 'visible' : 'hidden' }}
               onClick={ hideSlider }
     >
-      <div className={ sliderConfig.isVisible ? 'Slider__slider_on' : 'Slider__slider_off' }>
+      <div className={ sliderConfig.isVisible ? `${s.sliderOn}` : `${s.sliderOff}` }>
         { sliderItems }
       </div>
     </section>

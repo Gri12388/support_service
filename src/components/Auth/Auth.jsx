@@ -13,8 +13,8 @@ import mainLogo from '../../assets/images/logo.svg';
 import footerLogo from '../../assets/images/logo-invert.svg';
 import poster from '../../assets/images/poster.png';
 
-import '../../assets/styles/common.scss';
-import './Auth.scss';
+import c from '../../assets/styles/common.scss';
+import s from './Auth.scss';
 
 
 
@@ -85,28 +85,28 @@ function Auth() {
   //------------------------------------------------------------
 
   return (
-    <div className='container1'>
-      <main className='Auth__main'>
-        <section className='Auth__img-section'>
-          <img src={poster} alt="poster" className='Auth__poster'/>
+    <div className={ c.container1 }>
+      <main className={ s.main }>
+        <section className={ s.imgSection }>
+          <img src={ poster } alt='poster' className={ s.poster }/>
         </section>
-        <section className='Auth__auth-section'>
-          <img src={mainLogo} alt="logotype" className='Auth__main-logo' />
+        <section className={ s.authSection }>
+          <img src={ mainLogo } alt='logotype' className={ s.mainLogo } />
           <Login signal={ signal }/>
-          <p className='text2 Auth__text'>
+          <p className={ `${c.text2} ${s.text}` }>
             Not a member?
-            <span className='text2 interactiv Auth__text-marked' onClick={ showModal }>
+            <span className={ `${c.text2} ${c.interactiv} ${s.textMarked}` } onClick={ showModal }>
               &nbsp;Request registration
             </span>
           </p>
         </section>
       </main>
-      <footer className='Auth__footer'>
-        <img src={footerLogo} alt="logotype" className='Auth__footer-logo' />
+      <footer className={ s.footer }>
+        <img src={ footerLogo } alt='logotype' className={ s.footerLogo } />
       </footer>
       {claimMode === claimsModes.modal && (
         <div 
-          className='Auth__modal-area'
+          className={ s.modalArea }
           id='Auth__modal-area' 
           onClick={ hideModal }
         >

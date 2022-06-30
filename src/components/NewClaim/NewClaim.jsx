@@ -21,8 +21,8 @@ import {
   setToken
 } from '../../data/data.js';
 
-import '../../assets/styles/common.scss';
-import './NewClaim.scss';
+import c from '../../assets/styles/common.scss';
+import s from './NewClaim.scss';
 
 
 
@@ -359,10 +359,10 @@ function NewClaim() {
 
   return(
     <>
-      <form className='container2'>
-        <div className='subcontainer'>
-          <p className='text4 NewClaim__title'>Creating new claim</p>
-          <section className='NewClaim__input'>
+      <form className={ c.container2 }>
+        <div className={ c.subcontainer }>
+          <p className={`${c.text4} ${s.title}`}>Creating new claim</p>
+          <section className={ s.input }>
             <InputText 
               id={ elements[0].id }
               label='TITLE'
@@ -377,7 +377,7 @@ function NewClaim() {
               }}
             />
           </section>
-          <section className='NewClaim__input'>
+          <section className={ s.input }>
             <Sel 
               id={ elements[1].id }
               label='TYPE'
@@ -393,7 +393,7 @@ function NewClaim() {
               }}
             />
           </section>
-          <section className='NewClaim__input'>
+          <section className={ s.input }>
             <InputText 
               id={ elements[2].id }
               label='DESCRIPTION'
@@ -408,9 +408,9 @@ function NewClaim() {
               }}
             />
           </section>
-          <section className='NewClaim__buttons'>
-            <button className='button3 NewClaim__button' onClick={ onCancel }>Cancel</button>
-            { isFormOk ? (<button className='button2 xbutton1 NewClaim__button' onClick={ onSubmit }>Create</button>) : (<button className='button-inactiv xbutton1 NewClaim__button'>Create</button>) }
+          <section className={ s.buttons }>
+            <button className={ `${c.button3} ${s.button}` } onClick={ onCancel }>Cancel</button>
+            { isFormOk ? (<button className={ `${c.button2} ${c.xbutton1} ${s.button}` } onClick={ onSubmit }>Create</button>) : (<button className={ `${c.buttonInactiv} ${c.xbutton1} ${s.button}` }>Create</button>) }
           </section>
         </div>
       </form>

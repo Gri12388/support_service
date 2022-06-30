@@ -2,24 +2,24 @@
 @use '../../assets/styles/mixins' as m;
 @import url('../../assets/styles/normalize.scss');
 
-.InputText__label {
+.label {
   display: inline-block;
   margin-bottom: 8px;
 }
 
-.InputText__input_wrapper {
+.inputWrapper {
   margin-bottom: 0px;
 }
 
-.InputText__focused {
+.focused {
   border: solid 1px v.$color1;
 }
 
-.InputText__error {
+.error {
   border: solid 1px v.$color18;
 }
 
-.InputText__input {
+.input {
   @include m.text(v.$font1, 18px, 22px, v.$color7);
   
   &::placeholder {
@@ -27,7 +27,7 @@
   }
 }
 
-.InputText__icon_svg {
+.iconSvg {
   width: 40px;
   height: 40px;
   fill: v.$color0;

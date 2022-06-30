@@ -13,13 +13,13 @@
   stroke: v.$color8;
 }
 
-.Search__input_wrapper {
+.inputWrapper {
   width: 32.07%;
   margin-right: 64px;
   margin-left: 16px;
 }
 
-.Search__input {
+.input {
   @include m.text(v.$font1, 18px, 22px, v.$color7);
   width: 87%;
   &::placeholder {
@@ -27,7 +27,7 @@
   }
 }
 
-.Search__cross_svg {
+.crossSvg {
   width: 15px;
   height: 15px;
   margin-left: 16px;
@@ -39,7 +39,7 @@
   }
 }
 
-.Search__loupe_svg {
+.loupeSvg {
   @extend %svg;
   cursor: pointer;
   stroke: v.$color16;
@@ -51,7 +51,7 @@
 
 
 @media (max-width: 799px) {
-  .Search__input_wrapper {
+  .inputWrapper {
     display: none;
   }
 }

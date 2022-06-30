@@ -12,8 +12,8 @@ import { selectCommonState, setCommonState } from '../../store/slices/commonSlic
 
 import { columnOptions, decrypt, pager, setToken, sortOptions } from '../../data/data.js';
 
-import '../../assets/styles/common.scss';
-import './Claims.scss';
+import c from '../../assets/styles/common.scss';
+import s from './Claims.scss';
 
 
 
@@ -188,7 +188,7 @@ function Claims() {
     }
 
     return (
-      <section key={ item._id } className='Claims__row'>
+      <section key={ item._id } className={ s.row }>
         <ClaimRow item={ item } type={ type } status={ status }/>  
       </section>
     );
@@ -275,19 +275,19 @@ function Claims() {
 
   return (
     <>
-      <div className='container2'>
-        <header className='Claims__header'>
-          <section className='Claims__banner'>
-            <p className={ windowWidth > 799 ? 'text4' : 'text9' }>Your claims</p>
+      <div className={ c.container2 }>
+        <header className={ s.header }>
+          <section className={ s.banner }>
+            <p className={ windowWidth > 799 ? c.text4 : c.text9 }>Your claims</p>
             <Link 
-              className='button2 Claims__button'
+              className={ `${c.button2} ${s.button}` }
               to='/base/new'
             >
               { windowWidth > 799 ? '🞣 Create claim' : '🞣' }
             </Link>
           </section>
-          <section className='Claims__radio' style={{  visibility: column ? 'visible' : 'hidden' }}>
-            <div className='Claims__radiobutton'>
+          <section className={ s.radio } style={{ visibility: column ? 'visible' : 'hidden' }}>
+            <div className={ s.radiobutton }>
               <input  type='radio' 
                       id='Calims__asc' 
                       name='Claims__sort_radio'
@@ -295,9 +295,9 @@ function Claims() {
                       onChange={ onSortRadioButton }
                       checked={ sort === sortOptions.asc }
               />
-              <label htmlFor='Calims__asc' className='text3'>ascending sort</label>
+              <label htmlFor='Calims__asc' className={ c.text3 }>ascending sort</label>
             </div>
-            <div className='Claims__radiobutton'>
+            <div className={ s.radiobutton }>
               <input  type='radio' 
                       id='Calims__desc' 
                       name='Claims__sort_radio'
@@ -305,30 +305,30 @@ function Claims() {
                       onChange={ onSortRadioButton }
                       checked={ sort === sortOptions.desc }
               />
-              <label htmlFor='Calims__desc' className='text3'>descending sort</label>
+              <label htmlFor='Calims__desc' className={ c.text3 }>descending sort</label>
             </div>
           </section>
         </header>
-        <main className='Claims__table'>
-          <section className='Claims__table-head'>
-            <p  className={ column && column === columnOptions.title ? 'text7 column1 chosen' : 'text7 column1'}
+        <main className={ s.table }>
+          <section className={ s.tableHead }>
+            <p  className={ column && column === columnOptions.title ? `${c.text7} ${c.column1} ${c.chosen}` : `${c.text7} ${c.column1}` }
                 id='Claims__title'
                 onClick={ onColumn }
             >Title</p>
-            <p  className='text7 column2'>Created</p>
-            <p  className={ column && column === columnOptions.type ? 'text7 column3 chosen' : 'text7 column3'}
+            <p  className={ `${c.text7} ${c.column2}` }>Created</p>
+            <p  className={ column && column === columnOptions.type ? `${c.text7} ${c.column1} ${c.chosen}` : `${c.text7} ${c.column3}` }
                 id='Claims__type'
                 onClick={ onColumn }
           >Type</p>
-            <p  className={ column && column === columnOptions.status ? 'text7 column4 chosen' : 'text7 column4'}
+            <p  className={ column && column === columnOptions.status ? `${c.text7} ${c.column1} ${c.chosen}` : `${c.text7} ${c.column4}` }
                 id='Claims__status'
                 onClick={ onColumn }
             >Status</p>
-            <p  className='text7 column5'>Actions</p>
+            <p  className={ `${c.text7} ${c.column5}` }>Actions</p>
           </section>
           { rows }
         </main>
-        <main className='Claims__tiles'>
+        <main className={ s.tiles }>
           { tiles }
         </main>
 

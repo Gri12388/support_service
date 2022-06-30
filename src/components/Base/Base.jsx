@@ -4,8 +4,8 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import Search from '../Search/Search.jsx';
 import Slider from '../Slider/Slider.jsx';
 
-import '../../assets/styles/common.scss';
-import './Base.scss';
+import c from '../../assets/styles/common.scss';
+import s from './Base.scss';
 
 import baseUser from '../../assets/images/user.png';
 
@@ -96,7 +96,7 @@ function Base() {
   // Иконка боковой панели.                                  
   //------------------------------------------------------------//
   const baseIcons = baseIconsData.map(item => (
-    <svg className='Base__aside_svg' key={item.id}>
+    <svg className={ s.asideSvg } key={item.id}>
       <use href={ baseSprite + `#${ item.name }` }></use>
     </svg>
   ));
@@ -106,33 +106,33 @@ function Base() {
   //--------------------------------------------------------------------
 
   return (
-    <div className='container1 Base__container'>
-      <aside className='Base__aside'>
-        <img src={ baseLogo } alt='logotype' className='Base__logo' />
+    <div className={ `${c.container1} ${s.container}` }>
+      <aside className={ s.aside }>
+        <img src={ baseLogo } alt='logotype' className={ s.logo } />
         { baseIcons }
       </aside>
-      <section className='Base__section'>
-        <div className='Base__header_wrapper'>
-          <div className='Base__burger interactiv' onClick={ burgerHandler }>
-            <div className={sliderConfig.isVisible ? 'Base__burger-line1_cross' : 'Base__burger-line1'} />
-            <div className={sliderConfig.isVisible ? 'Base__burger-line2_cross' : 'Base__burger-line2'} />
-            <div className={sliderConfig.isVisible ? 'Base__burger-line3_cross' : 'Base__burger-line3'} />
+      <section className={ s.section }>
+        <div className={ s.headerWrapper }>
+          <div className={ `${s.burger} ${c.interactiv}` } onClick={ burgerHandler }>
+            <div className={sliderConfig.isVisible ? s.burgerLine1Cross : s.burgerLine1 } />
+            <div className={sliderConfig.isVisible ? s.burgerLine2Cross : s.burgerLine2 } />
+            <div className={sliderConfig.isVisible ? s.burgerLine3Cross : s.burgerLine3 } />
           </div>
-          <header className='Base__header'>
+          <header className={ s.header }>
             { location.pathname === '/base/claims' ? <Search /> : null }
-            <svg className='Base__bell-off_svg'>
+            <svg className={ s.bellOffSvg }>
               <use href={ baseSprite + `#bellOff` }></use>
             </svg>
-            <img src={ baseUser } alt='user' className='Base__user'/>
-            <span className={sessionStorage.key(0) ? 'Base__full-name' : 'Base__full-name_unauthenticated'} >
+            <img src={ baseUser } alt='user' className={ s.user } />
+            <span className={ sessionStorage.key(0) ? s.fullName : s.fullNameUnauthenticated }>
               { sessionStorage.key(0) ? sessionStorage.getItem('fullName') : 'Not authenticated'}
             </span>
-            <svg className='Base__quit_svg' onClick={ quitSession }>
+            <svg className={ s.quitSvg } onClick={ quitSession }>
               <use href={ baseSprite + `#quit` }></use>
             </svg>
           </header>
         </div>
-        <main className='Base__main'>
+        <main className={ s.main }>
           <Outlet />
         </main>
       </section>

@@ -5,7 +5,7 @@ import { configSettings, selectMessage, selectModes, selectStatus } from '../../
 
 import { claimsModes, claimsStatuses } from '../../data/data.js';
 
-import '../../assets/styles/common.scss';
+import c from '../../assets/styles/common.scss';
 
 import loadingImage from '../../assets/images/loading.png';
 
@@ -38,17 +38,17 @@ function Modal({ afterHideModalFunctionsArray }) {
   return (
     <>
       { claimMode === claimsModes.default && claimStatus === claimsStatuses.loading && (
-        <div className='modal-area'>
-          <div className='modal-message'>
-            <img src={ loadingImage } alt='loading' className='loading' />
+        <div className={ c.modalArea }>
+          <div className={ c.modalMessage }>
+            <img src={ loadingImage } alt='loading' className={ c.loading } />
           </div>
         </div>
       )}
       { claimMode === claimsModes.default && claimStatus === claimsStatuses.error && (
-        <div className='modal-area' onClick={ hideModal }>
-          <div className='modal-message' datagroupid='Modal__message'>
-            <p className='text3' datagroupid='Modal__message'>{ claimMessage }</p>
-            <div className='button2 close-button'>╳</div>
+        <div className={ c.modalArea } onClick={ hideModal }>
+          <div className={ c.modalMessage } datagroupid='Modal__message'>
+            <p className={ c.text3 } datagroupid='Modal__message'>{ claimMessage }</p>
+            <div className={ `${c.button2} ${c.closeButton}` }>╳</div>
           </div>
         </div>
       )}

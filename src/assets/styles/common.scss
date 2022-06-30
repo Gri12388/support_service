@@ -21,7 +21,7 @@
   cursor: default;
 }
 
-.text3-link {
+.text3Link {
   @extend .text3;
   width: fit-content;
   border-bottom: solid 1px v.$color20;
@@ -76,7 +76,7 @@
   transition: v.$transition;
 }
 
-.button-inactiv {
+.buttonInactiv {
   @extend %button;
   @include m.text(v.$font2, 18px, 36px, v.$color13);
   cursor: default;
@@ -128,7 +128,7 @@
   padding: 8px 16px;
 }
 
-.close-button {
+.closeButton {
   position: absolute;
   display: flex;
   justify-content: center;
@@ -165,7 +165,7 @@
   height: fit-content;
 }
 
-.input_wrapper {
+.inputWrapper {
   display: flex;
   width: 100%;
   max-width: 585px;
@@ -180,7 +180,7 @@
   background-color: v.$color0;
 }
 
-.image_wrapper {
+.imageWrapper {
   display: flex;
   align-items: center;
 }
@@ -233,19 +233,19 @@
   background-color: rgba($color: v.$color5, $alpha: .7);
 }
 
-.modal-area {
+.modalArea {
   @extend %modal-area;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.modal-area1 {
+.modalArea1 {
   @extend %modal-area;
   transition: v.$transition1;
 }
 
-.modal-message {
+.modalMessage {
   position: relative;
   width: fit-content;
   max-width: 498px;

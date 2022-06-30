@@ -42,7 +42,15 @@ module.exports = {
       {
         test: /\.s[ac]ss$/i,
         use: [miniCssExtractPlugin.loader, 
-          'css-loader', 
+          {
+            loader: require.resolve('css-loader'),
+            options: {
+              modules: {
+                mode: 'local',
+                localIdentName: ISDEV ? '[name]__[local]' : '[hash:base64]'
+              }
+            },
+          }, 
           'resolve-url-loader', 
           {
             loader: 'sass-loader',

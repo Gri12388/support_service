@@ -19,8 +19,8 @@ import {
   sendRequestBodyfull,
 } from '../../data/data.js';
 
-import '../../assets/styles/common.scss';
-import './Login.scss';
+import c from '../../assets/styles/common.scss';
+import s from './Login.scss';
 
 
 
@@ -315,8 +315,8 @@ function Login({ signal }) {
 
   return (
     <>
-      <form className='Login__form'>
-      <div className='Login__InputText1_wrapper'>
+      <form className={ s.form }>
+      <div className={ s.inputText1Wrapper }>
         <InputText
           id={ elements[0].id }
           type='email'
@@ -333,7 +333,7 @@ function Login({ signal }) {
           }}
         />
       </div>
-      <div className='Login__InputText1_wrapper'>
+      <div className={ s.inputText1Wrapper }>
         <InputText
           id={ elements[1].id }
           type='password'
@@ -350,16 +350,16 @@ function Login({ signal }) {
           }}
         />
       </div>
-      <div className='Login__checkbox_wrapper'>
+      <div className={ s.checkboxWrapper }>
         <input  type='checkbox' 
                 id='Login__checkbox' 
                 name='Login__checkbox' 
-                className='Login__checkbox' 
+                className={ s.checkbox } 
                 onChange={ onKeepLogged }
         />
-        <label htmlFor='' className='text2'>Keep me logged in</label>
+        <label htmlFor='' className={ c.text2 }>Keep me logged in</label>
       </div>
-      { isFormOk ? (<button className='button2 xbutton1' onClick={ onSubmit }>Login</button>) : (<button className='button-inactiv xbutton1'>Login</button>) }
+      { isFormOk ? (<button className={ `${c.button2} ${c.xbutton1}` } onClick={ onSubmit }>Login</button>) : (<button className={ `${c.buttonInactiv} ${c.xbutton1}` }>Login</button>) }
 
       </form>
       <Modal afterHideModalFunctionsArray={ [setFocus] }/>

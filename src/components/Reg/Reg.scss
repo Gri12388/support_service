@@ -9,12 +9,12 @@
   background-color: v.$color3;
 }
 
-.Reg__modal {
+.modal {
   @extend %modal;
   position: relative;
 }
 
-.Reg__modal1 {
+.modal1 {
   @extend %modal;
   display: flex;
   flex-direction: column;
@@ -23,23 +23,12 @@
   gap: 16px;
 }
 
-.Reg__modal2 {
-  @extend .Reg__modal1;
+.modal2 {
+  @extend .modal1;
   position: relative;
 }
 
-.Reg__section {
+.section {
   height: 103px;
   margin-bottom: 0px;
 }
-
-// .Reg__button {
-//   position: absolute;
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-//   top: -24px;
-//   right: -24px;
-//   width: 48px;
-//   border-radius: 50%;
-// }

@@ -11,42 +11,42 @@
   background-color: v.$color1;
 }
 
-.Slider__slider {
-  &_on {
+.slider {
+  &On {
     @extend %slider;
     left: 0;
   };
-  &_off {
+  &Off {
     @extend %slider;
     left: -100%;
   }
 }
 
-.Slider__item {
+.item {
   display: flex;
   justify-content: start;
   align-items: center;
   gap: 24px;
   height: 40px;
   padding-left: 16px;
-  &:hover .Slider__svg {
+  &:hover .svg {
     stroke: v.$color8;
   };
-  &:hover .Slider__text {
+  &:hover .text {
     color: v.$color8;
   }
 }
 
-.Slider__image {
+.image {
   width: 40px;
   height: 40px;
 }
 
-.Slider__text {
+.text {
   transition: v.$transition;
 }
 
-.Slider__svg {
+.svg {
   width: 40px;
   height: 40px;
   stroke: v.$color3;
