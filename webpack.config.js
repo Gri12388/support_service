@@ -8,7 +8,7 @@ const ISDEV = process.env.NODE_ENV === 'development' ? true : false;
 module.exports = {
   entry: {
     index: {
-      import: './src/index.src.jsx',
+      import: './src/index.src.tsx',
     },
   },
   output: {
@@ -97,7 +97,7 @@ module.exports = {
     },
     historyApiFallback: true,
     server: 'http',
-    port: 3000,
+    port: 3003,
     open: {
       app: {
         name: 'chrome',
@@ -116,6 +116,7 @@ module.exports = {
     },
   },
   resolve: {
+    extensions: ['.js', '.jsx', '.ts', '.tsx'],
     alias: {
       process: "process/browser"
    },
