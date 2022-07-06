@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { NavigateFunction, useNavigate } from 'react-router-dom';
 
 import Type from '../Type/Type.jsx';
 import Status from '../Status/Status.jsx';
@@ -9,26 +9,27 @@ import { roles } from '../../data/data.js';
 import c from '../../assets/styles/common.scss';
 import s from './ClaimTile.scss';
 
+import type { Iclaim, Iobj } from '../../commonTypes';
 
 
 //------------------------------------------------------------//
 // Компонент отвечает за отображение в мобильном режими плитки  
 // на странице, расположенной по адресу: '/base/claims'.             
 //------------------------------------------------------------//
-function ClaimTile({ item, type, status }) {
+function ClaimTile({ item, type, status } : { item : Iclaim, type : Iobj, status : Iobj }) {
 
   //------------------------------------------------------------//
   // Подготовка инструментов для взаимодействия с другими
   // страницами, файлами, компонентами и т.д.                                   
   //------------------------------------------------------------//
-  const navigate = useNavigate();
+  const navigate : NavigateFunction = useNavigate();
 
 
 
   //------------------------------------------------------------//
   // Извлечение из sessionStorage статуса пользователя.                                  
   //------------------------------------------------------------// 
-  const role = useMemo(() => sessionStorage.getItem('role'), []);
+  const role : string | null = useMemo(() => sessionStorage.getItem('role'), []);
 
   
 
@@ -38,7 +39,7 @@ function ClaimTile({ item, type, status }) {
   // передает в location.state данные элемента таблицы, которому
   // соответствует ссылка 'Browse'.                        
   //------------------------------------------------------------//
-  const onBrowse = () => {
+  const onBrowse = () : void => {
     navigate('/base/claim', {
       state: {
         id: item._id, 

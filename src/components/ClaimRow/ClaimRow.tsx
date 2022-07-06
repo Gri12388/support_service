@@ -8,7 +8,7 @@ import { roles } from '../../data/data.js';
 
 import c from '../../assets/styles/common.scss';
 
-import { Iclaim, Iobj } from '../../commonTypes';
+import type { Iclaim, Iobj } from '../../commonTypes';
 
 
 
