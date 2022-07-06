@@ -144,13 +144,11 @@ export interface IinputTextCallbacks {
   onPressedEnter: (e: React.KeyboardEvent<Element>) => void;
 }
 
-export enum EresponseTypes {
-  Token,
-  Status,
-  Type,
-}
-
 export interface IconfigInputWrapperViewReturn {
   isWarningShown: boolean;
   className: string;
+}
+
+export interface Itoken {
+  token: string;
 }

@@ -14,6 +14,16 @@ const key: string = crypto.randomBytes(16).toString('hex');
 const algorithm: string = 'aes256';
 
 
+//------------------------------------------------------------//
+// Enum, содержащий тип проверки ответа с сервера.                           
+//------------------------------------------------------------//
+export enum EresponseTypes {
+  Token,
+  Status,
+  Type,
+}
+
+
 
 //------------------------------------------------------------//
 // Возможные хосты.                           
@@ -379,12 +389,25 @@ export const statusColors: string[] = [
 
 
 
+  export function checkLoginResponse(resultUnchecked: any){
+    if (
+      !resultUnchecked ||
+      typeof resultUnchecked !== 'object' || 
+      !resultUnchecked.token ||
+      !resultUnchecked.role ||
+      typeof resultUnchecked.role !== 'object' ||
+      !resultUnchecked.role.name
+    ) return false;
+    return true;
+  }
+
+
   //------------------------------------------------------------//
   // Функция проверяет полученный ответ на наличие необходимых
   // составляющих, набор которых зависит от представленного
   // критерия проверки.
   //------------------------------------------------------------// 
-  function checkResponse(resultUnchecked: any, criteria : T.EresponseTypes) : boolean {
+  export function checkResponse(resultUnchecked: any, criteria : EresponseTypes) : boolean {
     function checkStatusOrType() : boolean {
       if (
         !resultUnchecked ||
@@ -404,9 +427,9 @@ export const statusColors: string[] = [
     }
     
     switch (criteria) {
-      case T.EresponseTypes.Status: return checkStatusOrType();
-      case T.EresponseTypes.Type: return checkStatusOrType();
-      case T.EresponseTypes.Token: return checkToken();
+      case EresponseTypes.Status: return checkStatusOrType();
+      case EresponseTypes.Type: return checkStatusOrType();
+      case EresponseTypes.Token: return checkToken();
       default: return false;
     }
   }
@@ -450,7 +473,7 @@ export const statusColors: string[] = [
       default:  throw new Error(messages.default);
     }
 
-    if (!checkResponse(resultUnchecked, T.EresponseTypes.Type)) throw new Error(messages.wrongData);
+    if (!checkResponse(resultUnchecked, EresponseTypes.Type)) throw new Error(messages.wrongData);
 
     const result : T.IresponseItem[] = normilizeResponse(resultUnchecked);
     
@@ -475,7 +498,7 @@ export const statusColors: string[] = [
       default:  throw new Error(messages.default);
     }
 
-    if (!checkResponse(resultUnchecked, T.EresponseTypes.Status)) throw new Error(messages.wrongData);
+    if (!checkResponse(resultUnchecked, EresponseTypes.Status)) throw new Error(messages.wrongData);
 
     const result : T.IresponseItem[] = normilizeResponse(resultUnchecked);
         
@@ -500,15 +523,15 @@ export const statusColors: string[] = [
     let resultUnchecked : any;
 
     switch (res.status) {
-      case 200: resultUnchecked = await res.json() as t.Itoken; break;
+      case 200: resultUnchecked = await res.json() as T.Itoken; break;
       case 401: throw new Error(messages.noAuth);
       case 404: throw new Error(messages.noFound);
       default:  throw new Error(messages.default); 
     }
 
-    if (!checkResponse(resultUnchecked, T.EresponseTypes.Token)) throw new Error(messages.wrongData);
+    if (!checkResponse(resultUnchecked, EresponseTypes.Token)) throw new Error(messages.wrongData);
 
-    const result : t.Itoken = {} as t.Itoken;
+    const result : T.Itoken = {} as T.Itoken;
     result.token = resultUnchecked.token.toString();
 
     const encryptedToken : string = encrypt(result.token);
