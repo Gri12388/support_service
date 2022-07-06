@@ -152,3 +152,18 @@ export interface IconfigInputWrapperViewReturn {
 export interface Itoken {
   token: string;
 }
+
+export interface ISliderConfig {
+  isVisible: boolean;
+}
+
+export interface IBaseIconsData {
+  id: number;
+  name: string;
+}
+
+export interface IsliderItemsData {
+  id: number;
+  name: string;
+  content: string;
+}

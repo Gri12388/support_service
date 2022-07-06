@@ -12,7 +12,8 @@ import baseUser from '../../assets/images/user.png';
 import baseLogo from '../../assets/images/logo-invert.svg';
 import baseSprite from '../../assets/images/sprite.svg';
 
-import type * as t from './baseTypes';
+import type { IBaseIconsData, ISliderConfig } from '../../commonTypes';
+
 
 
 //------------------------------------------------------------//
@@ -46,7 +47,7 @@ function Base() {
   // Создание локального состояния sliderConfig, регулирующего
   // отображение компонента Slider.                                  
   //------------------------------------------------------------//
-  const [sliderConfig, setSliderConfig] : [sliderConfig : t.ISliderConfig, setSliderConfig : React.Dispatch<React.SetStateAction<t.ISliderConfig>>] = useState({ isVisible: false } as t.ISliderConfig);
+  const [sliderConfig, setSliderConfig] : [sliderConfig : ISliderConfig, setSliderConfig : React.Dispatch<React.SetStateAction<ISliderConfig>>] = useState({ isVisible: false } as ISliderConfig);
 
 
 
@@ -54,7 +55,7 @@ function Base() {
   // Массив объектов, состоящих из id и названия. Используется
   // при создании набора иконок, отображаемых на боковой панели.                                  
   //------------------------------------------------------------//
-  const baseIconsData: t.IBaseIconsData[] = [
+  const baseIconsData: IBaseIconsData[] = [
     { id: 0, name: 'home' },
     { id: 1, name: 'globe' },
     { id: 2, name: 'archive' },
