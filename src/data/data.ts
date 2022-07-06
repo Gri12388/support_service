@@ -137,6 +137,8 @@ export const messages: t.Imessages = {
   noClaimId: 'Claim has not id',
   noData: 'Data is not recieved',
   noFound: 'Page is not found',
+  noFoundStatus: 'Status is not found',
+  noFoundType: 'Type is not found',
   noRole: 'Role is not defined',
   noToken: 'Token is not recieved',
   noUserId: 'Claim has not user\'s id',

@@ -100,6 +100,8 @@ export interface Imessages {
   noClaimId: string;
   noData: string;
   noFound: string;
+  noFoundStatus: string,
+  noFoundType: string;
   noRole: string;
   noToken: string;
   noUserId: string;
