@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { NavigateFunction, useNavigate } from 'react-router-dom';
 
 import Status from '../Status/Status.jsx';
 import Type from '../Type/Type.jsx';
@@ -7,7 +7,8 @@ import Type from '../Type/Type.jsx';
 import { roles } from '../../data/data.js';
 
 import c from '../../assets/styles/common.scss';
-import s from './ClaimRow.scss';
+
+import { Iclaim, Iobj } from '../../commonTypes';
 
 
 
@@ -15,19 +16,19 @@ import s from './ClaimRow.scss';
 // Компонент отвечает за отображение строки в таблице на 
 // странице, расположенной по адресу: '/base/claims'.             
 //------------------------------------------------------------//
-function ClaimRow({ item, type, status }) {
+function ClaimRow({ item, type, status } : { item : Iclaim, type : Iobj, status : Iobj }) {
   
   //------------------------------------------------------------//
   // Подготовка инструментов для взаимодействия с другими
   // страницами, файлами, компонентами и т.д.                                   
   //------------------------------------------------------------//
-  const navigate = useNavigate();
+  const navigate : NavigateFunction = useNavigate();
   
   
   //------------------------------------------------------------//
   // Извлечение из sessionStorage статуса пользователя.                                  
   //------------------------------------------------------------// 
-  const role = useMemo(() => sessionStorage.getItem('role'), []);
+  const role : string | null = useMemo(() => sessionStorage.getItem('role'), []);
 
 
   
@@ -37,7 +38,7 @@ function ClaimRow({ item, type, status }) {
   // передает в location.state данные элемента таблицы, которому
   // соответствует ссылка 'Browse'.                        
   //------------------------------------------------------------//
-  function onBrowse () {
+  function onBrowse () : void {
     navigate('/base/claim', {
       state: {
         id: item._id, 

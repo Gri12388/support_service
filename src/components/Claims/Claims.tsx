@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState  } from 'react';
 import { Link, Location, NavigateFunction, useLocation, useNavigate } from 'react-router-dom';
-// import { useDispatch, useSelector } from 'react-redux';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 
 import ClaimRow from '../ClaimRow/ClaimRow.jsx';
