@@ -15,7 +15,7 @@ import { columnOptions, decrypt, messages, pager, setToken, sortOptions } from '
 import c from '../../assets/styles/common.scss';
 import s from './Claims.scss';
 
-import * as T from '../../commonTypes';
+import type * as T from '../../commonTypes';
 
 
 

@@ -137,8 +137,20 @@ export interface IrequestResult {
   claims: Iclaim[];
 }
 
+export interface IinputTextCallbacks {
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onFocus: () => void; 
+  onBlur: () => void;
+  onPressedEnter: (e: React.KeyboardEvent<Element>) => void;
+}
+
 export enum EresponseTypes {
   Token,
   Status,
   Type,
+}
+
+export interface IconfigInputWrapperViewReturn {
+  isWarningShown: boolean;
+  className: string;
 }
