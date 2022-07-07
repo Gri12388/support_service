@@ -27,7 +27,7 @@ function Modal({ afterHideModalFunctionsArray } : { afterHideModalFunctionsArray
   //------------------------------------------------------------//
   function hideModal(e : React.MouseEvent) : void {
     const target : { dataset? : { groupid? : string }} = e.target as { dataset? : { groupid? : string }};
-    if (!target.dataset || !target.dataset.groupid || target.dataset.groupid !== 'Common__message' &&  claimStatus !== claimsStatuses.loading) {
+    if (!target.dataset || !target.dataset.groupid || (target.dataset.groupid !== 'Modal__message' &&  claimStatus !== claimsStatuses.loading)) {
       dispatch(configSettings({ status: claimsStatuses.ok, message: '' }));
       if (afterHideModalFunctionsArray && Array.isArray(afterHideModalFunctionsArray) && afterHideModalFunctionsArray.length > 0) afterHideModalFunctionsArray.forEach(item => item());
     }
