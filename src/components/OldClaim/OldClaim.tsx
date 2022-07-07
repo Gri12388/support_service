@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-// import { useDispatch } from 'react-redux';
+//import { useDispatch } from 'react-redux';
 import { Location, NavigateFunction, useLocation, useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../hooks';
 
@@ -9,9 +9,8 @@ import Sel from '../Sel/Sel.jsx';
 
 import { configSettings } from '../../store/slices/claimsSlice.js';
 import { 
-  claims,
   claimsStatuses,
-  errors,
+  errors, 
   messages, 
   methods, 
   onPressedEnter,
@@ -23,18 +22,22 @@ import {
 } from '../../data/data.js';
 
 import c from '../../assets/styles/common.scss';
-import s from './NewClaim.scss';
+import s from './OldClaim.scss';
 
-import type { IelementsObj, IinputElement, IobjObj } from '../../commonTypes';
-
+import type { 
+  IelementsObj, 
+  IinputElement, 
+  IlocationState, 
+  Iobj, 
+} from '../../commonTypes';
 
 //------------------------------------------------------------//
 // Компонент отвечает за отображение и функционирование
 // уникальной части страницы, расположенной по адресу:
-// '/base/new'.                             
+// '/base/claim'.                             
 //------------------------------------------------------------//
-function NewClaim() : JSX.Element {
-
+function OldClaim() : JSX.Element {
+  
   //------------------------------------------------------------//
   // Подготовка инструментов для взаимодействия с другими
   // страницами, файлами, компонентами и т.д.                                   
@@ -76,12 +79,27 @@ function NewClaim() : JSX.Element {
     else return null;
   }, [token, keepLogged]);
 
-  const types : IobjObj = useMemo(() => {
+  const types : Iobj[] = useMemo(() => {
     return JSON.parse(sessionStorage.getItem('types')!); 
   }, [token]);
-  const statuses : IobjObj = useMemo(() => {
+
+  const statuses : Iobj[] = useMemo(() => {
     return JSON.parse(sessionStorage.getItem('statuses')!);
   }, [token]);
+
+  const locationState : IlocationState = location.state! as IlocationState;
+
+
+
+  //------------------------------------------------------------//
+  // Устанавливаем ID типа, полученного в location.state. 
+  // Нужен для установки изначального локального состояния type.                                   
+  //------------------------------------------------------------// 
+  const typeID = useMemo(() => {
+    let temp : number = 0;
+    if(locationState.typeSlug) temp = types.find((item : Iobj) => item.slug! === locationState.typeSlug)!.id;
+    return temp ? temp.toString() : '';
+  }, []);
 
 
 
@@ -91,36 +109,49 @@ function NewClaim() : JSX.Element {
   // функции element.focus() для реализации перемещения фокуса  
   // при нажатии клавиши Enter.                                  
   //------------------------------------------------------------//
-  const [titleElement, setTitleElement] : [titleElement : HTMLElement | null, setTitleElement : React.Dispatch<React.SetStateAction<HTMLElement | null>>] = useState(null as HTMLElement | null);
-  const [typeElement, setTypeElement] : [typeElement : HTMLElement | null, setTypeElement : React.Dispatch<React.SetStateAction<HTMLElement | null>>] = useState(null as HTMLElement | null);
-  const [descriptionElement, setDescriptionElement] : [descriptionElement : HTMLElement | null, setDescriptionElement : React.Dispatch<React.SetStateAction<HTMLElement | null>>] = useState(null as HTMLElement | null);
+  let [titleElement, setTitleElement] : [titleElement : HTMLElement | null, setTitleElement : React.Dispatch<React.SetStateAction<HTMLElement | null>>] = useState(null as HTMLElement | null);
+  let [typeElement, setTypeElement] : [typeElement : HTMLElement | null, setTypeElement : React.Dispatch<React.SetStateAction<HTMLElement | null>>] = useState(null as HTMLElement | null);
+  let [descriptionElement, setDescriptionElement] : [descriptionElement : HTMLElement | null, setDescriptionElement : React.Dispatch<React.SetStateAction<HTMLElement | null>>] = useState(null as HTMLElement | null);
 
 
 
   //------------------------------------------------------------//
-  // Создание локальных состояний input элементов.                               
+  // Создание локальных состояний input элементов.                                
   //------------------------------------------------------------//
   const [title, setTitle] : [title : IinputElement, setTitle : React.Dispatch<React.SetStateAction<IinputElement>>] = useState({
-    content: '', 
+    content: locationState.title, 
     error: '',
     focused: true,
     status: false, 
     touched: false, 
   } as IinputElement);
   const [description, setDescription] : [description : IinputElement, setDescription : React.Dispatch<React.SetStateAction<IinputElement>>] = useState({
-    content: '', 
+    content: locationState.description, 
     error: '',
     focused: false,
     status: false, 
     touched: false, 
   } as IinputElement);
   const [type, setType] : [type : IinputElement, setType : React.Dispatch<React.SetStateAction<IinputElement>>] = useState({
-    content: '', 
+    content: typeID, 
     error: '',
     focused: false,
     status: false, 
     touched: false, 
   } as IinputElement);
+
+
+
+  //------------------------------------------------------------//
+  // Массивоподобный объект, хранящий данные для реализации 
+  // смены фокуса при нажатии на кнопку Enter, а именно: id
+  // элемента, сам элемент и его Tab позиция в форме.                                  
+  //------------------------------------------------------------//
+  const elements : IelementsObj = {
+    0: { id: 'fromOldClaim__title', state: titleElement, pos: 0 }, 
+    1: { id: 'fromOldClaim__type', state: typeElement, pos: 1 },
+    2: { id: 'fromOldClaim__description', state: descriptionElement, pos: 2 },
+  } 
 
 
 
@@ -152,19 +183,6 @@ function NewClaim() : JSX.Element {
 
 
   //------------------------------------------------------------//
-  // Массивоподобный объект, хранящий данные для реализации 
-  // смены фокуса при нажатии на кнопку Enter, а именно: id
-  // элемента, сам элемент и его Tab позиция в форме.                                  
-  //------------------------------------------------------------//
-  const elements : IelementsObj = {
-    0: { id: 'fromNewClaim__title', state: titleElement, pos: 0 }, 
-    1: { id: 'fromNewClaim__type', state: typeElement, pos: 1 },
-    2: { id: 'fromNewClaim__description', state: descriptionElement, pos: 2 },
-  } 
-
-
-
-  //------------------------------------------------------------//
   // Группа функций-обработчиков события onChange соотвествующих
   // input элементов.                              
   //------------------------------------------------------------//
@@ -186,21 +204,21 @@ function NewClaim() : JSX.Element {
   //------------------------------------------------------------//
   function setAllStatesDefault() : void {
     setTitle({
-      content: '', 
+      content: locationState.title,  
       error: '',
       focused: true,
       status: false, 
       touched: false, 
     });
     setDescription({
-      content: '', 
+      content: locationState.description,
       error: '',
       focused: false,
       status: false, 
       touched: false, 
     });
     setType({
-      content: '', 
+      content: typeID, 
       error: '',
       focused: false,
       status: false, 
@@ -213,13 +231,13 @@ function NewClaim() : JSX.Element {
   //------------------------------------------------------------//
   // Функция, формирующая содержание body-компонента AJAX 
   // запроса.                              
-  //------------------------------------------------------------//   
-  function createBody() : string {
+  //------------------------------------------------------------//  
+  function createBody(act : string) : string {
     return JSON.stringify({
       title: title.content,
       description: description.content,
-      type: types[type.content].slug,
-      status: Object.values(statuses).find(item => item.status === claims.new)!.slug,
+      type: types[+type.content].slug,
+      status: Object.values(statuses).find(item => item.status === act)!.slug,
     });
   }
 
@@ -229,14 +247,13 @@ function NewClaim() : JSX.Element {
   // Функция-организатор: собирает и/или проверяет необходимые
   // компоненты для AJAX-запроса и отправляет его.                             
   //------------------------------------------------------------// 
-  async function onSubmit(e : React.FormEvent) : Promise<void> {
-    e.preventDefault(); 
-
+  async function submit(act : string) : Promise<void> {
+    
     if (!token && !keepLogged) {
       navigate('/');
       return;
     }
-
+    
     dispatch(configSettings({ status: claimsStatuses.loading }));
 
     try {
@@ -245,18 +262,17 @@ function NewClaim() : JSX.Element {
         if (!password) throw new Error(messages.nullPassword);
         token = (await reconnect(email, password)).newToken;
       }
+      
+      const publicPath : string = publicPaths.claim + `/${locationState.id}`;
+      const method : string = methods.put;
+      const bodyJSON : string = createBody(act);
   
-      const publicPath : string = publicPaths.claim;
-      const method : string = methods.post;;
-      const bodyJSON : string = createBody();
-  
-      setAllStatesDefault()
-  
-      const res : Response = await sendRequestBodyfull(publicPath, method, bodyJSON, token);
-  
+      setAllStatesDefault();
+
+      const res = await sendRequestBodyfull(publicPath, method, bodyJSON, token);
+
       switch (res.status) {
         case 200: dispatch(configSettings({ status: 'ok' }));
-                  sessionStorage.setItem('offset', 'last');
                   navigate('/base/claims');
                   break;
         case 401: throw new Error(messages.noAuth);
@@ -266,7 +282,7 @@ function NewClaim() : JSX.Element {
     }
     catch(err : any) {
       dispatch(configSettings({ status: claimsStatuses.error, message: err.message }));
-    }  
+    }
   }
 
 
@@ -289,19 +305,29 @@ function NewClaim() : JSX.Element {
   // состояние.                         
   //------------------------------------------------------------// 
   function onBlur(setter: React.Dispatch<React.SetStateAction<IinputElement>>, checker: () => void) : void {
-    setter((state: IinputElement) : IinputElement => ({ ...state, touched: true, focused: false }));
+    setter((state: IinputElement) => ({ ...state, touched: true, focused: false }));
     checker();
   }
 
 
 
   //------------------------------------------------------------//
-  // Обработчик кнопки Cancel.                             
+  // Обработчики кнопок 'Cancel', 'Done' и 'Decline'.                             
   //------------------------------------------------------------// 
   function onCancel(e : React.MouseEvent) : void {
     e.preventDefault();
     navigate('/base/claims');
   };
+
+  function onDone(e : React.MouseEvent) : void {
+    e.preventDefault();
+    submit('Done');
+  }
+
+  function onDecline(e : React.MouseEvent) : void {
+    e.preventDefault();
+    submit('Declined');
+  }
 
 
 
@@ -331,10 +357,10 @@ function NewClaim() : JSX.Element {
     }
     setTitle((state: IinputElement) => ({ ...state, status: true, error: '' }));
   }
-  function checkDescription() {
+  function checkDescription() : void {
     setDescription((state: IinputElement) => ({...state, status: true, error: ''}));
   }
-  function checkType () {
+  function checkType () : void {
     setType((state: IinputElement) => ({ ...state, status: true, error: '' }));
   }
 
@@ -345,11 +371,11 @@ function NewClaim() : JSX.Element {
   // DOM дерева и сохраняющий их в своответствующем локальном 
   // состоянии.                                 
   //------------------------------------------------------------//  
-    useEffect(() => {
-      setTitleElement(document.getElementById(elements[0].id));
-      setTypeElement(document.getElementById(elements[1].id));
-      setDescriptionElement(document.getElementById(elements[2].id));
-    }, []);
+  useEffect(() => {
+    setTitleElement(document.getElementById(elements[0].id));
+    setTypeElement(document.getElementById(elements[1].id));
+    setDescriptionElement(document.getElementById(elements[2].id));
+  }, []);
 
 
 
@@ -359,7 +385,7 @@ function NewClaim() : JSX.Element {
     <>
       <form className={ c.container2 }>
         <div className={ c.subcontainer }>
-          <p className={`${c.text4} ${s.title}`}>Creating new claim</p>
+          <p className={ `${c.text4} ${s.title}` }>Incoming claim</p>
           <section className={ s.input }>
             <InputText 
               id={ elements[0].id }
@@ -379,7 +405,7 @@ function NewClaim() : JSX.Element {
             <Sel 
               id={ elements[1].id }
               label='TYPE'
-              groupId={ 'fromNewClaim__sel1' }
+              groupId={ 'fromOldClaim__sel1' }
               placeholder='Select type'
               value={ type.content }
               state={ type }
@@ -408,7 +434,8 @@ function NewClaim() : JSX.Element {
           </section>
           <section className={ s.buttons }>
             <button className={ `${c.button3} ${s.button}` } onClick={ onCancel }>Cancel</button>
-            { isFormOk ? (<button className={ `${c.button2} ${c.xbutton1} ${s.button}` } onClick={ onSubmit }>Create</button>) : (<button className={ `${c.buttonInactiv} ${c.xbutton1} ${s.button}` }>Create</button>) }
+            { isFormOk ? (<button className={ `${c.button2} ${c.xbutton1} ${s.button}` } onClick={ onDone }>Done</button>) : (<button className={ `${c.buttonInactiv} ${c.xbutton1} ${s.button}` }>Done</button>) }
+            { isFormOk ? (<button className={ `${c.button1} ${c.xbutton1} ${s.button}` } onClick={ onDecline }>Decline</button>) : (<button className={ `${c.buttonInactiv} ${c.xbutton1} ${s.button}` }>Decline</button>) }
           </section>
         </div>
       </form>
@@ -417,5 +444,4 @@ function NewClaim() : JSX.Element {
   ); 
 }
 
-export default NewClaim;
-
+export default OldClaim;

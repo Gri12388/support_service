@@ -167,3 +167,10 @@ export interface IsliderItemsData {
   name: string;
   content: string;
 }
+
+export interface IlocationState {
+  id: string;
+  title : string;
+  typeSlug : string;
+  description: string;
+}
