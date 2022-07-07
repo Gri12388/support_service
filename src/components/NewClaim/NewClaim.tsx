@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
-// import { useDispatch } from 'react-redux';
 import { Location, NavigateFunction, useLocation, useNavigate } from 'react-router-dom';
+
 import { useAppDispatch } from '../../hooks';
 
 import InputText from '../InputText/InputText';
@@ -26,6 +26,7 @@ import c from '../../assets/styles/common.scss';
 import s from './NewClaim.scss';
 
 import type { IelementsObj, IinputElement, IobjObj } from '../../commonTypes';
+
 
 
 //------------------------------------------------------------//

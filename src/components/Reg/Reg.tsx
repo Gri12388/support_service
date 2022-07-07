@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-//import { useDispatch, useSelector } from 'react-redux';
+
 import { useAppDispatch, useAppSelector } from '../../hooks';
 
 import InputText from '../InputText/InputText';
@@ -23,6 +23,8 @@ import s from './Reg.scss';
 import loadingImage from '../../assets/images/loading.png';
 
 import type { IelementsObj, IinputElement } from '../../commonTypes';
+
+
 
 //------------------------------------------------------------//
 // Компонент отвечает за отображение и функционирование

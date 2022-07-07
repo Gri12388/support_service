@@ -1,5 +1,5 @@
 import React from 'react';
-//import { useSelector, useDispatch } from 'react-redux';
+
 import { useAppDispatch, useAppSelector } from '../../hooks';
 
 import { configSettings, selectMessage, selectModes, selectStatus } from '../../store/slices/claimsSlice';
@@ -10,7 +10,9 @@ import c from '../../assets/styles/common.scss';
 
 import loadingImage from '../../assets/images/loading.png';
 
-function Modal({ afterHideModalFunctionsArray } : { afterHideModalFunctionsArray : Array<()=>any> | null }) {
+
+
+function Modal({ afterHideModalFunctionsArray } : { afterHideModalFunctionsArray : Array<()=>any> | null }) : JSX.Element {
   //------------------------------------------------------------//
   // Подготовка инструментов для взаимодействия с claimsSlice                                 
   //------------------------------------------------------------//

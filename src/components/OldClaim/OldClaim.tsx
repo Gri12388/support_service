@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
-//import { useDispatch } from 'react-redux';
 import { Location, NavigateFunction, useLocation, useNavigate } from 'react-router-dom';
+
 import { useAppDispatch } from '../../hooks';
 
 import InputText from '../InputText/InputText';
@@ -30,6 +30,8 @@ import type {
   IlocationState, 
   Iobj, 
 } from '../../commonTypes';
+
+
 
 //------------------------------------------------------------//
 // Компонент отвечает за отображение и функционирование

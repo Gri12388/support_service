@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
-//import { useDispatch, useSelector } from 'react-redux';
 import { NavigateFunction, useNavigate } from 'react-router-dom';
+
 import { useAppDispatch, useAppSelector } from '../../hooks';
 
 import { fetchClaims } from '../../store/slices/claimsSlice';
@@ -20,7 +20,7 @@ import sprite from '../../assets/images/sprite.svg';
 // поисковика на странице, расположенной по адресу: 
 // '/base/claims'                              
 //------------------------------------------------------------//
-function Search() {
+function Search() : JSX.Element {
 
   //------------------------------------------------------------//
   // Подготовка нужных инструментов для взаимодействия с другими

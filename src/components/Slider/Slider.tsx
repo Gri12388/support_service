@@ -7,11 +7,13 @@ import sliderSprite from '../../assets/images/sprite.svg';
 
 import type { ISliderConfig, IsliderItemsData } from '../../commonTypes';
 
+
+
 //------------------------------------------------------------//
 // Компонент отвечает за отображение и функционирование
 // слайдера.                            
 //------------------------------------------------------------//
-function Slider({ sliderConfig, functions } : { sliderConfig : ISliderConfig, functions : { setSliderConfig: React.Dispatch<React.SetStateAction<ISliderConfig>> } }) {
+function Slider({ sliderConfig, functions } : { sliderConfig : ISliderConfig, functions : { setSliderConfig: React.Dispatch<React.SetStateAction<ISliderConfig>> }}) : JSX.Element {
 
   //------------------------------------------------------------//
   // Массив объектов, необходимый для воздания группы иконок

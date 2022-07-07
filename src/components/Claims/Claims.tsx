@@ -7,15 +7,15 @@ import ClaimTile from '../ClaimTile/ClaimTile';
 import Modal from '../Modal/Modal';
 import Pager from '../Pager/Pager';
 
-import { configSettings, fetchClaims, selectClaims } from '../../store/slices/claimsSlice';
+import { fetchClaims, selectClaims } from '../../store/slices/claimsSlice';
 import { selectCommonState, setCommonState } from '../../store/slices/commonSlice';
 
-import { columnOptions, decrypt, messages, pager, setToken, sortOptions } from '../../data/data';
+import { columnOptions, messages, pager, setToken, sortOptions } from '../../data/data';
 
 import c from '../../assets/styles/common.scss';
 import s from './Claims.scss';
 
-import type * as T from '../../commonTypes';
+import type { Iclaim, Iobj } from '../../commonTypes';
 
 
 
@@ -24,7 +24,7 @@ import type * as T from '../../commonTypes';
 // уникальной части страницы, расположенной по адресу:
 // '/base/claims'.                             
 //------------------------------------------------------------//
-function Claims() {
+function Claims() : JSX.Element {
 
   //------------------------------------------------------------//
   // Подготовка нужных инструментов для взаимодействия с другими
@@ -58,11 +58,11 @@ function Claims() {
     return +sessionStorage.getItem('offset')!;
   }, []);
 
-  const types : T.Iobj[] = useMemo(() : T.Iobj[] => {
+  const types : Iobj[] = useMemo(() : Iobj[] => {
     return Object.values(JSON.parse(sessionStorage.getItem('types')!));
   }, [token]);
   
-  const statuses : T.Iobj[] = useMemo(() : T.Iobj[] => {
+  const statuses : Iobj[] = useMemo(() : Iobj[] => {
     return Object.values(JSON.parse(sessionStorage.getItem('statuses')!));
   }, [token]);
 
@@ -72,7 +72,7 @@ function Claims() {
   // Продолжаем подготовка инструментов для взаимодействия с 
   // другими страницами, файлами, компонентами и т.д.                                   
   //------------------------------------------------------------//
-  const claims : T.Iclaim[] = useAppSelector(selectClaims);
+  const claims : Iclaim[] = useAppSelector(selectClaims);
   const { search, sort, column } : { search: string, sort: string, column: string } = useAppSelector(selectCommonState);
   
 
@@ -166,12 +166,12 @@ function Claims() {
   //------------------------------------------------------------//
   let rows : JSX.Element[] = [];
   try {
-    rows = claims.map((item : T.Iclaim) => {
-      let type : T.Iobj | undefined, status : T.Iobj | undefined;
+    rows = claims.map((item : Iclaim) => {
+      let type : Iobj | undefined, status : Iobj | undefined;
   
       if (!item.type || !item.type.name) type = types[types.length - 1];
       else {
-        type = types.find((elem : T.Iobj) => {
+        type = types.find((elem : Iobj) => {
           const el : string = elem.type!.toLowerCase();
           const it : string = item.type!.name.toLowerCase();
           const res : number = el.localeCompare(it);
@@ -215,12 +215,12 @@ function Claims() {
   //------------------------------------------------------------//
   let tiles : JSX.Element[] = [];
   try {
-    tiles = claims.map((item : T.Iclaim) => {
-      let type : T.Iobj | undefined, status : T.Iobj | undefined;
+    tiles = claims.map((item : Iclaim) => {
+      let type : Iobj | undefined, status : Iobj | undefined;
   
       if (!item.type || !item.type.name) type = types[types.length - 1];
       else {
-        type = types.find((elem : T.Iobj) => {
+        type = types.find((elem : Iobj) => {
           const el : string = elem.type!.toLowerCase();
           const it : string = item.type!.name.toLowerCase();
           const res : number = el.localeCompare(it);
@@ -232,7 +232,7 @@ function Claims() {
   
       if (!item.status || !item.status.name) status = statuses[statuses.length - 1];
       else {
-        status = statuses.find((elem : T.Iobj) => {
+        status = statuses.find((elem : Iobj) => {
           const el : string = elem.status!.toLowerCase();
           const it : string = item.status!.name.toLowerCase();
           const res : number = el.localeCompare(it);

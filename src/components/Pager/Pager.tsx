@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
-//import { useDispatch, useSelector  } from 'react-redux';
 import { NavigateFunction, useNavigate } from 'react-router-dom';
+
 import { useAppDispatch, useAppSelector } from '../../hooks';
 
 import { pager, setToken } from '../../data/data';
@@ -13,12 +13,13 @@ import s from './Pager.scss';
 import type { IpagerSliceState } from '../../commonTypes';
 
 
+
 //------------------------------------------------------------//
 // Компонент отвечает за отображение и функционирование
 // указателя страниц на странице, расположенной по адресу:
 // '/base/claims'.                         
 //------------------------------------------------------------//
-function Pager() {
+function Pager() : JSX.Element {
 
   //------------------------------------------------------------//
   // Подготовка нужных инструментов для взаимодействия с другими

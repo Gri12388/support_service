@@ -12,11 +12,12 @@ import s from './ClaimTile.scss';
 import type { Iclaim, Iobj } from '../../commonTypes';
 
 
+
 //------------------------------------------------------------//
 // Компонент отвечает за отображение в мобильном режими плитки  
 // на странице, расположенной по адресу: '/base/claims'.             
 //------------------------------------------------------------//
-function ClaimTile({ item, type, status } : { item : Iclaim, type : Iobj, status : Iobj }) {
+function ClaimTile({ item, type, status } : { item : Iclaim, type : Iobj, status : Iobj }) : JSX.Element {
 
   //------------------------------------------------------------//
   // Подготовка инструментов для взаимодействия с другими

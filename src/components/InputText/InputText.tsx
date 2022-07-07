@@ -12,11 +12,12 @@ import type {
 } from '../../commonTypes';
 
 
+
 //------------------------------------------------------------//
 // Компонент отвечает за отображение и функционирование
 // группы элементов, обслуживающих элемент 'Input'.                          
 //------------------------------------------------------------//
-function InputText({ id, img, type, label, value, state, callbacks, placeholder } : { id : string, img? : string, type? : string, label : string, value? : string, state : IinputElement, callbacks : IinputTextCallbacks, placeholder : string}) {
+function InputText({ id, img, type, label, value, state, callbacks, placeholder } : { id : string, img? : string, type? : string, label : string, value? : string, state : IinputElement, callbacks : IinputTextCallbacks, placeholder : string}) : JSX.Element {
   
   //------------------------------------------------------------//
   // Массив, предназначенный для валидации поступившего типа

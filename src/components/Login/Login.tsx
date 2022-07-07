@@ -1,18 +1,16 @@
 import React, { useEffect, useMemo, useState } from 'react';
-//import { useDispatch } from 'react-redux';
 import { useAppDispatch } from '../../hooks';
 import { NavigateFunction, useNavigate } from 'react-router-dom';
 
 import Modal from '../Modal/Modal';
 import InputText from '../InputText/InputText';
 
-import { createBody, getStatuses, getTypes, encrypt, decrypt } from '../../data/data';
+import { createBody, getStatuses, getTypes, encrypt } from '../../data/data';
 
 import { configSettings } from '../../store/slices/claimsSlice';
 import { 
   checkLoginResponse,
   claimsStatuses,
-  EresponseTypes,
   errors, 
   messages, 
   methods,
@@ -40,7 +38,7 @@ import type {
 // группы элементов, находящихся на странице, расположенной по
 // адресу: '/' и отвечающих за аутентификацию пользователя.                              
 //------------------------------------------------------------//
-function Login({ signal } : Isignal) {
+function Login({ signal } : Isignal) : JSX.Element {
 
   
 
