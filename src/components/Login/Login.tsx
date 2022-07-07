@@ -3,12 +3,12 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useAppDispatch } from '../../hooks';
 import { NavigateFunction, useNavigate } from 'react-router-dom';
 
-import Modal from '../Modal/Modal.jsx';
-import InputText from '../InputText/InputText.jsx';
+import Modal from '../Modal/Modal';
+import InputText from '../InputText/InputText';
 
-import { createBody, getStatuses, getTypes, encrypt, decrypt } from '../../data/data.js';
+import { createBody, getStatuses, getTypes, encrypt, decrypt } from '../../data/data';
 
-import { configSettings } from '../../store/slices/claimsSlice.js';
+import { configSettings } from '../../store/slices/claimsSlice';
 import { 
   checkLoginResponse,
   claimsStatuses,
@@ -20,7 +20,7 @@ import {
   publicPaths,
   rules, 
   sendRequestBodyfull,
-} from '../../data/data.js';
+} from '../../data/data';
 
 import c from '../../assets/styles/common.scss';
 import s from './Login.scss';
@@ -190,7 +190,7 @@ function Login({ signal } : Isignal) {
 
       if (!checkLoginResponse(resultUnchecked)) throw new Error(messages.wrongData);
       
-      const result : IloginResponse = {} as IloginResponse;
+      const result : IloginResponse = { role:{}} as IloginResponse;
       result.token = resultUnchecked.token.toString();
 
       const encryptedToken = encrypt(result.token);
@@ -199,7 +199,7 @@ function Login({ signal } : Isignal) {
 
       if (resultUnchecked.fullName) result.fullName = resultUnchecked.fullName.toString();
       else result.fullName = 'Unknown';
-
+      
       if (!resultUnchecked.role.name) throw new Error(messages.noRole);
       result.role.name = resultUnchecked.role.name;
       sessionStorage.setItem('role', result.role.name);

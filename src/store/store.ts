@@ -1,10 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
 
-import typesReducer from './slices/typesSlice.js';
-import statusesReducer from './slices/statusesSlice.js';
-import claimsReducer from './slices/claimsSlice.js';
-import pagerReducer from './slices/pagerSlice.js';
-import commonReducer from './slices/commonSlice.js';
+import typesReducer from './slices/typesSlice';
+import statusesReducer from './slices/statusesSlice';
+import claimsReducer from './slices/claimsSlice';
+import pagerReducer from './slices/pagerSlice';
+import commonReducer from './slices/commonSlice';
 
 //export default configureStore({
 const store = configureStore({

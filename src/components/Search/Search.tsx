@@ -3,10 +3,10 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { NavigateFunction, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 
-import { fetchClaims } from '../../store/slices/claimsSlice.js';
-import { selectCommonState, setCommonState } from '../../store/slices/commonSlice.js';
+import { fetchClaims } from '../../store/slices/claimsSlice';
+import { selectCommonState, setCommonState } from '../../store/slices/commonSlice';
 
-import { pager, setToken } from '../../data/data.js';
+import { pager, setToken } from '../../data/data';
 
 import c from '../../assets/styles/common.scss';
 import s from './Search.scss';

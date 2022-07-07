@@ -21,7 +21,7 @@ import {
   pager, 
   publicPaths,
   reconnect 
-} from '../../data/data.js';
+} from '../../data/data';
 
 const initialState : IclaimsSliceState = {
   totalItems: 0,

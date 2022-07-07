@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 
-import { configSettings, reset, selectModes, selectStatus } from '../../store/slices/claimsSlice.js';
-import { resetPagerState } from '../../store/slices/pagerSlice.js';
+import { configSettings, reset, selectModes, selectStatus } from '../../store/slices/claimsSlice';
+import { resetPagerState } from '../../store/slices/pagerSlice';
 
-import Login from '../Login/Login.jsx';
-import Reg from '../Reg/Reg.jsx';
+import Login from '../Login/Login';
+import Reg from '../Reg/Reg';
 
-import { claimsModes, claimsStatuses } from '../../data/data.js';
+import { claimsModes, claimsStatuses } from '../../data/data';
 
 import mainLogo from '../../assets/images/logo.svg';
 import footerLogo from '../../assets/images/logo-invert.svg';

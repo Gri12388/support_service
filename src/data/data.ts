@@ -162,7 +162,7 @@ export const messages: t.Imessages = {
 
 
 //------------------------------------------------------------//
-// Возможные состояния свойства Mode из claimsSlice.js.                            
+// Возможные состояния свойства Mode из claimsSlice.                            
 //------------------------------------------------------------//
 export const claimsModes: t.IclaimsModes = {
   default: 'default',
@@ -172,7 +172,7 @@ export const claimsModes: t.IclaimsModes = {
 
 
 //------------------------------------------------------------//
-// Возможные состояния свойства Status из claimsSlice.js.                            
+// Возможные состояния свойства Status из claimsSlice.                            
 //------------------------------------------------------------//
 export const claimsStatuses: t.IclaimsStatuses = {
   ok: 'ok',

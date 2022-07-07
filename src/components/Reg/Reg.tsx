@@ -2,9 +2,9 @@ import React, { useEffect, useMemo, useState } from 'react';
 //import { useDispatch, useSelector } from 'react-redux';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 
-import InputText from '../InputText/InputText.jsx';
+import InputText from '../InputText/InputText';
 
-import { configSettings, selectMessage, selectModes, selectStatus } from '../../store/slices/claimsSlice.js';
+import { configSettings, selectMessage, selectModes, selectStatus } from '../../store/slices/claimsSlice';
 import {  
   claimsModes,
   claimsStatuses,
@@ -15,7 +15,7 @@ import {
   publicPaths,
   rules, 
   sendRequestBodyfull
-} from '../../data/data.js';
+} from '../../data/data';
 
 import c from '../../assets/styles/common.scss';
 import s from './Reg.scss';
@@ -32,7 +32,7 @@ import type { IelementsObj, IinputElement } from '../../commonTypes';
 function Reg() : JSX.Element {
   
   //------------------------------------------------------------//
-  // Подготовка инструментов для взаимодействия с claimsSlice.js                                  
+  // Подготовка инструментов для взаимодействия с claimsSlice                                  
   //------------------------------------------------------------//
   let claimMode = useAppSelector(selectModes);
   let claimStatus = useAppSelector(selectStatus);

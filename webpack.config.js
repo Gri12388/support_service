@@ -61,20 +61,20 @@ module.exports = {
         ],
       },
       {
-        test: /\.m?jsx?$/,
+        test: /\.m?(ts|js)x?$/,
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
         },
       },
-      {
-        test: /\.m?tsx?$/,
-        exclude: /node_modules/,
-        use: [
-          'babel-loader',
-          'ts-loader'
-        ]
-      },
+      // {
+      //   test: /\.m?tsx?$/,
+      //   exclude: /node_modules/,
+      //   use: [
+      //     'babel-loader',
+      //     'ts-loader'
+      //   ]
+      // },
       {
         test: /\.(png|svg|jpg|jpeg|gif)$/i,
         type: 'asset/resource',
@@ -116,7 +116,7 @@ module.exports = {
     },
   },
   resolve: {
-    extensions: ['.js', '.jsx', '.ts', '.tsx'],
+    extensions: ['.tsx', '.ts', '.js'],
     alias: {
       process: "process/browser"
    },

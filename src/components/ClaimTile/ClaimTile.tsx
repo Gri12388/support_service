@@ -1,10 +1,10 @@
 import React, { useMemo } from 'react';
 import { NavigateFunction, useNavigate } from 'react-router-dom';
 
-import Type from '../Type/Type.jsx';
-import Status from '../Status/Status.jsx';
+import Type from '../Type/Type';
+import Status from '../Status/Status';
 
-import { roles } from '../../data/data.js';
+import { roles } from '../../data/data';
 
 import c from '../../assets/styles/common.scss';
 import s from './ClaimTile.scss';

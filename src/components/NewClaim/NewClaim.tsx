@@ -3,11 +3,11 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Location, NavigateFunction, useLocation, useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../hooks';
 
-import InputText from '../InputText/InputText.jsx';
-import Modal from '../Modal/Modal.jsx';
-import Sel from '../Sel/Sel.jsx';
+import InputText from '../InputText/InputText';
+import Modal from '../Modal/Modal';
+import Sel from '../Sel/Sel';
 
-import { configSettings } from '../../store/slices/claimsSlice.js';
+import { configSettings } from '../../store/slices/claimsSlice';
 import { 
   claims,
   claimsStatuses,
@@ -20,7 +20,7 @@ import {
   rules, 
   sendRequestBodyfull,
   setToken
-} from '../../data/data.js';
+} from '../../data/data';
 
 import c from '../../assets/styles/common.scss';
 import s from './NewClaim.scss';

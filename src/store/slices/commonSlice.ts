@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { sortOptions } from '../../data/data.js';
+import { sortOptions } from '../../data/data';
 
 import type { RootState } from '../../store/store';
 

@@ -2,15 +2,15 @@ import React, { useEffect, useMemo, useState  } from 'react';
 import { Link, Location, NavigateFunction, useLocation, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 
-import ClaimRow from '../ClaimRow/ClaimRow.jsx';
-import ClaimTile from '../ClaimTile/ClaimTile.jsx';
-import Modal from '../Modal/Modal.jsx';
-import Pager from '../Pager/Pager.jsx';
+import ClaimRow from '../ClaimRow/ClaimRow';
+import ClaimTile from '../ClaimTile/ClaimTile';
+import Modal from '../Modal/Modal';
+import Pager from '../Pager/Pager';
 
-import { configSettings, fetchClaims, selectClaims } from '../../store/slices/claimsSlice.js';
-import { selectCommonState, setCommonState } from '../../store/slices/commonSlice.js';
+import { configSettings, fetchClaims, selectClaims } from '../../store/slices/claimsSlice';
+import { selectCommonState, setCommonState } from '../../store/slices/commonSlice';
 
-import { columnOptions, decrypt, messages, pager, setToken, sortOptions } from '../../data/data.js';
+import { columnOptions, decrypt, messages, pager, setToken, sortOptions } from '../../data/data';
 
 import c from '../../assets/styles/common.scss';
 import s from './Claims.scss';
