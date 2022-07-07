@@ -25,7 +25,13 @@ import {
 import c from '../../assets/styles/common.scss';
 import s from './Login.scss';
 
-import type * as T from '../../commonTypes';
+import type { 
+  IelementsObj,
+  IinputElement,
+  IloginResponse,
+  IselElement,
+  Isignal,
+ } from '../../commonTypes';
 
 
 
@@ -34,7 +40,7 @@ import type * as T from '../../commonTypes';
 // группы элементов, находящихся на странице, расположенной по
 // адресу: '/' и отвечающих за аутентификацию пользователя.                              
 //------------------------------------------------------------//
-function Login({ signal } : T.Isignal) {
+function Login({ signal } : Isignal) {
 
   
 
@@ -61,23 +67,23 @@ function Login({ signal } : T.Isignal) {
   //------------------------------------------------------------//
   // Состояния input элементов                                
   //------------------------------------------------------------//
-  const [email, setEmail] : [email : T.IinputElement, setEmail : React.Dispatch<React.SetStateAction<T.IinputElement>>] = useState({
+  const [email, setEmail] : [email : IinputElement, setEmail : React.Dispatch<React.SetStateAction<IinputElement>>] = useState({
     content: '', 
     error: errors.emailErrors.noEmail,
     focused: true,
     status: false, 
     touched: false, 
-  } as T.IinputElement);
-  const [password, setPassword] : [password : T.IinputElement, setPassword : React.Dispatch<React.SetStateAction<T.IinputElement>>] = useState({
+  } as IinputElement);
+  const [password, setPassword] : [password : IinputElement, setPassword : React.Dispatch<React.SetStateAction<IinputElement>>] = useState({
     content: '', 
     error: errors.passwordErrors.noPassword,
     focused: false,
     status: false, 
     touched: false, 
-  } as T.IinputElement);
-  const [keepLogged, setKeepLogged] : [keepLogged : T.IselElement, setKeepLogged : React.Dispatch<React.SetStateAction<T.IselElement>>] = useState({
+  } as IinputElement);
+  const [keepLogged, setKeepLogged] : [keepLogged : IselElement, setKeepLogged : React.Dispatch<React.SetStateAction<IselElement>>] = useState({
     content: false
-  } as T.IselElement);
+  } as IselElement);
 
 
 
@@ -86,7 +92,7 @@ function Login({ signal } : T.Isignal) {
   // смены фокуса при нажатии на кнопку Enter, а именно: id
   // элемента, сам элемент и его Tab позиция в форме.                                  
   //------------------------------------------------------------//
-  const elements: T.IelementsObj = {
+  const elements: IelementsObj = {
     0: { id: 'fromLogin__email', state: emailElement, pos: 0 }, 
     1: { id: 'fromLogin__password', state: passwordElement, pos: 1 },
   } 
@@ -122,13 +128,13 @@ function Login({ signal } : T.Isignal) {
   // input элементов                              
   //------------------------------------------------------------//
   function onEmailInput(e: React.ChangeEvent<HTMLInputElement>) {
-    setEmail((state : T.IinputElement) => ({ ...state, content: e.target.value }));
+    setEmail((state : IinputElement) => ({ ...state, content: e.target.value }));
   }
   function onPasswordInput(e: React.ChangeEvent<HTMLInputElement>) {
-    setPassword((state : T.IinputElement) => ({ ...state, content: e.target.value }));
+    setPassword((state : IinputElement) => ({ ...state, content: e.target.value }));
   }
   function onKeepLogged() {
-    setKeepLogged((state : T.IselElement) => ({ ...state, content: !state.content }));
+    setKeepLogged((state : IselElement) => ({ ...state, content: !state.content }));
   }
 
 
@@ -144,14 +150,14 @@ function Login({ signal } : T.Isignal) {
       focused: false,
       status: false, 
       touched: false, 
-    } as T.IinputElement);
+    } as IinputElement);
     setPassword({
       content: '',
       error: errors.passwordErrors.noPassword,
       focused: false,
       status: false, 
       touched: false, 
-    } as T.IinputElement);
+    } as IinputElement);
   }
 
 
@@ -184,7 +190,7 @@ function Login({ signal } : T.Isignal) {
 
       if (!checkLoginResponse(resultUnchecked)) throw new Error(messages.wrongData);
       
-      const result : T.IloginResponse = {} as T.IloginResponse;
+      const result : IloginResponse = {} as IloginResponse;
       result.token = resultUnchecked.token.toString();
 
       const encryptedToken = encrypt(result.token);
@@ -227,8 +233,8 @@ function Login({ signal } : T.Isignal) {
   //------------------------------------------------------------//
   // Обработчик события onFocus input элемента                            
   //------------------------------------------------------------// 
-  function onFocus(setter: React.Dispatch<React.SetStateAction<T.IinputElement>>) : void {
-    setter((state: T.IinputElement) : T.IinputElement => ({ ...state, focused: true }));
+  function onFocus(setter: React.Dispatch<React.SetStateAction<IinputElement>>) : void {
+    setter((state: IinputElement) : IinputElement => ({ ...state, focused: true }));
   }
 
 
@@ -236,8 +242,8 @@ function Login({ signal } : T.Isignal) {
   //------------------------------------------------------------//
   // Обработчик события onBlur input элемента                            
   //------------------------------------------------------------// 
-  function onBlur(setter: React.Dispatch<React.SetStateAction<T.IinputElement>>, checker: () => void) : void {
-    setter((state: T.IinputElement) : T.IinputElement => ({ ...state, touched: true, focused: false }));
+  function onBlur(setter: React.Dispatch<React.SetStateAction<IinputElement>>, checker: () => void) : void {
+    setter((state: IinputElement) : IinputElement => ({ ...state, touched: true, focused: false }));
     checker();
   }
 
@@ -249,7 +255,7 @@ function Login({ signal } : T.Isignal) {
   //------------------------------------------------------------//
   function setFocus() : void {
     if (emailElement) emailElement.focus();
-    setEmail((state: T.IinputElement) : T.IinputElement => ({ ...state, touched: false }));
+    setEmail((state: IinputElement) : IinputElement => ({ ...state, touched: false }));
   }
 
 
@@ -261,31 +267,31 @@ function Login({ signal } : T.Isignal) {
   //------------------------------------------------------------// 
   function checkEmail() : void {
     if (email.content.length !== 0 && !rules.emailRegExp.test(email.content)) {
-      return setEmail((state: T.IinputElement) : T.IinputElement => ({
+      return setEmail((state: IinputElement) : IinputElement => ({
         ...state, 
         status: false, 
         error: errors.emailErrors.wrongEmail
       }));
     }
-    setEmail((state: T.IinputElement) : T.IinputElement => ({ ...state, status: true, error: '' }));
+    setEmail((state: IinputElement) : IinputElement => ({ ...state, status: true, error: '' }));
   }
 
   function checkPassword() : void {
     if (email.content.length > 0 && password.content.length < rules.passwordLengthMin) {
-      return setPassword((state: T.IinputElement) : T.IinputElement => ({
+      return setPassword((state: IinputElement) : IinputElement => ({
         ...state, 
         status: false, 
         error: errors.passwordErrors.shortPassword
       }));
     }
     if (password.content.length > rules.passwordLengthMax) {
-      return setPassword((state: T.IinputElement) : T.IinputElement => ({
+      return setPassword((state: IinputElement) : IinputElement => ({
         ...state, 
         status: false, 
         error: errors.passwordErrors.longPassword
       }));
     }
-    setPassword((state: T.IinputElement) : T.IinputElement => ({ ...state, status: true, error: '' }));
+    setPassword((state: IinputElement) : IinputElement => ({ ...state, status: true, error: '' }));
   }
 
 
@@ -309,7 +315,7 @@ function Login({ signal } : T.Isignal) {
   useEffect(() => {
     if (emailElement) {
       emailElement.focus();
-      setEmail((state: T.IinputElement) : T.IinputElement => ({ ...state, touched: false }));
+      setEmail((state: IinputElement) : IinputElement => ({ ...state, touched: false }));
     }
   }, [signal]);
 
