@@ -6,7 +6,6 @@ import claimsReducer from './slices/claimsSlice';
 import pagerReducer from './slices/pagerSlice';
 import commonReducer from './slices/commonSlice';
 
-//export default configureStore({
 const store = configureStore({
   reducer: {
     types: typesReducer,

@@ -12,7 +12,6 @@ import type {
 } from '../../commonTypes';
 
 import { 
-  claims,
   claimsModes, 
   claimsStatuses, 
   hosts,
