@@ -122,13 +122,13 @@ function Login({ signal } : T.Isignal) {
   // input элементов                              
   //------------------------------------------------------------//
   function onEmailInput(e: React.ChangeEvent<HTMLInputElement>) {
-    setEmail(state => ({ ...state, content: e.target.value }));
+    setEmail((state : T.IinputElement) => ({ ...state, content: e.target.value }));
   }
   function onPasswordInput(e: React.ChangeEvent<HTMLInputElement>) {
-    setPassword(state => ({ ...state, content: e.target.value }));
+    setPassword((state : T.IinputElement) => ({ ...state, content: e.target.value }));
   }
   function onKeepLogged() {
-    setKeepLogged(state => ({ ...state, content: !state.content }));
+    setKeepLogged((state : T.IselElement) => ({ ...state, content: !state.content }));
   }
 
 
@@ -227,7 +227,7 @@ function Login({ signal } : T.Isignal) {
   //------------------------------------------------------------//
   // Обработчик события onFocus input элемента                            
   //------------------------------------------------------------// 
-  function onFocus(setter: React.Dispatch<React.SetStateAction<T.IinputElement>>) {
+  function onFocus(setter: React.Dispatch<React.SetStateAction<T.IinputElement>>) : void {
     setter((state: T.IinputElement) : T.IinputElement => ({ ...state, focused: true }));
   }
 
@@ -236,7 +236,7 @@ function Login({ signal } : T.Isignal) {
   //------------------------------------------------------------//
   // Обработчик события onBlur input элемента                            
   //------------------------------------------------------------// 
-  function onBlur(setter: React.Dispatch<React.SetStateAction<T.IinputElement>>, checker: () => void) {
+  function onBlur(setter: React.Dispatch<React.SetStateAction<T.IinputElement>>, checker: () => void) : void {
     setter((state: T.IinputElement) : T.IinputElement => ({ ...state, touched: true, focused: false }));
     checker();
   }
