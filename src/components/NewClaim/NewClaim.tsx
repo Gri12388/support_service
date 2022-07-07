@@ -379,7 +379,7 @@ function NewClaim() : JSX.Element {
             <Sel 
               id={ elements[1].id }
               label='TYPE'
-              groupId={ 'fromNewClaim__sel1' }
+              groupId='fromNewClaim__sel1'
               placeholder='Select type'
               value={ type.content }
               state={ type }

@@ -144,6 +144,13 @@ export interface IinputTextCallbacks {
   onPressedEnter: (e: React.KeyboardEvent<Element>) => void;
 }
 
+export interface IinputSelCallbacks {
+  onChange: (id: string) => void;
+  onFocus: () => void; 
+  onBlur: () => void;
+  onPressedEnter: (e: React.KeyboardEvent<Element>) => void;
+}
+
 export interface IconfigInputWrapperViewReturn {
   isWarningShown: boolean;
   className: string;
