@@ -29,6 +29,7 @@ import type {
   IinputElement, 
   IlocationState, 
   Iobj, 
+  IobjObj
 } from '../../commonTypes';
 
 
@@ -81,11 +82,11 @@ function OldClaim() : JSX.Element {
     else return null;
   }, [token, keepLogged]);
 
-  const types : Iobj[] = useMemo(() => {
+  const types : IobjObj = useMemo(() => {
     return JSON.parse(sessionStorage.getItem('types')!); 
   }, [token]);
 
-  const statuses : Iobj[] = useMemo(() => {
+  const statuses : IobjObj = useMemo(() => {
     return JSON.parse(sessionStorage.getItem('statuses')!);
   }, [token]);
 
@@ -99,7 +100,7 @@ function OldClaim() : JSX.Element {
   //------------------------------------------------------------// 
   const typeID = useMemo(() => {
     let temp : number = 0;
-    if(locationState.typeSlug) temp = types.find((item : Iobj) => item.slug! === locationState.typeSlug)!.id;
+    if(locationState.typeSlug) temp = Object.values(types).find((item : Iobj) => item.slug! === locationState.typeSlug)!.id;
     return temp ? temp.toString() : '';
   }, []);
 
