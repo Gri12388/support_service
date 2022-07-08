@@ -46,9 +46,8 @@ function checkResponse(resultUnchecked: any) : boolean {
   if (
     !resultUnchecked || 
     typeof resultUnchecked !== 'object' || 
-    !resultUnchecked.totalItems || 
     isNaN(+resultUnchecked.totalItems) || 
-    !resultUnchecked.claims ||
+    !resultUnchecked.claims || 
     !Array.isArray(resultUnchecked.claims)
   ) return false;
   return true;
