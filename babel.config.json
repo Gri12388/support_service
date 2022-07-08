@@ -4,21 +4,12 @@
       "@babel/preset-env",
       {
         "targets": "> 0.25%, not dead",
-        // "targets": {
-        //   "chrome": "104"
-        // },
         "useBuiltIns": "usage",
         "corejs": "3.22.1"
       }
     ],
     [
-      "@babel/preset-react",
-      {
-        "runtime": "automatic"
-      }
-    ],
-    [
-      "@babel/preset-typescript"
+      "@babel/preset-react"
     ]
   ]
 }

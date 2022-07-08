@@ -61,20 +61,20 @@ module.exports = {
         ],
       },
       {
-        test: /\.m?(ts|js)x?$/,
+        test: /\.m?jsx?$/,
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
         },
       },
-      // {
-      //   test: /\.m?tsx?$/,
-      //   exclude: /node_modules/,
-      //   use: [
-      //     'babel-loader',
-      //     'ts-loader'
-      //   ]
-      // },
+      {
+        test: /\.m?tsx?$/,
+        exclude: /node_modules/,
+        use: [
+          'babel-loader',
+          'ts-loader'
+        ]
+      },
       {
         test: /\.(png|svg|jpg|jpeg|gif)$/i,
         type: 'asset/resource',
@@ -126,11 +126,6 @@ module.exports = {
       'util': require.resolve('util/'),
       'stream': require.resolve('stream-browserify'),
       'process': require.resolve('process'),
-      // 'buffer': false,
-      // 'crypto': false,
-      // 'util': false,
-      // 'stream': false,
-      // 'process': false
     }
   },
   mode: process.env.NODE_ENV,
