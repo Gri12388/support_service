@@ -89,9 +89,9 @@ export const rules: t.Irules = {
   surnameLengthMin: 1,
   surnameLengthMax: 20,
   emailRegExp: /^\w[-._\w]*\w@\w[-._\w]*\w\.\w{2,3}$/,
-  passwordLengthMin: 6,
-  passwordLengthMax: 20,
-  titleLengthMax: 30,
+  passwordLengthMin: 1,
+  passwordLengthMax: 30,
+  titleLengthMax: 50,
 }
 
 
