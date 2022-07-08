@@ -36,9 +36,9 @@ function Reg() : JSX.Element {
   //------------------------------------------------------------//
   // Подготовка инструментов для взаимодействия с claimsSlice                                  
   //------------------------------------------------------------//
-  let claimMode = useAppSelector(selectModes);
-  let claimStatus = useAppSelector(selectStatus);
-  let claimMessage = useAppSelector(selectMessage);
+  const claimMode = useAppSelector(selectModes);
+  const claimStatus = useAppSelector(selectStatus);
+  const claimMessage = useAppSelector(selectMessage);
   const dispatch = useAppDispatch(); 
 
 
@@ -216,9 +216,9 @@ function Reg() : JSX.Element {
   function onSubmit(e: React.FormEvent) : void {
     e.preventDefault();
 
-    let publicPath : string = publicPaths.reg;
-    let method : string = methods.post;
-    let bodyJSON : string = createBody();
+    const publicPath : string = publicPaths.reg;
+    const method : string = methods.post;
+    const bodyJSON : string = createBody();
     
     sendRequestBodyfull(publicPath, method, bodyJSON)
     .then(res => {
@@ -380,35 +380,35 @@ function Reg() : JSX.Element {
   // по наступлению события onChange. Нужна для того, чтобы 
   // определять отображать ли кнопку submit действующей или нет.                             
   //------------------------------------------------------------// 
-  let isNameOk : boolean = useMemo (() => !(
+  const isNameOk : boolean = useMemo (() => !(
     name.content.length === 0 ||
     name.content.length < rules.nameLengthMin ||
     name.content.length > rules.nameLengthMax
     ), [name]);
 
-  let isSurnameOk : boolean = useMemo (() => !(
+  const isSurnameOk : boolean = useMemo (() => !(
     surname.content.length === 0 ||
     surname.content.length < rules.surnameLengthMin ||
     surname.content.length > rules.surnameLengthMax
     ), [surname]);
 
-  let isEmailOk : boolean = useMemo (() => !(
+  const isEmailOk : boolean = useMemo (() => !(
     email.content.length === 0 ||
     !rules.emailRegExp.test(email.content)
     ), [email]);
   
-  let isPasswordOk : boolean = useMemo (() => !(
+  const isPasswordOk : boolean = useMemo (() => !(
     password.content.length === 0 ||
     password.content.length < rules.passwordLengthMin ||
     password.content.length > rules.passwordLengthMax
     ), [password]);
 
-  let isPasswordCopyOk : boolean = useMemo (() => !(
+  const isPasswordCopyOk : boolean = useMemo (() => !(
     passwordCopy.content.length === 0 ||
     passwordCopy.content !== password.content
     ), [passwordCopy]);
 
-  let isFormOk : boolean = useMemo (() => (
+  const isFormOk : boolean = useMemo (() => (
     isNameOk &&
     isSurnameOk && 
     isEmailOk &&

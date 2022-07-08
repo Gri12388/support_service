@@ -112,9 +112,9 @@ function OldClaim() : JSX.Element {
   // функции element.focus() для реализации перемещения фокуса  
   // при нажатии клавиши Enter.                                  
   //------------------------------------------------------------//
-  let [titleElement, setTitleElement] : [titleElement : HTMLElement | null, setTitleElement : React.Dispatch<React.SetStateAction<HTMLElement | null>>] = useState(null as HTMLElement | null);
-  let [typeElement, setTypeElement] : [typeElement : HTMLElement | null, setTypeElement : React.Dispatch<React.SetStateAction<HTMLElement | null>>] = useState(null as HTMLElement | null);
-  let [descriptionElement, setDescriptionElement] : [descriptionElement : HTMLElement | null, setDescriptionElement : React.Dispatch<React.SetStateAction<HTMLElement | null>>] = useState(null as HTMLElement | null);
+  const [titleElement, setTitleElement] : [titleElement : HTMLElement | null, setTitleElement : React.Dispatch<React.SetStateAction<HTMLElement | null>>] = useState(null as HTMLElement | null);
+  const [typeElement, setTypeElement] : [typeElement : HTMLElement | null, setTypeElement : React.Dispatch<React.SetStateAction<HTMLElement | null>>] = useState(null as HTMLElement | null);
+  const [descriptionElement, setDescriptionElement] : [descriptionElement : HTMLElement | null, setDescriptionElement : React.Dispatch<React.SetStateAction<HTMLElement | null>>] = useState(null as HTMLElement | null);
 
 
 

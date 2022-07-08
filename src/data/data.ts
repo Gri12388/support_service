@@ -249,7 +249,7 @@ export const statusColors: string[] = [
   export const onPressedEnter = (elements : T.IelementsObj) => (e: React.KeyboardEvent) => {
     if (e.code === 'Enter' || e.key === 'Enter') {
       e.preventDefault();
-      let arr: T.Ielement[] = Object.values(elements);
+      const arr: T.Ielement[] = Object.values(elements);
       let pos: number = arr.find((item : T.Ielement) : boolean => item.id === e.currentTarget.id)!.pos;
       elements[++pos % arr.length].state!.focus();
     }
@@ -368,7 +368,7 @@ export const statusColors: string[] = [
 
     tempArr.push(obj);
 
-    let tempObj : T.IobjObj = {};
+    const tempObj : T.IobjObj = {};
 
     tempArr.forEach((item : T.Iobj) => tempObj[item.id] = item);
 
