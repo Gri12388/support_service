@@ -252,16 +252,10 @@ export const statusColors: string[] = [
       const arr: T.Ielement[] = Object.values(elements);
       const element : T.Ielement | undefined = arr.find((item : T.Ielement) : boolean => item.id === e.currentTarget.id);
       let pos : number;
-      if (element === undefined) {
-        console.error('error #1 of "onPressedEnter" function');
-        return;
-      }
+      if (element === undefined) throw new Error('error #1 of "onPressedEnter" function');
       pos = element.pos;
       const state : HTMLElement | null = elements[++pos % arr.length].state;
-      if (state === null) {
-        console.error('error #2 of "onPressedEnter" function');
-        return;
-      }
+      if (state === null) throw new Error('error #2 of "onPressedEnter" function');
       state.focus();
     }
   }
@@ -275,10 +269,9 @@ export const statusColors: string[] = [
   // значение token.                                 
   //------------------------------------------------------------//
   export function setToken(encryptedToken : string) : string | null {
-    if (!encryptedToken) return null;
-    const temp = decrypt(encryptedToken);
+    const temp : string = decrypt(encryptedToken);
     const decoded : string | JwtPayload | null = decode(temp); 
-    if (typeof decoded === 'string' || decoded === null || decoded.exp === undefined ) throw new Error (messages.wrongData);
+    if (typeof decoded === 'string' || decoded === null || decoded.exp === undefined ) throw new Error ('Error of setToken function');
     if (Date.now() >= decoded.exp * 1000) return null;
     else return temp;
   }
