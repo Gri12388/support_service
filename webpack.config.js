@@ -1,6 +1,7 @@
 const path = require('path');
 const htmlWebpackPlugin = require('html-webpack-plugin');
 const miniCssExtractPlugin = require('mini-css-extract-plugin');
+// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const webpack = require('webpack');
 
 const ISDEV = process.env.NODE_ENV === 'development' ? true : false;
@@ -26,6 +27,7 @@ module.exports = {
       title: 'Home',
       favicon: './src/assets/images/logo.svg',
       root: 'root',
+      minify: !ISDEV,
     }),
     new miniCssExtractPlugin({
       filename: ISDEV ? '[name].css' : '[name].[contenthash].css',
@@ -36,6 +38,9 @@ module.exports = {
     new webpack.ProvidePlugin({
       Buffer: ['buffer', 'Buffer'],
   }),
+    // new BundleAnalyzerPlugin({
+    //   generateStatsFile: true,
+    // }),
   ],
   module: {
     rules: [
@@ -105,12 +110,15 @@ module.exports = {
     }
   },
   optimization: {
+    minimize: true,     
     splitChunks: {
+      maxSize: 244000,
       cacheGroups: {
-        commons: {
+        restNodeModules: {
           test: /[\\/]node_modules[\\/]/,
-          name: 'vendors',
+          name: 'nodeModules',
           chunks: 'all',
+          priority: 0,
         },
       },
     },
