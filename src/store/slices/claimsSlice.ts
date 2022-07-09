@@ -259,7 +259,7 @@ const claimsSlice = createSlice({
       })
       .addCase(fetchClaims.fulfilled, (state, action) => {
         state.totalItems = action.payload.totalItems;
-        let temp : Iclaims = {} as Iclaims;
+        const temp : Iclaims = {} as Iclaims;
         action.payload.claims.forEach((item, index) => temp[index] = item);
         state.values = temp;
         state.status = claimsStatuses.ok;

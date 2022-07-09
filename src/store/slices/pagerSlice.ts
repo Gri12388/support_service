@@ -30,7 +30,6 @@ const pagerSlice = createSlice({
     },
     resetPagerState: state => {
       state = initialState;
-
     }
   },
 });

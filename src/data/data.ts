@@ -11,7 +11,7 @@ import type * as t from './types';
 // Константы, необходимые для функций шифрования/дешифрования.                           
 //------------------------------------------------------------//
 const key: string = crypto.randomBytes(16).toString('hex');
-const algorithm: string = 'aes256';
+const algorithm = 'aes256';
 
 
 //------------------------------------------------------------//
@@ -250,8 +250,19 @@ export const statusColors: string[] = [
     if (e.code === 'Enter' || e.key === 'Enter') {
       e.preventDefault();
       const arr: T.Ielement[] = Object.values(elements);
-      let pos: number = arr.find((item : T.Ielement) : boolean => item.id === e.currentTarget.id)!.pos;
-      elements[++pos % arr.length].state!.focus();
+      const element : T.Ielement | undefined = arr.find((item : T.Ielement) : boolean => item.id === e.currentTarget.id);
+      let pos : number;
+      if (element === undefined) {
+        console.error('error #1 of "onPressedEnter" function');
+        return;
+      }
+      pos = element.pos;
+      const state : HTMLElement | null = elements[++pos % arr.length].state;
+      if (state === null) {
+        console.error('error #2 of "onPressedEnter" function');
+        return;
+      }
+      state.focus();
     }
   }
 

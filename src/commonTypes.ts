@@ -99,7 +99,7 @@ export interface IpagerSliceState {
   pointer: number,
   displayLeft: boolean,
   displayRight: boolean,
-};
+}
 
 export interface IsetPagerStatePayload {
   offset?: number,
