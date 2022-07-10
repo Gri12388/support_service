@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Location, NavigateFunction, useLocation, useNavigate } from 'react-router-dom';
+import { NavigateFunction, useNavigate } from 'react-router-dom';
 
 import { useAppDispatch } from '../../hooks';
 
@@ -25,7 +25,7 @@ import {
 import c from '../../assets/styles/common.scss';
 import s from './NewClaim.scss';
 
-import type { IelementsObj, IinputElement, IobjObj } from '../../commonTypes';
+import type { IelementsObj, IinputElement, Iobj, IobjObj } from '../../commonTypes';
 
 
 
@@ -42,10 +42,18 @@ function NewClaim() : JSX.Element {
   //------------------------------------------------------------//
   const dispatch = useAppDispatch();
   const navigate : NavigateFunction = useNavigate();
-  const location : Location = useLocation();
 
 
 
+  //------------------------------------------------------------//
+  // Локальное состояние isError отвечает за распознание 
+  // появления в коде сгенерированных ошибок.                                 
+  //------------------------------------------------------------//
+  const componentName = 'NewClaim';
+  const [isError, setIsError] : [isError : boolean, setIsError : React.Dispatch<React.SetStateAction<boolean>>] = useState(false);
+  
+  
+  
   //------------------------------------------------------------//
   // Извлечение нужных данных из sessionStorage. Извлечение
   // token из sessionStorage проходит в два этапа: сначала 
@@ -59,7 +67,12 @@ function NewClaim() : JSX.Element {
   const encryptedToken : string | null = sessionStorage.getItem('token');
 
   let token : string | null = useMemo(() => {
-    if (!encryptedToken) return null;
+    if (isError) return '';
+    if (encryptedToken === null) {
+      console.error(`${messages.noToken} at ${componentName} component`);
+      setIsError(true);
+      return '';
+    }
     return setToken(encryptedToken);
   }, [encryptedToken]);
 
@@ -68,24 +81,41 @@ function NewClaim() : JSX.Element {
   }, []);
 
   const email : string | null = useMemo(() => {
+    if (isError) return null;
     if (!token && keepLogged) return sessionStorage.getItem('email');
     else return null;
   }, [token, keepLogged]);
 
   const password : string | null = useMemo(() => {
+    if (isError) return null;
     if (!token && keepLogged) return sessionStorage.getItem('password');
     else return null;
   }, [token, keepLogged]);
 
-  const types : IobjObj = useMemo(() => {
-    return JSON.parse(sessionStorage.getItem('types')!); 
+  const types : IobjObj | null = useMemo(() => {
+    if (isError) return null;
+    const temp = sessionStorage.getItem('types');
+    if (temp === null) {
+      console.error(`${messages.noTypes} at ${componentName} component`);
+      setIsError(true); 
+      return null; 
+    }
+    return JSON.parse(temp!); 
   }, [token]);
-  const statuses : IobjObj = useMemo(() => {
-    return JSON.parse(sessionStorage.getItem('statuses')!);
+
+  const statuses : IobjObj | null = useMemo(() => {
+    if (isError) return null;
+    const temp = sessionStorage.getItem('statuses');
+    if (temp === null) {
+      console.error(`${messages.noStatuses} at ${componentName} component`);
+      setIsError(true); 
+      return null;
+    }
+    return JSON.parse(temp);
   }, [token]);
-
-
-
+  
+  
+  
   //------------------------------------------------------------//
   // Данный блок предназначен для хранения input элементов DOM  
   // дерева, которые будут задействованы при использовании      
@@ -166,16 +196,58 @@ function NewClaim() : JSX.Element {
 
 
   //------------------------------------------------------------//
+  // Хук, реагирующий на монтирование. Ищет нежные элементы 
+  // DOM дерева и сохраняющий их в своответствующем локальном 
+  // состоянии.                                 
+  //------------------------------------------------------------//  
+  useEffect(() => {
+    setTitleElement(document.getElementById(elements[0].id));
+    setTypeElement(document.getElementById(elements[1].id));
+    setDescriptionElement(document.getElementById(elements[2].id));
+  }, []);
+
+
+
+  //------------------------------------------------------------//
+  // Проверяем, не просрочен ли token. Если просрочен, проверяем,
+  // нужно ли автоматически получить новый token. Если не нужно,
+  // переходим на страницу, расположенную по адресу '/', 
+  // прекращая сессию.                                   
+  //------------------------------------------------------------//
+  useEffect(() => {
+    if (isError) return;
+    if ((token === null && !keepLogged)) {
+      navigate('/');
+    }
+  }, [token]);
+
+
+  
+    //------------------------------------------------------------//
+  // Хук, реагирующий на изменение локального состояния isError.
+  // Если isError верен, то происходит переход на страницу, 
+  // расположенную по адресу '/'.                                 
+  //------------------------------------------------------------//
+  useEffect(() => {
+    if (isError) navigate('/');
+  }, [isError]);
+
+
+  
+  //------------------------------------------------------------//
   // Группа функций-обработчиков события onChange соотвествующих
   // input элементов.                              
   //------------------------------------------------------------//
   function onTitleInput(e: React.ChangeEvent<HTMLInputElement>) : void {
+    if (isError) return; 
     setTitle(state => ({ ...state, content: e.target.value }));
   }
   function onDescriptionInput(e: React.ChangeEvent<HTMLInputElement>) : void {
+    if (isError) return; 
     setDescription(state => ({ ...state, content: e.target.value }));
   }
   function onTypeInput(id : string) : void {
+    if (isError) return; 
     setType(state => ({ ...state, content: id, touched: true, status: true }));
   }
 
@@ -186,6 +258,7 @@ function NewClaim() : JSX.Element {
   // в изначальное положение.                                 
   //------------------------------------------------------------//
   function setAllStatesDefault() : void {
+    if (isError) return; 
     setTitle({
       content: '', 
       error: '',
@@ -215,12 +288,23 @@ function NewClaim() : JSX.Element {
   // Функция, формирующая содержание body-компонента AJAX 
   // запроса.                              
   //------------------------------------------------------------//   
-  function createBody() : string {
+  function createBody() : string | null {
+    if (isError) return null; 
+    
+    const typeSlug : string | undefined = types![type.content].slug;
+    if (typeSlug === undefined) throw new Error(messages.noSlug);
+    
+    const found : Iobj | undefined = Object.values(statuses!).find(item => item.status === claims.new);
+    if (found === undefined) throw new Error(messages.noMatch);
+
+    const statusSlug : string | undefined = found.slug;
+    if (statusSlug === undefined) throw new Error(messages.noSlug);
+
     return JSON.stringify({
       title: title.content,
       description: description.content,
-      type: types[type.content].slug,
-      status: Object.values(statuses).find(item => item.status === claims.new)!.slug,
+      type: typeSlug,
+      status: statusSlug,
     });
   }
 
@@ -232,11 +316,24 @@ function NewClaim() : JSX.Element {
   //------------------------------------------------------------// 
   async function onSubmit(e : React.FormEvent) : Promise<void> {
     e.preventDefault(); 
+    
+    if (isError) return; 
 
     if (!token && !keepLogged) {
-      navigate('/');
+      console.error(`${messages.noToken} at ${componentName} component`);
+      setIsError(true); 
       return;
     }
+
+    let createdBody : string | null = null;
+    try {
+      createdBody = createBody();
+    }
+    catch(err : any) {
+      console.error(`${err.message} at ${componentName} component`);
+      setIsError(true); 
+      return;
+    } 
 
     dispatch(configSettings({ status: claimsStatuses.loading }));
 
@@ -249,7 +346,7 @@ function NewClaim() : JSX.Element {
   
       const publicPath : string = publicPaths.claim;
       const method : string = methods.post;
-      const bodyJSON : string = createBody();
+      const bodyJSON : string = createdBody!;
   
       setAllStatesDefault()
   
@@ -266,6 +363,7 @@ function NewClaim() : JSX.Element {
       }
     }
     catch(err : any) {
+      console.error(`${err.message} at ${componentName} component`);
       dispatch(configSettings({ status: claimsStatuses.error, message: err.message }));
     }  
   }
@@ -278,6 +376,7 @@ function NewClaim() : JSX.Element {
   // состояния.                            
   //------------------------------------------------------------// 
   function onFocus(setter : React.Dispatch<React.SetStateAction<IinputElement>>) : void {
+    if (isError) return;
     setter((state: IinputElement) => ({ ...state, focused: true }));
   }
 
@@ -290,6 +389,7 @@ function NewClaim() : JSX.Element {
   // состояние.                         
   //------------------------------------------------------------// 
   function onBlur(setter: React.Dispatch<React.SetStateAction<IinputElement>>, checker: () => void) : void {
+    if (isError) return;
     setter((state: IinputElement) : IinputElement => ({ ...state, touched: true, focused: false }));
     checker();
   }
@@ -301,8 +401,9 @@ function NewClaim() : JSX.Element {
   //------------------------------------------------------------// 
   function onCancel(e : React.MouseEvent) : void {
     e.preventDefault();
+    if (isError) return;
     navigate('/base/claims');
-  }
+  };
 
 
 
@@ -311,7 +412,13 @@ function NewClaim() : JSX.Element {
   // после сокрытия модального окна.
   //------------------------------------------------------------//
   function setFocus() : void {
-    titleElement!.focus();
+    if (isError) return;
+    if (titleElement === null) {
+      console.error(`${messages.noTitle} at ${componentName} component`);
+      setIsError(true); 
+      return;
+    }
+    titleElement.focus();
     setTitle((state: IinputElement) => ({ ...state, touched: false }));
   }
 
@@ -323,6 +430,7 @@ function NewClaim() : JSX.Element {
   // отображать ошибки, если они есть, сразу после смены фокуса.                            
   //------------------------------------------------------------// 
   function checkTitle() : void {
+    if (isError) return;
     if (title.content.length > rules.titleLengthMax) {
       return setTitle((state: IinputElement) => ({
         ...state, 
@@ -333,30 +441,19 @@ function NewClaim() : JSX.Element {
     setTitle((state: IinputElement) => ({ ...state, status: true, error: '' }));
   }
   function checkDescription() {
+    if (isError) return;
     setDescription((state: IinputElement) => ({...state, status: true, error: ''}));
   }
   function checkType () {
+    if (isError) return;
     setType((state: IinputElement) => ({ ...state, status: true, error: '' }));
   }
 
 
 
-  //------------------------------------------------------------//
-  // Хук, реагирующий на монтирование. Ищет нежные элементы 
-  // DOM дерева и сохраняющий их в своответствующем локальном 
-  // состоянии.                                 
-  //------------------------------------------------------------//  
-    useEffect(() => {
-      setTitleElement(document.getElementById(elements[0].id));
-      setTypeElement(document.getElementById(elements[1].id));
-      setDescriptionElement(document.getElementById(elements[2].id));
-    }, []);
-
-
-
   //--------------------------------------------------------------------
 
-  return(
+  return (
     <>
       <form className={ c.container2 }>
         <div className={ c.subcontainer }>
@@ -415,7 +512,7 @@ function NewClaim() : JSX.Element {
       </form>
       <Modal afterHideModalFunctionsArray={ [setFocus] }/>
     </>
-  ); 
+  );
 }
 
 export default NewClaim;
