@@ -248,7 +248,7 @@ function NewClaim() : JSX.Element {
       }
   
       const publicPath : string = publicPaths.claim;
-      const method : string = methods.post;;
+      const method : string = methods.post;
       const bodyJSON : string = createBody();
   
       setAllStatesDefault()
@@ -302,7 +302,7 @@ function NewClaim() : JSX.Element {
   function onCancel(e : React.MouseEvent) : void {
     e.preventDefault();
     navigate('/base/claims');
-  };
+  }
 
 
 

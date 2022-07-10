@@ -8,7 +8,7 @@
     "dev": "cross-env NODE_ENV=development webpack",
     "prod": "cross-env NODE_ENV=production webpack",
     "serve": "cross-env NODE_ENV=development webpack serve",
-    "lint": "eslint --fix \"./src/**/*.ts\""
+    "lint": "eslint --fix \"./src/**/*.tsx\""
   },
   "keywords": [],
   "author": "",

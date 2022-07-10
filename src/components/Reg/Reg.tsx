@@ -186,7 +186,7 @@ function Reg() : JSX.Element {
   }
   function onEmailInput(e: React.ChangeEvent<HTMLInputElement>) {
     setEmail((state : IinputElement) => ({ ...state, content: e.target.value }));
-  };
+  }
   function onPasswordInput(e: React.ChangeEvent<HTMLInputElement>) {
     setPassword((state : IinputElement) => ({ ...state, content: e.target.value }));
   }

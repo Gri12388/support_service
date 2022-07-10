@@ -91,25 +91,29 @@ export interface Ierrors {
   typeError: ItypeError;
 }
 
+// export interface Imessages {
+//   alreadyRegistered: string;
+//   default: string;
+//   regBad: string;
+//   regGood: string;
+//   noAuth: string;
+//   noClaimId: string;
+//   noData: string;
+//   noFound: string;
+//   noFoundStatus: string,
+//   noFoundType: string;
+//   noRole: string;
+//   noToken: string;
+//   noUserId: string;
+//   nullEmail: string;
+//   nullPassword: string;
+//   nullStatusOrTypeName: string;
+//   nullStatusOrTypeSlug: string;
+//   wrongData: string;
+// }
+
 export interface Imessages {
-  alreadyRegistered: string;
-  default: string;
-  regBad: string;
-  regGood: string;
-  noAuth: string;
-  noClaimId: string;
-  noData: string;
-  noFound: string;
-  noFoundStatus: string,
-  noFoundType: string;
-  noRole: string;
-  noToken: string;
-  noUserId: string;
-  nullEmail: string;
-  nullPassword: string;
-  nullStatusOrTypeName: string;
-  nullStatusOrTypeSlug: string;
-  wrongData: string;
+  [index : string] : string;
 }
 
 export interface IclaimsModes {

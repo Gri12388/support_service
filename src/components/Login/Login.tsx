@@ -172,7 +172,6 @@ function Login({ signal } : Isignal) : JSX.Element {
       const publicPath: string = publicPaths.auth;
       const method: string = methods.post;
       const bodyJSON: string = createBody(email.content, password.content);
-      let token : string;
       
       setAllStatesDefault();
 
@@ -193,7 +192,7 @@ function Login({ signal } : Isignal) : JSX.Element {
 
       const encryptedToken = encrypt(result.token);
       sessionStorage.setItem('token', encryptedToken);
-      token = result.token;
+      const token : string = result.token;
 
       if (resultUnchecked.fullName) result.fullName = resultUnchecked.fullName.toString();
       else result.fullName = 'Unknown';

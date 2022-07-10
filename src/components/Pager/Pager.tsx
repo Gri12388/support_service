@@ -64,7 +64,7 @@ function Pager() : JSX.Element {
   // Переменная, изменение значения которой влияет на один из 
   // хуков useEffect данного компонента.                                  
   //------------------------------------------------------------//
-  let offset : number = 0;
+  let offset  = 0;
 
 
 
@@ -103,7 +103,7 @@ function Pager() : JSX.Element {
   // значения pointer, содержащего истребуемый оффсет сервера.                      
   //------------------------------------------------------------// 
   function computePagerState({ last, offset, pointer } : IpagerSliceState) {
-    let temp : IpagerSliceState = {
+    const temp : IpagerSliceState = {
       last: last,
       offset: offset,
       pointer: pointer

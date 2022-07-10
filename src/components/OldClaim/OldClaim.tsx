@@ -99,7 +99,7 @@ function OldClaim() : JSX.Element {
   // Нужен для установки изначального локального состояния type.                                   
   //------------------------------------------------------------// 
   const typeID = useMemo(() => {
-    let temp : number = 0;
+    let temp  = 0;
     if(locationState.typeSlug) temp = Object.values(types).find((item : Iobj) => item.slug! === locationState.typeSlug)!.id;
     return temp ? temp.toString() : '';
   }, []);
@@ -320,7 +320,7 @@ function OldClaim() : JSX.Element {
   function onCancel(e : React.MouseEvent) : void {
     e.preventDefault();
     navigate('/base/claims');
-  };
+  }
 
   function onDone(e : React.MouseEvent) : void {
     e.preventDefault();

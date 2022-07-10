@@ -36,7 +36,7 @@ function Slider({ sliderConfig, functions } : { sliderConfig : ISliderConfig, fu
   //------------------------------------------------------------//
   function hideSlider(e : React.MouseEvent) : void {
     const target : { id? : string } = e.target as { id? : string };
-    let temp : ISliderConfig = { ...sliderConfig };
+    const temp : ISliderConfig = { ...sliderConfig };
     if (target.id === 'Slider__modal-area') temp.isVisible = false;
     functions.setSliderConfig(temp);
   }

@@ -4,6 +4,9 @@ module.exports = {
     ecmaVersion: 2020,
     sourceType: 'module',
   },
+  'plugins': [
+    'react-hooks'
+  ],
   extends: [
     'plugin:react/recommended',
     'plugin:react-hooks/recommended',
@@ -17,5 +20,6 @@ module.exports = {
     'react/prop-types': 'off',
     'react/jsx-uses-react': 'off',
     'react/react-in-jsx-scope': 'off',
+    'react-hooks/rules-of-hooks': 'error',
   }
 }

@@ -170,31 +170,31 @@ function Sel(
         isWarningShown: false, 
         className: `${c.inputWrapper} ${s.base} ${s.inputWrapper}` 
       };
-    };
+    }
     if (state && !state.focused && state.touched && state.status) {
       return { 
         isWarningShown: false, 
         className: `${c.inputWrapper} ${s.base} ${s.inputWrapper}` 
       };
-    };
+    }
     if (state && !state.focused && state.touched && !state.status) {
       return { 
         isWarningShown: true, 
         className: `${c.inputWrapper} ${s.base} ${s.inputWrapper} ${s.error}` 
       };
-    };
+    }
     if (state && state.focused && !state.touched) {
       return { 
         isWarningShown: false, 
         className: `${c.inputWrapper} ${s.base} ${s.inputWrapper} ${s.focused}`
       };
-    };
+    }
     if (state && state.focused && state.touched && state.status) {
       return { 
         isWarningShown: false, 
         className: `${c.inputWrapper} ${s.base} ${s.inputWrapper} ${s.focused}` 
       };
-    };
+    }
     if (state && state.focused && state.touched && !state.status) {
       return { 
         isWarningShown: true, 

@@ -9,7 +9,7 @@ import c from '../../assets/styles/common.scss';
 //------------------------------------------------------------//
 function NotFound() : JSX.Element {
   return (
-    <p className={ c.text3 }>There's nothing here!</p>
+    <p className={ c.text3 }>There&apos;s nothing here!</p>
   );
 }
 

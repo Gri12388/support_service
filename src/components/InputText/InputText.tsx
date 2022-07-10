@@ -38,31 +38,31 @@ function InputText({ id, img, type, label, value, state, callbacks, placeholder 
         isWarningShown: false, 
         className: `${c.inputWrapper} ${s.inputWrapper}`
       };
-    };
+    }
     if (state && !state.focused && state.touched && state.status) {
       return { 
         isWarningShown: false, 
         className: `${c.inputWrapper} ${s.inputWrapper}`
       };
-    };
+    }
     if (state && !state.focused && state.touched && !state.status) {
       return { 
         isWarningShown: true, 
         className: `${c.inputWrapper} ${s.inputWrapper} ${s.error}` 
       };
-    };
+    }
     if (state && state.focused && !state.touched) {
       return { 
         isWarningShown: false, 
         className: `${c.inputWrapper} ${s.inputWrapper} ${s.focused}`  
       };
-    };
+    }
     if (state && state.focused && state.touched && state.status) {
       return { 
         isWarningShown: false, 
         className: `${c.inputWrapper} ${s.inputWrapper} ${s.focused}` 
       };
-    };
+    }
     if (state && state.focused && state.touched && !state.status) {
       return { 
         isWarningShown: true, 
