@@ -124,7 +124,7 @@ export interface IconfigSettingsPayload {
 }
 
 export interface IcreateAsyncThunkParams {
-  token : string; 
+  token : string | null; 
   offset : number; 
   limit : number; 
   search : string; 
