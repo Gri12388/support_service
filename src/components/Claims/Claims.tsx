@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState  } from 'react';
-import { Link, Location, NavigateFunction, useLocation, useNavigate } from 'react-router-dom';
+import { Link, NavigateFunction, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 
 import ClaimRow from '../ClaimRow/ClaimRow';
@@ -31,10 +31,10 @@ function Claims() : JSX.Element {
   // страницами, файлами, компонентами и т.д.                                   
   //------------------------------------------------------------//
   const dispatch = useAppDispatch();
-  const location : Location = useLocation();
   const navigate : NavigateFunction = useNavigate();
 
-
+  const componentName = 'Claims';
+  const [isError, setIsError] : [isError : boolean, setIsError : React.Dispatch<React.SetStateAction<boolean>>] = useState(false);
   
   //------------------------------------------------------------//
   // Извлечение нужных данных из sessionStorage. Извлечение
@@ -47,7 +47,12 @@ function Claims() : JSX.Element {
   const encryptedToken : string | null = sessionStorage.getItem('token');
 
   const token : string | null = useMemo(() : string | null => {
-    if (encryptedToken === null) return null;
+    if (isError) return '';
+    if (encryptedToken === null) {
+      console.error(`${messages.noToken} at ${componentName} component`);
+      setIsError(true);
+      return '';
+    }
     return setToken(encryptedToken);
   }, [encryptedToken]);
 
@@ -55,28 +60,43 @@ function Claims() : JSX.Element {
     return sessionStorage.getItem('keepLogged') === 'true';
   }, []);
   
-  const offset : number | null = useMemo(() : number | null => {
+  const offset : number = useMemo(() : number => {
+    if (isError) return 0; 
     const temp = sessionStorage.getItem('offset');
-    if (temp === null) return null;
+    if (temp === null) {
+      console.error(`${messages.noOffset} at ${componentName} component`);
+      setIsError(true);
+      return 0;
+    }
     return +temp;
   }, []);
 
   const types : Iobj[] | null = useMemo(() : Iobj[] | null => {
+    if (isError) return null; 
     const temp = sessionStorage.getItem('types');
-    if (temp === null) return null;
+    if (temp === null) {
+      console.error(`${messages.noTypes} at ${componentName} component`);
+      setIsError(true);  
+      return null;
+    }
     return Object.values(JSON.parse(temp));
   }, [token]);
   
   const statuses : Iobj[] | null = useMemo(() : Iobj[] | null => {
+    if (isError) return null; 
     const temp = sessionStorage.getItem('statuses');
-    if (temp === null) return null;
+    if (temp === null) {
+      console.error(`${messages.noStatuses} at ${componentName} component`);
+      setIsError(true); 
+      return null;
+    }
     return Object.values(JSON.parse(temp));
   }, [token]);
 
   
 
   //------------------------------------------------------------//
-  // Продолжаем подготовка инструментов для взаимодействия с 
+  // Продолжаем подготовку инструментов для взаимодействия с 
   // другими страницами, файлами, компонентами и т.д.                                   
   //------------------------------------------------------------//
   const claims : Iclaim[] = useAppSelector(selectClaims);
@@ -85,14 +105,12 @@ function Claims() : JSX.Element {
 
 
   //------------------------------------------------------------//
-  // Создание локальных состояний windowWidth и isError. Первое 
+  // Создание локального состояния windowWidth, которое 
   // отвечает за вычисление размера окна устройства, необходимого  
   // для отображения заголовка и некоторого другого контента 
-  // страницы. Второе отвечает за распознание появления в коде 
-  // сгенерированных ошибок.                                 
+  // страницы.                                
   //------------------------------------------------------------//
   const [windowWidth, setWindowWidth] : [windowWidth : number, setWindowWidth : React.Dispatch<React.SetStateAction<number>>] = useState(window.innerWidth);
-  const [isError, setIsError] : [isError : boolean, setIsError : React.Dispatch<React.SetStateAction<boolean>>] = useState(false);
 
 
 
@@ -102,22 +120,24 @@ function Claims() : JSX.Element {
   //------------------------------------------------------------//
 
     const rows : JSX.Element[] | null = useMemo(() => {
+      if (isError) return null;
       try {
         return setRows();
       }
       catch (err : any) {
-        console.error(err.message);
+        console.error(`${err.message} at ${componentName} component`);
         setIsError(true);
         return null;
       }
     }, [types, statuses, claims]);
 
     const tiles : JSX.Element[] | null = useMemo(() => {
+      if (isError) return null;
       try {
         return setTiles();
       }
       catch (err : any) {
-        console.error(err.message);
+        console.error(`${err.message} at ${componentName} component`);
         setIsError(true);
         return null;
       }
@@ -125,188 +145,6 @@ function Claims() : JSX.Element {
 
 
 
-  //------------------------------------------------------------//
-  // Функция, устанавливающая в локальное состояние windowWidth
-  // действующий размер окна. Прикрепляется к элементу document
-  // в качестве eventListener.                                 
-  //------------------------------------------------------------//
-  function onClaimsWindowWidthResize() : void {
-    setWindowWidth(window.innerWidth);
-  }
-
-
-
-  //------------------------------------------------------------//
-  // Обработчик радиокнопок. Сохраняет содержание радиокнопок в 
-  // общем состоянии sort и отправляет запрос с требуемой  
-  // сортировкой на сервер.                               
-  //------------------------------------------------------------//
-  function onSortRadioButton(e : React.ChangeEvent<HTMLInputElement>) : void {
-    if (offset === null) return;
-    dispatch(setCommonState({ sort: e.target.value }));
-    dispatch(fetchClaims({ 
-      token: token, 
-      offset: offset, 
-      limit: pager.base, 
-      search: search, 
-      column: column, 
-      sort: e.target.value 
-    }));
-  }
-
-
-
-  //------------------------------------------------------------//
-  // Обработчик заголовков таблицы. Определяет и сохраняет  
-  // колонку сортировки в общем состоянии column и отправляет   
-  // запрос с требуемой сортировкой на сервер.                               
-  //------------------------------------------------------------//
-  function onColumn(e : React.MouseEvent) : void {
-    if (offset === null) return;
-    const target : { id? : string } = e.target as { id? : string };
-    let temp : string;
-    // не сортировать по title
-    if (target.id === 'Claims__title' && column === columnOptions.title) temp = '';
-    
-    // сортировать по title
-    else if (target.id === 'Claims__title' && column !== columnOptions.title) temp = columnOptions.title;
-    
-    // не сортировать по type
-    else if (target.id === 'Claims__type' && column === columnOptions.type) temp = '';
-    
-    // сортировать по type
-    else if (target.id === 'Claims__type' && column !== columnOptions.type) temp = columnOptions.type;
-    
-    // не сортировать по status
-    else if (target.id === 'Claims__status' && column === columnOptions.status) temp = '';
-    
-    // сортировать по status
-    else if (target.id === 'Claims__status' && column !== columnOptions.status) temp = columnOptions.status;
-    else return;
-    dispatch(setCommonState({ column: temp }));
-    dispatch(fetchClaims({
-      token: token, 
-      offset: offset, 
-      limit: pager.base, 
-      search: search, 
-      column: temp, 
-      sort: sort
-    }));
-  }
-
-
-
-  //------------------------------------------------------------//
-  // Функция. Находит в массиве type элемент, указанный 
-  // в массиве claims. То же самое делает со status. Если 
-  // claims не содержит ни типа, ни статуса, выбирает значения
-  // по умолчанию. С учетом этого формирует строку.                             
-  //------------------------------------------------------------//
-  function setRows() : JSX.Element[] | null {
-    if (types === null || statuses === null) return null;
-    const rows : JSX.Element[] = claims.map((item : Iclaim) => {
-      let type : Iobj | undefined, status : Iobj | undefined;
-
-      if (!item.type || !item.type.name) type = types[types.length - 1];
-      else {
-        type = types.find((elem : Iobj) => {
-          if (!elem.type) throw new Error(messages.noFoundType);
-          const el : string = elem.type.toLowerCase();
-          const it : string = item.type!.name.toLowerCase();
-          const res : number = el.localeCompare(it);
-          if (res === 0) return true;
-          else return false;
-        });
-        if (!type) throw new Error(messages.noFoundType);
-      }
-  
-      if (!item.status || !item.status.name) status = statuses[statuses.length - 1];
-      else {
-        status = statuses.find(elem => {
-          if (!elem.status) throw new Error(messages.noFoundStatus);
-          const el : string = elem.status.toLowerCase();
-          const it : string = item.status!.name.toLowerCase();
-          const res : number = el.localeCompare(it);
-          if (res === 0) return true;
-          else return false;
-        });
-        if (!status) throw new Error(messages.noFoundStatus);
-      }
-      return (
-        <section key={ item._id } className={ s.row }>
-          <ClaimRow item={ item } type={ type } status={ status }/>  
-        </section>
-      );
-    });
-    return rows;
-  }
-  
-  
-  
-  //------------------------------------------------------------//
-  // Функция. Находит в массиве type элемент, указанный 
-  // в массиве claims. То же самое делает со status. Если 
-  // claims не содержит ни типа, ни статуса, выбирает значения
-  // по умолчанию. С учетом этого формирует плитку.                             
-  //------------------------------------------------------------//
-  function setTiles() : JSX.Element[] | null {
-    if (types === null || statuses === null) return null;
-    const tiles : JSX.Element[] = claims.map((item : Iclaim) => {
-      let type : Iobj | undefined, status : Iobj | undefined;
-
-      if (!item.type || !item.type.name) type = types[types.length - 1];
-      else {
-        type = types.find((elem : Iobj) => {
-          if (!elem.type) throw new Error(messages.noFoundType);
-          const el : string = elem.type.toLowerCase();
-          const it : string = item.type!.name.toLowerCase();
-          const res : number = el.localeCompare(it);
-          if (res === 0) return true;
-          else return false;
-        });
-        if (!type) throw new Error(messages.noFoundType);
-      }
-
-      if (!item.status || !item.status.name) status = statuses[statuses.length - 1];
-      else {
-        status = statuses.find((elem : Iobj) => {
-          if (!elem.status) throw new Error(messages.noFoundStatus);
-          const el : string = elem.status.toLowerCase();
-          const it : string = item.status!.name.toLowerCase();
-          const res : number = el.localeCompare(it);
-          if (res === 0) return true;
-          else return false;
-        });
-        if (!status) throw new Error(messages.noFoundStatus);
-      }
-
-      return (
-        <ClaimTile key={ item._id } item={ item } type={ type } status={ status }/>  
-      );
-    });
-    return tiles;
-  }
-  
-  
-
-  //------------------------------------------------------------//
-  // Функция, проверяющая наличие значения null у ключевых 
-  // переменных.                                 
-  //------------------------------------------------------------//
-  function checkIsNull() : boolean {
-    if (
-      (token === null && !keepLogged) ||
-      offset === null ||
-      types === null ||
-      statuses === null ||
-      rows === null ||
-      tiles === null
-      ) return true;
-    else return false;
-  }
-
-
-  
   //------------------------------------------------------------//
   // Хук, реагирующий на монтирование. Устанавливает функцию
   // onClaimsWindowWidthResize в качестве eventListener.                      
@@ -329,7 +167,8 @@ function Claims() : JSX.Element {
   // если значением ключевых переменных является null.                                   
   //------------------------------------------------------------//
   useEffect(() => {
-    if (checkIsNull()) {
+    if (isError) return;
+    if ((token === null && !keepLogged)) {
       navigate('/');
     }
     else {
@@ -344,15 +183,213 @@ function Claims() : JSX.Element {
         }));
       }
       catch (err : any) {
-        console.error(err.message);
+        console.error(`${err.message} at ${componentName} component`);
         navigate('/');
       }
     }
-  }, [token, isError]);
+  }, [token]);
+
+
+  useEffect(() => {
+    if (isError) navigate('/');
+  }, [isError]);
 
 
 
-if (checkIsNull()) return <></>
+  //------------------------------------------------------------//
+  // Функция, устанавливающая в локальное состояние windowWidth
+  // действующий размер окна. Прикрепляется к элементу document
+  // в качестве eventListener.                                 
+  //------------------------------------------------------------//
+  function onClaimsWindowWidthResize() : void {
+    if (isError) return;
+    setWindowWidth(window.innerWidth);
+  }
+
+
+
+  //------------------------------------------------------------//
+  // Обработчик радиокнопок. Сохраняет содержание радиокнопок в 
+  // общем состоянии sort и отправляет запрос с требуемой  
+  // сортировкой на сервер.                               
+  //------------------------------------------------------------//
+  function onSortRadioButton(e : React.ChangeEvent<HTMLInputElement>) : void {
+    if (isError) return;
+    dispatch(setCommonState({ sort: e.target.value }));
+    try {
+      dispatch(fetchClaims({ 
+        token: token, 
+        offset: offset, 
+        limit: pager.base, 
+        search: search, 
+        column: column, 
+        sort: e.target.value 
+      }));
+    }
+    catch(err : any) {
+      console.error(`${err.message} at ${componentName} component`);
+      setIsError(true); 
+    }
+  }
+
+
+
+  //------------------------------------------------------------//
+  // Обработчик заголовков таблицы. Определяет и сохраняет  
+  // колонку сортировки в общем состоянии column и отправляет   
+  // запрос с требуемой сортировкой на сервер.                               
+  //------------------------------------------------------------//
+  function onColumn(e : React.MouseEvent) : void {
+    if (isError) return;
+    const target : { id? : string } = e.target as { id? : string };
+    let temp : string;
+    // не сортировать по title
+    if (target.id === 'Claims__title' && column === columnOptions.title) temp = '';
+    
+    // сортировать по title
+    else if (target.id === 'Claims__title' && column !== columnOptions.title) temp = columnOptions.title;
+    
+    // не сортировать по type
+    else if (target.id === 'Claims__type' && column === columnOptions.type) temp = '';
+    
+    // сортировать по type
+    else if (target.id === 'Claims__type' && column !== columnOptions.type) temp = columnOptions.type;
+    
+    // не сортировать по status
+    else if (target.id === 'Claims__status' && column === columnOptions.status) temp = '';
+    
+    // сортировать по status
+    else if (target.id === 'Claims__status' && column !== columnOptions.status) temp = columnOptions.status;
+    else return;
+    dispatch(setCommonState({ column: temp }));
+    try {
+      dispatch(fetchClaims({
+        token: token, 
+        offset: offset, 
+        limit: pager.base, 
+        search: search, 
+        column: temp, 
+        sort: sort
+      }));
+    }
+    catch(err : any) {
+      console.error(`${err.message} at ${componentName} component`);
+      setIsError(true); 
+    }
+  }
+
+
+
+  //------------------------------------------------------------//
+  // Функция. Находит в массиве type элемент, указанный 
+  // в массиве claims. То же самое делает со status. Если 
+  // claims не содержит ни типа, ни статуса, выбирает значения
+  // по умолчанию. С учетом этого формирует строку.                             
+  //------------------------------------------------------------//
+  function setRows() : JSX.Element[] | null {
+    if (isError) return null;
+    try {
+      const rows : JSX.Element[] = claims.map((item : Iclaim) => {
+        let type : Iobj | undefined, status : Iobj | undefined;
+  
+        if (!item.type || !item.type.name) type = types![types!.length - 1];
+        else {
+          type = types!.find((elem : Iobj) => {
+            if (!elem.type) return false;
+            const el : string = elem.type.toLowerCase();
+            const it : string = item.type!.name.toLowerCase();
+            const res : number = el.localeCompare(it);
+            if (res === 0) return true;
+            else return false;
+          });
+          if (!type) throw new Error(messages.noMatch);
+        }
+    
+        if (!item.status || !item.status.name) status = statuses![statuses!.length - 1];
+        else {
+          status = statuses!.find(elem => {
+            if (!elem.status) return false;
+            const el : string = elem.status.toLowerCase();
+            const it : string = item.status!.name.toLowerCase();
+            const res : number = el.localeCompare(it);
+            if (res === 0) return true;
+            else return false;
+          });
+          if (!status) throw new Error(messages.noMatch);
+        }
+        return (
+          <section key={ item._id } className={ s.row }>
+            <ClaimRow item={ item } type={ type } status={ status }/>  
+          </section>
+        );
+      });
+      return rows;
+    }
+    catch (err : any) {
+      console.error(`${err.message} at ${componentName} component`);
+      setIsError(true); 
+      return null;
+    }
+  }
+  
+  
+  
+  //------------------------------------------------------------//
+  // Функция. Находит в массиве type элемент, указанный 
+  // в массиве claims. То же самое делает со status. Если 
+  // claims не содержит ни типа, ни статуса, выбирает значения
+  // по умолчанию. С учетом этого формирует плитку.                             
+  //------------------------------------------------------------//
+  function setTiles() : JSX.Element[] | null {
+    if (isError) return null;
+    try {
+      const tiles : JSX.Element[] = claims.map((item : Iclaim) => {
+        let type : Iobj | undefined, status : Iobj | undefined;
+  
+        if (!item.type || !item.type.name) type = types![types!.length - 1];
+        else {
+          type = types!.find((elem : Iobj) => {
+            if (!elem.type) return false;
+            const el : string = elem.type.toLowerCase();
+            const it : string = item.type!.name.toLowerCase();
+            const res : number = el.localeCompare(it);
+            if (res === 0) return true;
+            else return false;
+          });
+          if (!type) throw new Error(messages.noMatch);
+        }
+  
+        if (!item.status || !item.status.name) status = statuses![statuses!.length - 1];
+        else {
+          status = statuses!.find((elem : Iobj) => {
+            if (!elem.status) return false;
+            const el : string = elem.status.toLowerCase();
+            const it : string = item.status!.name.toLowerCase();
+            const res : number = el.localeCompare(it);
+            if (res === 0) return true;
+            else return false;
+          });
+          if (!status) throw new Error(messages.noMatch);
+        }
+  
+        return (
+          <ClaimTile key={ item._id } item={ item } type={ type } status={ status }/>  
+        );
+      });
+      return tiles;
+    }
+    catch (err : any) {
+      console.error(`${err.message} at ${componentName} component`);
+      setIsError(true); 
+      return null;
+    }
+  }
+  
+
+
+
+
+if (isError) return <></>
 
   //--------------------------------------------------------------------
 
