@@ -52,6 +52,21 @@ function OldClaim() : JSX.Element {
 
 
   //------------------------------------------------------------//
+  // Имя компонента.                                 
+  //------------------------------------------------------------//
+  const componentName = 'OldClaim';
+  
+  
+  
+  //------------------------------------------------------------//
+  // Локальное состояние isError отвечает за распознание 
+  // появления в коде сгенерированных ошибок.                                 
+  //------------------------------------------------------------//
+  const [isError, setIsError] : [isError : boolean, setIsError : React.Dispatch<React.SetStateAction<boolean>>] = useState(false);
+
+
+
+  //------------------------------------------------------------//
   // Извлечение нужных данных из sessionStorage. Извлечение
   // token из sessionStorage проходит в два этапа: сначала 
   // извлекается закодированный token, потом он раскодируется. 
@@ -64,7 +79,12 @@ function OldClaim() : JSX.Element {
   const encryptedToken : string | null = sessionStorage.getItem('token');
 
   let token : string | null = useMemo(() => {
-    if (!encryptedToken) return null;
+    if (isError) return '';
+    if (encryptedToken === null) {
+      console.error(`${messages.noToken} at ${componentName} component`);
+      setIsError(true);
+      return '';
+    }
     return setToken(encryptedToken);
   }, [encryptedToken]);
 
@@ -73,23 +93,44 @@ function OldClaim() : JSX.Element {
   }, []);
 
   const email : string | null = useMemo(() => {
+    if (isError) return null;
     if (!token && keepLogged) return sessionStorage.getItem('email');
     else return null;
   }, [token, keepLogged]);
 
   const password : string | null = useMemo(() => {
+    if (isError) return null;
     if (!token && keepLogged) return sessionStorage.getItem('password');
     else return null;
   }, [token, keepLogged]);
 
-  const types : IobjObj = useMemo(() => {
-    return JSON.parse(sessionStorage.getItem('types')!); 
+  const types : IobjObj | null = useMemo(() => {
+    if (isError) return null;
+    const temp = sessionStorage.getItem('types');
+    if (temp === null) {
+      console.error(`${messages.noTypes} at ${componentName} component`);
+      setIsError(true); 
+      return null; 
+    }
+    return JSON.parse(temp); 
   }, [token]);
 
-  const statuses : IobjObj = useMemo(() => {
-    return JSON.parse(sessionStorage.getItem('statuses')!);
+  const statuses : IobjObj | null = useMemo(() => {
+    if (isError) return null;
+    const temp = sessionStorage.getItem('statuses');
+    if (temp === null) {
+      console.error(`${messages.noStatuses} at ${componentName} component`);
+      setIsError(true); 
+      return null;
+    }
+    return JSON.parse(temp);
   }, [token]);
 
+  
+
+  //------------------------------------------------------------//
+  // Извлекаем нужные данные из location.state. 
+  //------------------------------------------------------------//
   const locationState : IlocationState = location.state! as IlocationState;
 
 
@@ -98,10 +139,21 @@ function OldClaim() : JSX.Element {
   // Устанавливаем ID типа, полученного в location.state. 
   // Нужен для установки изначального локального состояния type.                                   
   //------------------------------------------------------------// 
-  const typeID = useMemo(() => {
-    let temp  = 0;
-    if(locationState.typeSlug) temp = Object.values(types).find((item : Iobj) => item.slug! === locationState.typeSlug)!.id;
-    return temp ? temp.toString() : '';
+  const typeID : string | null = useMemo(() => {
+    if (isError) return null;
+
+    const arr : Iobj[] = Object.values(types!);
+    const found : Iobj | undefined = arr.find((item : Iobj) => {
+      if (item.slug === undefined) return false; 
+      return item.slug === locationState.typeSlug;
+    });
+    if (found === undefined) {
+      console.error(`${messages.noMatch} at ${componentName} component`);
+      setIsError(true); 
+      return null;
+    }
+
+    return found.id.toString();
   }, []);
 
 
@@ -146,19 +198,6 @@ function OldClaim() : JSX.Element {
 
 
   //------------------------------------------------------------//
-  // Массивоподобный объект, хранящий данные для реализации 
-  // смены фокуса при нажатии на кнопку Enter, а именно: id
-  // элемента, сам элемент и его Tab позиция в форме.                                  
-  //------------------------------------------------------------//
-  const elements : IelementsObj = {
-    0: { id: 'fromOldClaim__title', state: titleElement, pos: 0 }, 
-    1: { id: 'fromOldClaim__type', state: typeElement, pos: 1 },
-    2: { id: 'fromOldClaim__description', state: descriptionElement, pos: 2 },
-  } 
-
-
-
-  //------------------------------------------------------------//
   // Группа переменных, содержащих результат валидации 
   // содержания input элементов по наступлению события onChange.  
   // Нужна для того, чтобы определять отображать ли кнопку submit 
@@ -186,16 +225,72 @@ function OldClaim() : JSX.Element {
 
 
   //------------------------------------------------------------//
+  // Массивоподобный объект, хранящий данные для реализации 
+  // смены фокуса при нажатии на кнопку Enter, а именно: id
+  // элемента, сам элемент и его Tab позиция в форме.                                  
+  //------------------------------------------------------------//
+  const elements : IelementsObj = {
+    0: { id: 'fromOldClaim__title', state: titleElement, pos: 0 }, 
+    1: { id: 'fromOldClaim__type', state: typeElement, pos: 1 },
+    2: { id: 'fromOldClaim__description', state: descriptionElement, pos: 2 },
+  } 
+
+
+
+  //------------------------------------------------------------//
+  // Хук, реагирующий на монтирование. Ищет нежные элементы 
+  // DOM дерева и сохраняющий их в своответствующем локальном 
+  // состоянии.                                 
+  //------------------------------------------------------------//  
+  useEffect(() => {
+    setTitleElement(document.getElementById(elements[0].id));
+    setTypeElement(document.getElementById(elements[1].id));
+    setDescriptionElement(document.getElementById(elements[2].id));
+  }, []);
+
+
+
+  //------------------------------------------------------------//
+  // Хук, реагирующий на изменения локального состояния token. 
+  // Проверяет, не просрочен ли token. Если просрочен, проверяет,
+  // нужно ли автоматически получить новый token. Если не нужно,
+  // переходит на страницу, расположенную по адресу '/', 
+  // прекращая сессию.                                   
+  //------------------------------------------------------------//
+  useEffect(() => {
+    if (isError) return;
+    if ((token === null && !keepLogged)) {
+      navigate('/');
+    }
+  }, [token]);
+
+
+
+  //------------------------------------------------------------//
+  // Хук, реагирующий на изменение локального состояния isError.
+  // Если isError верен, то происходит переход на страницу, 
+  // расположенную по адресу '/'.                                 
+  //------------------------------------------------------------//
+  useEffect(() => {
+    if (isError) navigate('/');
+  }, [isError]);
+
+
+
+  //------------------------------------------------------------//
   // Группа функций-обработчиков события onChange соотвествующих
   // input элементов.                              
   //------------------------------------------------------------//
   function onTitleInput(e: React.ChangeEvent<HTMLInputElement>) : void {
+    if (isError) return; 
     setTitle(state => ({ ...state, content: e.target.value }));
   }
   function onDescriptionInput(e: React.ChangeEvent<HTMLInputElement>) : void {
+    if (isError) return; 
     setDescription(state => ({ ...state, content: e.target.value }));
   }
   function onTypeInput(id : string) : void {
+    if (isError) return; 
     setType(state => ({ ...state, content: id, touched: true, status: true }));
   }
 
@@ -206,6 +301,7 @@ function OldClaim() : JSX.Element {
   // в изначальное положение.                                 
   //------------------------------------------------------------//
   function setAllStatesDefault() : void {
+    if (isError) return; 
     setTitle({
       content: locationState.title,  
       error: '',
@@ -221,7 +317,7 @@ function OldClaim() : JSX.Element {
       touched: false, 
     });
     setType({
-      content: typeID, 
+      content: typeID!, 
       error: '',
       focused: false,
       status: false, 
@@ -235,12 +331,23 @@ function OldClaim() : JSX.Element {
   // Функция, формирующая содержание body-компонента AJAX 
   // запроса.                              
   //------------------------------------------------------------//  
-  function createBody(act : string) : string {
+  function createBody(act : string) : string | null {
+    if (isError) return null; 
+
+    const typeSlug : string | undefined = types![type.content].slug;
+    if (typeSlug === undefined) throw new Error(messages.noSlug);
+
+    const found : Iobj | undefined = Object.values(statuses!).find(item => item.status === act);
+    if (found === undefined) throw new Error(messages.noMatch);
+
+    const statusSlug : string | undefined = found.slug;
+    if (statusSlug === undefined) throw new Error(messages.noSlug);
+
     return JSON.stringify({
       title: title.content,
       description: description.content,
-      type: types[+type.content].slug,
-      status: Object.values(statuses).find(item => item.status === act)!.slug,
+      type: typeSlug,
+      status: statusSlug,
     });
   }
 
@@ -252,10 +359,23 @@ function OldClaim() : JSX.Element {
   //------------------------------------------------------------// 
   async function submit(act : string) : Promise<void> {
     
+    if (isError) return; 
+
     if (!token && !keepLogged) {
-      navigate('/');
+      console.error(`${messages.noToken} at ${componentName} component`);
+      setIsError(true); 
       return;
     }
+
+    let createdBody : string | null = null;
+    try {
+      createdBody = createBody(act);
+    }
+    catch(err : any) {
+      console.error(`${err.message} at ${componentName} component`);
+      setIsError(true); 
+      return;
+    } 
     
     dispatch(configSettings({ status: claimsStatuses.loading }));
 
@@ -268,7 +388,7 @@ function OldClaim() : JSX.Element {
       
       const publicPath : string = publicPaths.claim + `/${locationState.id}`;
       const method : string = methods.put;
-      const bodyJSON : string = createBody(act);
+      const bodyJSON : string = createdBody!;
   
       setAllStatesDefault();
 
@@ -284,6 +404,7 @@ function OldClaim() : JSX.Element {
       }
     }
     catch(err : any) {
+      console.error(`${err.message} at ${componentName} component`);
       dispatch(configSettings({ status: claimsStatuses.error, message: err.message }));
     }
   }
@@ -296,6 +417,7 @@ function OldClaim() : JSX.Element {
   // состояния.                            
   //------------------------------------------------------------// 
   function onFocus(setter : React.Dispatch<React.SetStateAction<IinputElement>>) : void {
+    if (isError) return;
     setter((state: IinputElement) => ({ ...state, focused: true }));
   }
 
@@ -308,6 +430,7 @@ function OldClaim() : JSX.Element {
   // состояние.                         
   //------------------------------------------------------------// 
   function onBlur(setter: React.Dispatch<React.SetStateAction<IinputElement>>, checker: () => void) : void {
+    if (isError) return;
     setter((state: IinputElement) => ({ ...state, touched: true, focused: false }));
     checker();
   }
@@ -319,16 +442,19 @@ function OldClaim() : JSX.Element {
   //------------------------------------------------------------// 
   function onCancel(e : React.MouseEvent) : void {
     e.preventDefault();
+    if (isError) return;
     navigate('/base/claims');
   }
 
   function onDone(e : React.MouseEvent) : void {
     e.preventDefault();
+    if (isError) return;
     submit('Done');
   }
 
   function onDecline(e : React.MouseEvent) : void {
     e.preventDefault();
+    if (isError) return;
     submit('Declined');
   }
 
@@ -339,7 +465,13 @@ function OldClaim() : JSX.Element {
   // после сокрытия модального окна.
   //------------------------------------------------------------//
   function setFocus() : void {
-    titleElement!.focus();
+    if (isError) return;
+    if (titleElement === null) {
+      console.error(`${messages.noTitle} at ${componentName} component`);
+      setIsError(true); 
+      return;
+    }
+    titleElement.focus();
     setTitle((state: IinputElement) => ({ ...state, touched: false }));
   }
 
@@ -351,6 +483,7 @@ function OldClaim() : JSX.Element {
   // отображать ошибки, если они есть, сразу после смены фокуса.                            
   //------------------------------------------------------------// 
   function checkTitle() : void {
+    if (isError) return;
     if (title.content.length > rules.titleLengthMax) {
       return setTitle((state: IinputElement) => ({
         ...state, 
@@ -360,25 +493,16 @@ function OldClaim() : JSX.Element {
     }
     setTitle((state: IinputElement) => ({ ...state, status: true, error: '' }));
   }
+
   function checkDescription() : void {
+    if (isError) return;
     setDescription((state: IinputElement) => ({...state, status: true, error: ''}));
   }
+
   function checkType () : void {
+    if (isError) return;
     setType((state: IinputElement) => ({ ...state, status: true, error: '' }));
   }
-
-
-
-  //------------------------------------------------------------//
-  // Хук, реагирующий на монтирование. Ищет нежные элементы 
-  // DOM дерева и сохраняющий их в своответствующем локальном 
-  // состоянии.                                 
-  //------------------------------------------------------------//  
-  useEffect(() => {
-    setTitleElement(document.getElementById(elements[0].id));
-    setTypeElement(document.getElementById(elements[1].id));
-    setDescriptionElement(document.getElementById(elements[2].id));
-  }, []);
 
 
 
