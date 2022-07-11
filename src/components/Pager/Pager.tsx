@@ -3,7 +3,7 @@ import { NavigateFunction, useNavigate } from 'react-router-dom';
 
 import { useAppDispatch, useAppSelector } from '../../hooks';
 
-import { pager, setToken } from '../../data/data';
+import { messages, pager, setToken } from '../../data/data';
 import { selectTotalClaimsNumber, fetchClaims } from '../../store/slices/claimsSlice';
 import { selectPagerState, setPagerState } from '../../store/slices/pagerSlice';
 import { selectCommonState } from '../../store/slices/commonSlice';
@@ -14,12 +14,13 @@ import type { IpagerSliceState } from '../../commonTypes';
 
 
 
+
 //------------------------------------------------------------//
 // Компонент отвечает за отображение и функционирование
 // указателя страниц на странице, расположенной по адресу:
 // '/base/claims'.                         
 //------------------------------------------------------------//
-function Pager() : JSX.Element {
+function Pager({isError, setIsError} : {isError : boolean, setIsError : React.Dispatch<React.SetStateAction<boolean>>}) : JSX.Element {
 
   //------------------------------------------------------------//
   // Подготовка нужных инструментов для взаимодействия с другими
@@ -28,13 +29,19 @@ function Pager() : JSX.Element {
   const navigate: NavigateFunction = useNavigate();
 
 
-  
+
+  //------------------------------------------------------------//
+  // Имя компонента.                                 
+  //------------------------------------------------------------//
+  const componentName = 'Pager';
+
+
+
   //------------------------------------------------------------//
   // Подготовка инструментов для взаимодействия с другими
   // страницами, файлами, компонентами и т.д.                                   
   //------------------------------------------------------------//
   const dispatch = useAppDispatch();
-  //const dispatchPagerState = useDispatch();
   const pagerState = useAppSelector(selectPagerState);
   const { search, sort, column } = useAppSelector(selectCommonState);
   const pageNumber: number = Math.ceil(useAppSelector(selectTotalClaimsNumber) / pager.base);
@@ -51,7 +58,12 @@ function Pager() : JSX.Element {
   const encryptedToken : string | null = sessionStorage.getItem('token');
 
   const token : string | null = useMemo(() => {
-    if (!encryptedToken) return null;
+    if (isError) return '';
+    if (encryptedToken === null) {
+      console.error(`${messages.noToken} at ${componentName} component`);
+      setIsError(true);
+      return '';
+    }
     return setToken(encryptedToken);
   }, [encryptedToken])
   
@@ -64,7 +76,7 @@ function Pager() : JSX.Element {
   // Переменная, изменение значения которой влияет на один из 
   // хуков useEffect данного компонента.                                  
   //------------------------------------------------------------//
-  let offset  = 0;
+  let offset : number  = 0;
 
 
 
@@ -74,6 +86,36 @@ function Pager() : JSX.Element {
   // отображения компонента 'Pager'.                                  
   //------------------------------------------------------------//
   const [windowWidth, setWindowWidth] : [windowWidth : number, setWindowWidth : React.Dispatch<React.SetStateAction<number>>] = useState(window.innerWidth);
+
+
+
+  //------------------------------------------------------------//
+  // Хук, реагирующий на значение переменных offset и pageNumber. 
+  // Запускает функцию computePagerState.                      
+  //------------------------------------------------------------//
+  useEffect(() => {
+    if (isError) return;
+    let temp : IpagerSliceState = {} as IpagerSliceState;
+
+    temp.last = pageNumber;
+    temp.offset = windowWidth < 500 ? pager.offsetMin : pager.offsetMax;
+    temp.pointer = (+sessionStorage.getItem('offset')!) / pager.base + 1;
+    
+    temp = computePagerState(temp)!;
+
+    dispatch(setPagerState(temp));
+  }, [offset, pageNumber]);
+
+
+
+  //------------------------------------------------------------//
+  // Хук, реагирующий на монтирование. Устанавливает функцию
+  // getWindowWidth в качестве eventListener.                      
+  //------------------------------------------------------------//
+  useEffect(() => {
+    window.addEventListener('resize', getWindowWidth);
+    return () => window.removeEventListener('resize', getWindowWidth);
+  }, []);
 
 
 
@@ -102,7 +144,8 @@ function Pager() : JSX.Element {
   // Функция, определяющая вид Pager, исходя из текущего 
   // значения pointer, содержащего истребуемый оффсет сервера.                      
   //------------------------------------------------------------// 
-  function computePagerState({ last, offset, pointer } : IpagerSliceState) {
+  function computePagerState({ last, offset, pointer } : IpagerSliceState) : IpagerSliceState | null {
+    if (isError) return null;
     const temp : IpagerSliceState = {
       last: last,
       offset: offset,
@@ -161,22 +204,29 @@ function Pager() : JSX.Element {
   // адрусу: '/'. Иначе, реализует указанную выше логику.                   
   //------------------------------------------------------------// 
   function incrementPointer() : void {
+    if (isError) return;
     if (!token && !keepLogged) {
       navigate('/');
       return;
     }
     let temp : IpagerSliceState = { ...pagerState };
     if (temp.pointer < temp.last) temp.pointer++;
-    temp = computePagerState(temp);
+    temp = computePagerState(temp)!;
     dispatch(setPagerState(temp));
-    dispatch(fetchClaims({
-      token: token!, 
-      offset: (temp.pointer - 1) * pager.base, 
-      limit: pager.base, 
-      search: search, 
-      column: column, 
-      sort: sort
-    }));
+    try {
+      dispatch(fetchClaims({
+        token: token!, 
+        offset: (temp.pointer - 1) * pager.base, 
+        limit: pager.base, 
+        search: search, 
+        column: column, 
+        sort: sort
+      }));
+    }
+    catch(err : any) {
+      console.error(`${err.message} at ${componentName} component`);
+      setIsError(true); 
+    }
   }
 
 
@@ -191,22 +241,29 @@ function Pager() : JSX.Element {
   // адрусу: '/'. Иначе, реализует указанную выше логику.                             
   //------------------------------------------------------------// 
   function decrementPointer() : void {
+    if (isError) return;
     if (!token && !keepLogged) {
       navigate('/');
       return;
     }
     let temp : IpagerSliceState = { ...pagerState };
     if (temp.pointer > 1) temp.pointer--;
-    temp = computePagerState(temp);
+    temp = computePagerState(temp)!;
     dispatch(setPagerState(temp));
-    dispatch(fetchClaims({
-      token: token!, 
-      offset: (temp.pointer - 1) * pager.base, 
-      limit: pager.base, 
-      search: search, 
-      column: column, 
-      sort: sort
-    }));
+    try {
+      dispatch(fetchClaims({
+        token: token!, 
+        offset: (temp.pointer - 1) * pager.base, 
+        limit: pager.base, 
+        search: search, 
+        column: column, 
+        sort: sort
+      }));
+    }
+    catch(err : any) {
+      console.error(`${err.message} at ${componentName} component`);
+      setIsError(true); 
+    }
   }
 
 
@@ -221,6 +278,7 @@ function Pager() : JSX.Element {
   // выше логику.                     
   //------------------------------------------------------------//  
   function choosePage(e : React.MouseEvent) : void {
+    if (isError) return;
     if (!token && !keepLogged) {
       navigate('/');
       return;
@@ -228,46 +286,23 @@ function Pager() : JSX.Element {
     const target : { id? : string } = e.target as { id? : string };
     let temp : IpagerSliceState = { ...pagerState };
     temp.pointer = +target.id!;
-    temp = computePagerState(temp);
+    temp = computePagerState(temp)!;
     dispatch(setPagerState(temp));
-    dispatch(fetchClaims({
-      token: token!, 
-      offset: (temp.pointer - 1) * pager.base, 
-      limit: pager.base, 
-      search: search, 
-      column: column, 
-      sort: sort
-    }));
+    try {
+      dispatch(fetchClaims({
+        token: token!, 
+        offset: (temp.pointer - 1) * pager.base, 
+        limit: pager.base, 
+        search: search, 
+        column: column, 
+        sort: sort
+      }));
+    }
+    catch(err : any) {
+      console.error(`${err.message} at ${componentName} component`);
+      setIsError(true); 
+    }
   } 
-
-
-
-  //------------------------------------------------------------//
-  // Хук, реагирующий на значение переменных offset и pageNumber. 
-  // Запускает функцию computePagerState.                      
-  //------------------------------------------------------------//
-  useEffect(() => {
-    let temp : IpagerSliceState = {} as IpagerSliceState;
-
-    temp.last = pageNumber;
-    temp.offset = windowWidth < 500 ? pager.offsetMin : pager.offsetMax;
-    temp.pointer = (+sessionStorage.getItem('offset')!) / pager.base + 1;
-    
-    temp = computePagerState(temp);
-    
-    dispatch(setPagerState(temp));
-  }, [offset, pageNumber]);
-
-
-
-  //------------------------------------------------------------//
-  // Хук, реагирующий на монтирование. Устанавливает функцию
-  // getWindowWidth в качестве eventListener.                      
-  //------------------------------------------------------------//
-  useEffect(() => {
-    window.addEventListener('resize', getWindowWidth);
-    return () => window.removeEventListener('resize', getWindowWidth);
-  }, []);
 
 
 
@@ -275,13 +310,17 @@ function Pager() : JSX.Element {
   // Набор номеров оффсетов сервера. Счет начинается с единицы.                     
   //------------------------------------------------------------//
   const pages : JSX.Element[] = [];
-  for (let i = pagerState.start; i <= pagerState.stop; i++) {
-    pages.push(
-      <div key={ i } id={ i.toString() } className={ pagerState.pointer === i ? `${s.item} ${s.pointer}` : s.item } onClick={ choosePage }>{ i }</div>
-    );
+  if (!isError) {
+    for (let i = pagerState.start; i <= pagerState.stop; i++) {
+      pages.push(
+        <div key={ i } id={ i.toString() } className={ pagerState.pointer === i ? `${s.item} ${s.pointer}` : s.item } onClick={ choosePage }>{ i }</div>
+      );
+    }
   }
 
 
+
+  if (isError) return <></>
 
   //--------------------------------------------------------------------
   

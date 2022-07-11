@@ -33,7 +33,19 @@ function Claims() : JSX.Element {
   const dispatch = useAppDispatch();
   const navigate : NavigateFunction = useNavigate();
 
+
+
+  //------------------------------------------------------------//
+  // Имя компонента.                                 
+  //------------------------------------------------------------//
   const componentName = 'Claims';
+
+
+  
+  //------------------------------------------------------------//
+  // Локальное состояние isError отвечает за распознание 
+  // появления в коде сгенерированных ошибок.                                 
+  //------------------------------------------------------------//
   const [isError, setIsError] : [isError : boolean, setIsError : React.Dispatch<React.SetStateAction<boolean>>] = useState(false);
   
   //------------------------------------------------------------//
@@ -456,7 +468,7 @@ if (isError) return <></>
           { tiles }
         </main>
 
-        <Pager />
+        <Pager isError={ isError } setIsError={ setIsError } />
       </div>
       <Modal afterHideModalFunctionsArray={ null } />
     </>
