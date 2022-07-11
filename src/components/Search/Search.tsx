@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from '../../hooks';
 import { fetchClaims } from '../../store/slices/claimsSlice';
 import { selectCommonState, setCommonState } from '../../store/slices/commonSlice';
 
-import { pager, setToken } from '../../data/data';
+import { messages, pager, setToken } from '../../data/data';
 
 import c from '../../assets/styles/common.scss';
 import s from './Search.scss';
@@ -27,15 +27,23 @@ function Search() : JSX.Element {
   // страницами, файлами, компонентами и т.д.                                   
   //------------------------------------------------------------//
   const navigate : NavigateFunction = useNavigate();
-
-
-
-  //------------------------------------------------------------//
-  // Подготовка инструментов для взаимодействия с другими
-  // страницами, файлами, компонентами и т.д.                                   
-  //------------------------------------------------------------//
   const dispatch = useAppDispatch();
   const { column, search: commonSearch, sort } = useAppSelector(selectCommonState);
+
+
+
+//------------------------------------------------------------//
+  // Имя компонента.                                 
+  //------------------------------------------------------------//
+  const componentName = 'Search';
+
+
+
+  //------------------------------------------------------------//
+  // Локальное состояние isError отвечает за распознание 
+  // появления в коде сгенерированных ошибок.                                 
+  //------------------------------------------------------------//
+  const [isError, setIsError] : [isError : boolean, setIsError : React.Dispatch<React.SetStateAction<boolean>>] = useState(false);
   
 
 
@@ -57,68 +65,18 @@ function Search() : JSX.Element {
   const encryptedToken : string | null = sessionStorage.getItem('token');
 
   const token : string | null = useMemo(() => {
-    if (!encryptedToken) return null;
+    if (isError) return '';
+    if (encryptedToken === null) {
+      console.error(`${messages.noToken} at ${componentName} component`);
+      setIsError(true);
+      return '';
+    }
     return setToken(encryptedToken);
   }, [encryptedToken])
   
   const keepLogged : boolean = useMemo(() => {
     return sessionStorage.getItem('keepLogged') === 'true';
   }, []);
-
-
-
-  //------------------------------------------------------------//
-  // Обработчик события onChange input элемента поиска.                                  
-  //------------------------------------------------------------//
-  function onChange(e : React.ChangeEvent<HTMLInputElement>) : void {
-    setSearch(e.target.value);
-  }
-
-
-
-  //------------------------------------------------------------//
-  // Обработчик иконки крестика. Стирает содержимое поиска из
-  // локального состояния search.                                  
-  //------------------------------------------------------------//
-  function onCross() : void {
-    setSearch('');
-  }
-
-
-
-  //------------------------------------------------------------//
-  // Обработчик иконки лупы. Сохраняет содержание поисковика в 
-  // общем состоянии search и отправляет запрос с искомым 
-  // на сервер.                                   
-  //------------------------------------------------------------//  
-  function onLoupe() : void {
-    if (!token && !keepLogged) {
-      navigate('/');
-      return;
-    }
-    dispatch(setCommonState({ search: search }));
-    dispatch(fetchClaims({
-      token: token!, 
-      offset: 0, 
-      limit: pager.base, 
-      search: search, 
-      column: column, 
-      sort: sort
-    }));
-  }
-
-
-
-  //------------------------------------------------------------//
-  // Обработчик кнопки Enter. Если она нажата, и локальное 
-  // состояние search не является пустой строкой, вызывается
-  // функция onLoupe.                                
-  //------------------------------------------------------------// 
-  function onKeyDown(e: React.KeyboardEvent) : void {
-    if (search && (e.code === 'Enter' || e.key === 'Enter')) {
-      onLoupe();
-    }
-  }
 
 
 
@@ -136,6 +94,70 @@ function Search() : JSX.Element {
         return;
       }
       dispatch(setCommonState({search: ''}));
+      try {
+        dispatch(fetchClaims({
+          token: token!, 
+          offset: 0, 
+          limit: pager.base, 
+          search: search, 
+          column: column, 
+          sort: sort
+        }));
+      }
+      catch (err : any) {
+        console.error(`${err.message} at ${componentName} component`);
+        navigate('/');
+      }
+    }
+  }, [search]);
+
+
+
+  //------------------------------------------------------------//
+  // Хук, реагирующий на изменение локального состояния isError.
+  // Если isError верен, то происходит переход на страницу, 
+  // расположенную по адресу '/'.                                 
+  //------------------------------------------------------------//
+  useEffect(() => {
+    if (isError) navigate('/');
+  }, [isError]);
+
+
+  
+  //------------------------------------------------------------//
+  // Обработчик события onChange input элемента поиска.                                  
+  //------------------------------------------------------------//
+  function onChange(e : React.ChangeEvent<HTMLInputElement>) : void {
+    if (isError) return;
+    setSearch(e.target.value);
+  }
+
+
+
+  //------------------------------------------------------------//
+  // Обработчик иконки крестика. Стирает содержимое поиска из
+  // локального состояния search.                                  
+  //------------------------------------------------------------//
+  function onCross() : void {
+    if (isError) return;
+    setSearch('');
+  }
+
+
+
+  //------------------------------------------------------------//
+  // Обработчик иконки лупы. Сохраняет содержание поисковика в 
+  // общем состоянии search и отправляет запрос с искомым 
+  // на сервер.                                   
+  //------------------------------------------------------------//  
+  function onLoupe() : void {
+    if (isError) return;
+    if (!token && !keepLogged) {
+      navigate('/');
+      return;
+    }
+    dispatch(setCommonState({ search: search }));
+    try {
       dispatch(fetchClaims({
         token: token!, 
         offset: 0, 
@@ -145,9 +167,29 @@ function Search() : JSX.Element {
         sort: sort
       }));
     }
-  }, [search]);
+    catch(err : any) {
+      console.error(`${err.message} at ${componentName} component`);
+      setIsError(true); 
+    }
+  }
 
 
+
+  //------------------------------------------------------------//
+  // Обработчик кнопки Enter. Если она нажата, и локальное 
+  // состояние search не является пустой строкой, вызывается
+  // функция onLoupe.                                
+  //------------------------------------------------------------// 
+  function onKeyDown(e: React.KeyboardEvent) : void {
+    if (isError) return;
+    if (search && (e.code === 'Enter' || e.key === 'Enter')) {
+      onLoupe();
+    }
+  }
+
+
+
+  if (isError) return <></>
 
   //--------------------------------------------------------------------
 

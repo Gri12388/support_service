@@ -20,7 +20,7 @@ import type { IpagerSliceState } from '../../commonTypes';
 // указателя страниц на странице, расположенной по адресу:
 // '/base/claims'.                         
 //------------------------------------------------------------//
-function Pager({isError, setIsError} : {isError : boolean, setIsError : React.Dispatch<React.SetStateAction<boolean>>}) : JSX.Element {
+function Pager() : JSX.Element {
 
   //------------------------------------------------------------//
   // Подготовка нужных инструментов для взаимодействия с другими
@@ -37,6 +37,14 @@ function Pager({isError, setIsError} : {isError : boolean, setIsError : React.Di
 
 
 
+  //------------------------------------------------------------//
+  // Локальное состояние isError отвечает за распознание 
+  // появления в коде сгенерированных ошибок.                                 
+  //------------------------------------------------------------//
+  const [isError, setIsError] : [isError : boolean, setIsError : React.Dispatch<React.SetStateAction<boolean>>] = useState(false);
+  
+  
+  
   //------------------------------------------------------------//
   // Подготовка инструментов для взаимодействия с другими
   // страницами, файлами, компонентами и т.д.                                   
@@ -116,6 +124,17 @@ function Pager({isError, setIsError} : {isError : boolean, setIsError : React.Di
     window.addEventListener('resize', getWindowWidth);
     return () => window.removeEventListener('resize', getWindowWidth);
   }, []);
+
+
+
+  //------------------------------------------------------------//
+  // Хук, реагирующий на изменение локального состояния isError.
+  // Если isError верен, то происходит переход на страницу, 
+  // расположенную по адресу '/'.                                 
+  //------------------------------------------------------------//
+  useEffect(() => {
+    if (isError) navigate('/');
+  }, [isError]);
 
 
 

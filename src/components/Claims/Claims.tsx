@@ -405,7 +405,7 @@ function Claims() : JSX.Element {
 
 
 
-if (isError) return <></>
+  if (isError) return <></>
 
   //--------------------------------------------------------------------
 
@@ -468,7 +468,7 @@ if (isError) return <></>
           { tiles }
         </main>
 
-        <Pager isError={ isError } setIsError={ setIsError } />
+        <Pager />
       </div>
       <Modal afterHideModalFunctionsArray={ null } />
     </>
