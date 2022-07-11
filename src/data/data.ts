@@ -255,13 +255,24 @@ export const statusColors: string[] = [
   export const onPressedEnter = (elements : T.IelementsObj) => (e: React.KeyboardEvent) => {
     if (e.code === 'Enter' || e.key === 'Enter') {
       e.preventDefault();
+
       const arr: T.Ielement[] = Object.values(elements);
       const element : T.Ielement | undefined = arr.find((item : T.Ielement) : boolean => item.id === e.currentTarget.id);
       let pos : number;
-      if (element === undefined) throw new Error('error #1 of "onPressedEnter" function');
+
+      if (element === undefined) {
+        console.error('error #1 of "onPressedEnter" function');
+        return;
+      }
+      
       pos = element.pos;
       const state : HTMLElement | null = elements[++pos % arr.length].state;
-      if (state === null) throw new Error('error #2 of "onPressedEnter" function');
+      
+      if (state === null) {
+        console.error('error #2 of "onPressedEnter" function');
+        return;
+      }
+
       state.focus();
     }
   }
