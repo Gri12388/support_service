@@ -44,6 +44,13 @@ function Reg() : JSX.Element {
 
 
   //------------------------------------------------------------//
+  // Имя компонента.                                 
+  //------------------------------------------------------------//
+  const componentName : string = 'Reg';
+
+
+
+  //------------------------------------------------------------//
   // Данный блок предназначен для хранения input элементов DOM  
   // дерева, которые будут задействованы при использовании      
   // функции element.focus() для реализации перемещения фокуса  
@@ -168,7 +175,7 @@ function Reg() : JSX.Element {
   //------------------------------------------------------------//
   function onTryAgainButton() : void {
     dispatch(configSettings({ status: claimsStatuses.ok, message: '' }));
-    nameElement!.focus();
+    if (nameElement) nameElement.focus();
     setAllStatesDefault();
   }
 
@@ -221,7 +228,7 @@ function Reg() : JSX.Element {
     const bodyJSON : string = createBody();
     
     sendRequestBodyfull(publicPath, method, bodyJSON)
-    .then(res => {
+    .then((res : Response) => {
       switch (res.status) {
         case 200: dispatch(configSettings({ status: claimsStatuses.message, message: messages.regGood }));
                   break;
@@ -229,7 +236,8 @@ function Reg() : JSX.Element {
         default:  throw new Error(messages.regBad);
       }
     })
-    .catch(err => {
+    .catch((err : any) => {
+      console.error(`${err.message} at ${componentName} component`);
       dispatch(configSettings({ status: claimsStatuses.error, message: err.message }));
     });
 
