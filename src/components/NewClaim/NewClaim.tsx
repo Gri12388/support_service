@@ -48,7 +48,7 @@ function NewClaim() : JSX.Element {
   //------------------------------------------------------------//
   // Имя компонента.                                 
   //------------------------------------------------------------//
-  const componentName = 'NewClaim';
+  const componentName : string = 'NewClaim';
 
 
 

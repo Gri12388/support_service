@@ -40,14 +40,19 @@ import type {
 //------------------------------------------------------------//
 function Login({ signal } : Isignal) : JSX.Element {
 
-  
-
   //------------------------------------------------------------//
   // Подготовка инструментов для взаимодействия с другими
   // страницами, файлами, компонентами и т.д.                                   
   //------------------------------------------------------------//
   const navigate : NavigateFunction = useNavigate();
   const dispatch = useAppDispatch();
+
+
+
+  //------------------------------------------------------------//
+  // Имя компонента.                                 
+  //------------------------------------------------------------//
+  const componentName : string = 'NewClaim';
 
 
   
@@ -122,16 +127,41 @@ function Login({ signal } : Isignal) : JSX.Element {
 
 
   //------------------------------------------------------------//
+  // Хук, реагирующий на монтирование. Ищет нужные элементы
+  // DOM дерева и сохраняет их в своответствующем состоянии.                                 
+  //------------------------------------------------------------//
+  useEffect(() => {
+    setEmailElement(document.getElementById(elements[0].id));
+    setPasswordElement(document.getElementById(elements[1].id));
+  }, []);
+
+
+
+  //------------------------------------------------------------//
+  // Хук, реагирующий на изменение локального состояния signal.
+  // Устанавливает фокус на нужный input элемент по получению
+  // сигнала.                                
+  //------------------------------------------------------------//
+  useEffect(() => {
+    if (emailElement) {
+      emailElement.focus();
+      setEmail((state: IinputElement) : IinputElement => ({ ...state, touched: false }));
+    }
+  }, [signal]);
+
+
+
+  //------------------------------------------------------------//
   // Группа функций-обработчиков события onChange соотвествующих
   // input элементов                              
   //------------------------------------------------------------//
-  function onEmailInput(e: React.ChangeEvent<HTMLInputElement>) {
+  function onEmailInput(e: React.ChangeEvent<HTMLInputElement>) : void {
     setEmail((state : IinputElement) => ({ ...state, content: e.target.value }));
   }
-  function onPasswordInput(e: React.ChangeEvent<HTMLInputElement>) {
+  function onPasswordInput(e: React.ChangeEvent<HTMLInputElement>) : void {
     setPassword((state : IinputElement) => ({ ...state, content: e.target.value }));
   }
-  function onKeepLogged() {
+  function onKeepLogged() : void {
     setKeepLogged((state : IselElement) => ({ ...state, content: !state.content }));
   }
 
@@ -207,8 +237,8 @@ function Login({ signal } : Isignal) : JSX.Element {
 
       if (keepLogged.content) {
         
-        const encryptedEmail = encrypt(email.content);
-        const encryptedPassword = encrypt(password.content); 
+        const encryptedEmail : string = encrypt(email.content);
+        const encryptedPassword : string = encrypt(password.content); 
 
         sessionStorage.setItem('email', encryptedEmail);
         sessionStorage.setItem('password', encryptedPassword);
@@ -221,6 +251,7 @@ function Login({ signal } : Isignal) : JSX.Element {
       navigate('/base/claims');
     }
     catch (err: any) {
+      console.error(`${err.message} at ${componentName} component`);
       dispatch(configSettings({ status: claimsStatuses.error, message: err.message }));
     }
   }
@@ -293,31 +324,6 @@ function Login({ signal } : Isignal) : JSX.Element {
 
 
 
-  //------------------------------------------------------------//
-  // Хук, реагирующий на монтирование. Ищет нужные элементы
-  // DOM дерева и сохраняет их в своответствующем состоянии.                                 
-  //------------------------------------------------------------//
-  useEffect(() => {
-    setEmailElement(document.getElementById(elements[0].id));
-    setPasswordElement(document.getElementById(elements[1].id));
-  }, []);
-
-
-
-  //------------------------------------------------------------//
-  // Хук, реагирующий на изменение локального состояния signal.
-  // Устанавливает фокус на нужный input элемент по получению
-  // сигнала.                                
-  //------------------------------------------------------------//
-  useEffect(() => {
-    if (emailElement) {
-      emailElement.focus();
-      setEmail((state: IinputElement) : IinputElement => ({ ...state, touched: false }));
-    }
-  }, [signal]);
-
-
-  
   //--------------------------------------------------------------------
 
   return (
