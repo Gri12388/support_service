@@ -54,7 +54,7 @@ function OldClaim() : JSX.Element {
   //------------------------------------------------------------//
   // Имя компонента.                                 
   //------------------------------------------------------------//
-  const componentName : string = 'OldClaim';
+  const componentName  = 'OldClaim';
   
   
   

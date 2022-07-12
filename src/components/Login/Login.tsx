@@ -52,7 +52,7 @@ function Login({ signal } : Isignal) : JSX.Element {
   //------------------------------------------------------------//
   // Имя компонента.                                 
   //------------------------------------------------------------//
-  const componentName : string = 'Login';
+  const componentName  = 'Login';
 
 
   

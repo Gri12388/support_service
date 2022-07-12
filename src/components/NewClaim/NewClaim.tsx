@@ -48,7 +48,7 @@ function NewClaim() : JSX.Element {
   //------------------------------------------------------------//
   // Имя компонента.                                 
   //------------------------------------------------------------//
-  const componentName : string = 'NewClaim';
+  const componentName  = 'NewClaim';
 
 
 
@@ -410,7 +410,7 @@ function NewClaim() : JSX.Element {
     e.preventDefault();
     if (isError) return;
     navigate('/base/claims');
-  };
+  }
 
 
 

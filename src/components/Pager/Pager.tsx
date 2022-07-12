@@ -27,6 +27,10 @@ function Pager() : JSX.Element | null {
   // страницами, файлами, компонентами и т.д.                                   
   //------------------------------------------------------------//
   const navigate: NavigateFunction = useNavigate();
+  const dispatch = useAppDispatch();
+  const pagerState = useAppSelector(selectPagerState);
+  const { search, sort, column } = useAppSelector(selectCommonState);
+  const pageNumber: number = Math.ceil(useAppSelector(selectTotalClaimsNumber) / pager.base);
 
 
 
@@ -42,18 +46,8 @@ function Pager() : JSX.Element | null {
   // появления в коде сгенерированных ошибок.                                 
   //------------------------------------------------------------//
   const [isError, setIsError] : [isError : boolean, setIsError : React.Dispatch<React.SetStateAction<boolean>>] = useState(false);
-  
-  
-  
-  //------------------------------------------------------------//
-  // Подготовка инструментов для взаимодействия с другими
-  // страницами, файлами, компонентами и т.д.                                   
-  //------------------------------------------------------------//
-  const dispatch = useAppDispatch();
-  const pagerState = useAppSelector(selectPagerState);
-  const { search, sort, column } = useAppSelector(selectCommonState);
-  const pageNumber: number = Math.ceil(useAppSelector(selectTotalClaimsNumber) / pager.base);
 
+  
 
   //------------------------------------------------------------//
   // Извлечение нужных данных из sessionStorage. Извлечение
@@ -84,7 +78,7 @@ function Pager() : JSX.Element | null {
   // Переменная, изменение значения которой влияет на один из 
   // хуков useEffect данного компонента.                                  
   //------------------------------------------------------------//
-  let offset : number  = 0;
+  let offset   = 0;
 
 
 
