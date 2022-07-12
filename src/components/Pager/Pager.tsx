@@ -20,7 +20,7 @@ import type { IpagerSliceState } from '../../commonTypes';
 // указателя страниц на странице, расположенной по адресу:
 // '/base/claims'.                         
 //------------------------------------------------------------//
-function Pager() : JSX.Element {
+function Pager() : JSX.Element | null {
 
   //------------------------------------------------------------//
   // Подготовка нужных инструментов для взаимодействия с другими
@@ -339,11 +339,11 @@ function Pager() : JSX.Element {
 
 
 
-  if (isError) return <></>
+  if (isError) return null;
 
   //--------------------------------------------------------------------
   
-  if (pageNumber === 0 || pageNumber === 1) return <></>;
+  if (pageNumber === 0 || pageNumber === 1) return null;
   else return (
     <section className={ s.barWrapper } >
       <div className={ s.bar }>

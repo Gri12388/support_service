@@ -16,7 +16,7 @@ import type { Iclaim, Iobj } from '../../commonTypes';
 // Компонент отвечает за отображение строки в таблице на 
 // странице, расположенной по адресу: '/base/claims'.             
 //------------------------------------------------------------//
-function ClaimRow({ item, type, status } : { item : Iclaim, type : Iobj, status : Iobj }) : JSX.Element {
+function ClaimRow({ item, type, status } : { item : Iclaim, type : Iobj, status : Iobj }) : JSX.Element | null {
   
   //------------------------------------------------------------//
   // Подготовка инструментов для взаимодействия с другими
@@ -63,7 +63,7 @@ function ClaimRow({ item, type, status } : { item : Iclaim, type : Iobj, status 
     type.id === undefined || 
     status.id === null || 
     status.id === undefined
-  ) return <></>;
+  ) return null;
   
 
 
